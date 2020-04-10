@@ -104,7 +104,7 @@ In case of errors, you have to set at least 6 levels.
 If you do not set it, here is the default setting:
 
 #+BEGIN_SRC emacs-lisp
-(setq shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉")
+(setq shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉"))
 #+END_SRC
 
 ** Default paragraph indentation and fill column
