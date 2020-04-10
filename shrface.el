@@ -1,4 +1,4 @@
-;;; shrface.el --- Faces for shr -*- lexical-binding: t; -*-
+;;; shrface.el --- Org-like Faces for shr -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020 Damon Chan
 
@@ -27,14 +27,29 @@
 
 ;;; shrface
 
-(defvar shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉")
-  "Bullets for headings")
+(defgroup shrface nil
+  "Org-like faces setting for shr"
+  :group 'shr)
 
-(defvar shrface-paragraph-indentation 2
-  "Indentation for paragraph")
+(defgroup shrface-faces nil
+  "Org-like faces for shr"
+  :group 'shrface
+  :group 'faces)
 
-(defvar shrface-paragraph-fill-column 120
-  "Fill columns for paragraph")
+(defcustom shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉")
+  "Bullets for headings"
+  :group 'shrface
+  :type '(repeat (string :tag "Bullet character")))
+
+(defcustom shrface-paragraph-indentation 2
+  "Indentation for paragraph"
+  :group 'shrface
+  :type 'integer)
+
+(defcustom  shrface-paragraph-fill-column 120
+  "Fill columns for paragraph"
+  :group 'shrface
+  :type 'integer)
 
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
