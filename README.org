@@ -22,17 +22,17 @@ It is a shr faces package. Org Like faces for shr, eww, nov.el and more!
 
 + Org Like Faces
 + Browse the internet with =eww= just like org mode.
-[[file:img/eww-1.png][eww-1]]
+  #+html: <p align="center"><img src="img/eww-1.png" /></p>
+  #+html: <p align="center"><img src="img/eww-2.png" /></p>
 
-[[file:img/eww-2.png][eww-2]]
 + Read dash docsets with =dash= with the beauty of org faces.
-[[file:img/dash-doc-1.png][dash-doc-1]]
+  #+html: <p align="center"><img src="img/dash-doc-1.png" /></p>
+  #+html: <p align="center"><img src="img/dash-doc-2.png" /></p>
 
-[[file:img/dash-doc-2.png][dash-doc-2]]
 + Read epub files with =nov.el= with the same reading experience just like org mode.
-[[file:img/epub-1.png][epub-1]]
+  #+html: <p align="center"><img src="img/epub-1.png" /></p>
+  #+html: <p align="center"><img src="img/epub-1.png" /></p>
 
-[[file:img/epub-2.png][epub-2]]
 
 * Installation
 
