@@ -149,7 +149,17 @@ Here are the faces supported:
 ** (Optional) Enable source codes highlight
 You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight
 
-Add the following codes into your =init.el=:
+#+BEGIN_SRC emacs-lisp
+(use-package shr-tag-pre-highlight
+       :ensure t
+       :after shr
+       :custom-update
+       (shr-external-rendering-functions
+        '((pre . shr-tag-pre-highlight))))
+#+END_SRC
+
+If you want to add indentation and =#+BEGIN_SRC=, and =#+END_SRC= for later easy coping to
+org-files, you can overwrite the function like me:
 
 #+BEGIN_SRC emacs-lisp
   (require 'shr-tag-pre-highlight)
@@ -183,3 +193,4 @@ Add the following codes into your =init.el=:
       (insert (propertize "#+END_SRC" 'face 'org-block-end-line ) )
       (shr-ensure-newline)))
 #+END_SRC
+
