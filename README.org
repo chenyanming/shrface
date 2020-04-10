@@ -154,6 +154,24 @@ Here are the faces supported:
 (defface shrface-h6-face '((t :inherit org-level-6))
   "Face used for h6 headlines."
   :group 'shrface-faces)
+
+(defface shrface-highlight
+  '(
+    (((class color) (min-colors 88) (background light))
+     :background "darkseagreen2")
+    (((class color) (min-colors 88) (background dark))
+     :background "darkolivegreen")
+    (((class color) (min-colors 16) (background light))
+     :background "darkseagreen2")
+    (((class color) (min-colors 16) (background dark))
+     :background "darkolivegreen")
+    (((class color) (min-colors 8))
+     :background "green" :foreground "black")
+    (t :inverse-video t)
+    )
+  "Face for highlighting."
+  :group 'shrface-faces)
+
 #+END_SRC
 
 ** (Optional) Enable source codes highlight
