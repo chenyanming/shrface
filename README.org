@@ -23,14 +23,14 @@
   - [[#enable-source-codes-highlight][Enable source codes highlight]]
 
 * Description
-It is a shr faces package. Org Like faces for shr, eww, nov.el and more!
+It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and more!
 
 + Configurable org-like heading faces, heading bullets, paragraph indentation,
   fill-column and more.
 + Browse the internet with =eww= just like org mode.
-+ Read dash docsets with =dash= with the beauty of org faces.
-+ Read epub files with =nov.el= with the just like org mode.
-+ Read html email with =mu4e= with the same reading experience just like org mode
++ Read dash docsets with =dash= and the beauty of org faces.
++ Read epub files with =nov.el=, just like org mode.
++ Read html email with =mu4e=, the same reading experience just like org mode
   without formatting html to org file.
 
 ** Screenshots when using =eww=
@@ -43,7 +43,7 @@ It is a shr faces package. Org Like faces for shr, eww, nov.el and more!
 
 ** Screenshots when using =nov.el=
   #+html: <p align="center"><img src="img/epub-1.png" width="80%"/></p>
-  #+html: <p align="center"><img src="img/epub-1.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/epub-2.png" width="80%"/></p>
 
 ** Screenshots when using =mu4e=
   #+html: <p align="center"><img src="img/mu4e.png" width="80%"/></p>
