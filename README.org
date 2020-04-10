@@ -5,6 +5,10 @@
 
 * Table of Contents :TOC_3:noexport:
 - [[#description][Description]]
+  - [[#screenshots-when-using-eww][Screenshots when using =eww=]]
+  - [[#screenshots-when-using-dash-doc][Screenshots when using =dash-doc=]]
+  - [[#screenshots-when-using-novel][Screenshots when using =nov.el=]]
+  - [[#screenshots-when-using-mu4e][Screenshots when using =mu4e=]]
 - [[#installation][Installation]]
   - [[#require][require]]
   - [[#use-package][use-package]]
@@ -13,24 +17,36 @@
 - [[#configuration][Configuration]]
   - [[#eww-dash-docs-and-other-shr-based-packages][=eww=, =dash-docs=, and other =shr= based packages]]
   - [[#enable-the-shrface-for-novel][Enable the =shrface= for =nov.el=]]
-  - [[#default-bullets-for-headings-h1-to-h6][Default bullets for headings (h1 to h6)]]
+  - [[#default-heading-bullets-h1-to-h6][Default heading bullets (h1 to h6)]]
+  - [[#default-paragraph-indentation-and-fill-column][Default paragraph indentation and fill column]]
   - [[#supported-faces][Supported faces]]
   - [[#enable-source-codes-highlight][Enable source codes highlight]]
 
 * Description
 It is a shr faces package. Org Like faces for shr, eww, nov.el and more!
 
-+ Org Like Faces
++ Configurable org-like heading faces, heading bullets, paragraph indentation,
+  fill-column and more.
 + Browse the internet with =eww= just like org mode.
-  #+html: <p align="center"><img src="img/eww-1.png" width="50%"/>  <img src="img/eww-2.png" width="50%"/></p>
-
 + Read dash docsets with =dash= with the beauty of org faces.
-  #+html: <p align="center"><img src="img/dash-doc-1.png" /></p>
-  #+html: <p align="center"><img src="img/dash-doc-2.png" /></p>
++ Read epub files with =nov.el= with the just like org mode.
++ Read html email with =mu4e= with the same reading experience just like org mode
+  without formatting html to org file.
 
-+ Read epub files with =nov.el= with the same reading experience just like org mode.
-  #+html: <p align="center"><img src="img/epub-1.png" /></p>
-  #+html: <p align="center"><img src="img/epub-1.png" /></p>
+** Screenshots when using =eww=
+  #+html: <p align="center"><img src="img/eww-1.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/eww-2.png" width="80%"/></p>
+
+** Screenshots when using =dash-doc=
+  #+html: <p align="center"><img src="img/dash-doc-1.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/dash-doc-2.png" width="80%"/></p>
+
+** Screenshots when using =nov.el=
+  #+html: <p align="center"><img src="img/epub-1.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/epub-1.png" width="80%"/></p>
+
+** Screenshots when using =mu4e=
+  #+html: <p align="center"><img src="img/mu4e.png" width="80%"/></p>
 
 
 * Installation
@@ -79,7 +95,7 @@ If you read epub files using =nov.el=, you can add one more line into your =init
 (setq nov-shr-rendering-functions shr-external-rendering-functions)
 #+END_SRC
 
-** Default bullets for headings (h1 to h6)
+** Default heading bullets (h1 to h6)
 You can configure your farourite bullets for 6 levels of headings.
 
 In case of errors, you have to set at least 6 levels.
@@ -90,6 +106,15 @@ If you do not set it, here is the default setting:
 (setq shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉")
 #+END_SRC
 
+** Default paragraph indentation and fill column
+You can configure the paragraph indentation and fill column for better reading experience
+
+If you do not set it, here are the default setting:
+
+#+BEGIN_SRC emacs-lisp
+(setq shrface-paragraph-indentation 2)
+(setq shrface-paragraph-fill-column 120)
+#+END_SRC
 
 ** Supported faces
 Here are the faces supported:
