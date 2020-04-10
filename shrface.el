@@ -34,7 +34,7 @@
   "Indentation for paragraph")
 
 (defvar shrface-paragraph-fill-column 120
-  "Indentation for paragraph")
+  "Fill columns for paragraph")
 
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
