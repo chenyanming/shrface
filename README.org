@@ -92,9 +92,7 @@ If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you
 ** Default heading bullets (h1 to h6)
 You can configure your farourite bullets for 6 levels of headings.
 
-In case of errors, you have to set at least 6 levels.
-
-If you do not set it, here is the default setting:
+Here is the default setting in the package:
 
 #+BEGIN_SRC emacs-lisp
 (setq shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉"))
@@ -103,7 +101,7 @@ If you do not set it, here is the default setting:
 ** Default paragraph indentation and fill column
 You can configure the paragraph indentation and fill column for better reading experience
 
-If you do not set it, here are the default setting:
+Here are the default setting in the package:
 
 #+BEGIN_SRC emacs-lisp
 (setq shrface-paragraph-indentation 2)
