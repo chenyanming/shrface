@@ -10,6 +10,7 @@
   - [[#screenshots-when-using-novel][Screenshots when using =nov.el=]]
   - [[#screenshots-when-using-mu4e][Screenshots when using =mu4e=]]
 - [[#installation][Installation]]
+  - [[#ues-package][ues-package]]
   - [[#doom-emacs][Doom Emacs]]
   - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#prerequisites][Prerequisites]]
@@ -50,6 +51,15 @@ It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and mo
 
 * Installation
 Choose one of the following installation methods based on your needs:
+
+** ues-package
+
+#+BEGIN_SRC emacs-lisp
+(use-package shrface
+  :after shr
+  :quelpa
+  (shrface :repo "chenyanming/shrface" :fetcher github))
+#+END_SRC
 
 ** Doom Emacs
 Add the following line to =package.el=
