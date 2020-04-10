@@ -22,7 +22,7 @@ It is a shr faces package. Org Like faces for shr, eww, nov.el and more!
 
 + Org Like Faces
 + Browse the internet with =eww= just like org mode.
-  #+html: <p align="center"><img src="img/eww-1.png" /></p>
+  #+html: <p align="center"><img src="img/eww-1.png" width="50%"/></p>
   #+html: <p align="center"><img src="img/eww-2.png" /></p>
 
 + Read dash docsets with =dash= with the beauty of org faces.
