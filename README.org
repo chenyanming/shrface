@@ -22,7 +22,6 @@ It is a shr faces package. Org Like faces for shr, eww, nov.el and more!
 
 + Org Like Faces
 + Browse the internet with =eww= just like org mode.
-  #+ATTR_HTML: title="eww-1"
 [[file:img/eww-1.png][eww-1]]
 
 [[file:img/eww-2.png][eww-2]]
