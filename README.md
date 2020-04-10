@@ -15,22 +15,22 @@ It is a shr faces package. Org Like faces for shr, eww, nov.el and more!
 -   Org Like Faces
 -   Browse the internet with `eww` just like org mode.
 
-[eww-1](img/eww-1.png)
+![eww-1](img/eww-1.png)
 
-[eww-2](img/eww-2.png)
+![eww-2](img/eww-2.png)
 
 -   Read dash docsets with `dash` with the beauty of org faces.
 
-[dash-doc-1](img/dash-doc-1.png)
+![dash-doc-1](img/dash-doc-1.png)
 
-[dash-doc-2](img/dash-doc-2.png)
+![dash-doc-2](img/dash-doc-2.png)
 
 -   Read epub files with `nov.el` with the same reading experience just
     like org mode.
 
-[epub-1](img/epub-1.png)
+![epub-1](img/epub-1.png)
 
-[epub-2](img/epub-2.png)
+![epub-2](img/epub-2.png)
 
 Installation
 ============
