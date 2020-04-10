@@ -10,9 +10,8 @@
   - [[#screenshots-when-using-novel][Screenshots when using =nov.el=]]
   - [[#screenshots-when-using-mu4e][Screenshots when using =mu4e=]]
 - [[#installation][Installation]]
-  - [[#spacemacs][Spacemacs]]
-  - [[#use-package][use-package]]
   - [[#doom-emacs][Doom Emacs]]
+  - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#prerequisites][Prerequisites]]
 - [[#configuration][Configuration]]
   - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e, =nov.el= etc]]
@@ -52,7 +51,15 @@ It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and mo
 * Installation
 Choose one of the following installation methods based on your needs:
 
-** Spacemacs
+** Doom Emacs
+Add the following line to =package.el=
+#+BEGIN_SRC emacs-lisp
+(package! shrface :recipe (:host github :repo "chenyanming/shrface"))
+#+END_SRC
+
+Run =./.emacs.d/bin/doom sync=
+
+** Spacemacs or other emacs distributions
 Put =shrface.el= to your load-path. Here is example of ~spacemacs~
 
 #+BEGIN_SRC sh
@@ -63,24 +70,6 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/private/shrface"))
 (require 'shrface)
 #+END_SRC
-
-
-** use-package
-
-#+BEGIN_SRC emacs-lisp
-(use-package shrface
-  :ensure t
-  :after shr)
-
-#+END_SRC
-
-** Doom Emacs
-Add the following line to =package.el=
-#+BEGIN_SRC emacs-lisp
-(package! shrface :recipe (:host github :repo "chenyanming/shrface"))
-#+END_SRC
-
-Run =./.emacs.d/bin/doom sync=
 
 * Prerequisites
 This package uses =shr= and =org-faces=.
