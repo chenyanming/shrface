@@ -5,7 +5,7 @@
 ;; Author: Damon Chan
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: shr face
-;; Version: 1
+;; Version: 1.1
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 (require 'shr)
 (require 'org-faces)
+(require 'org-bullets)
 
 ;;; shrface
 
@@ -36,7 +37,7 @@
   :group 'shrface
   :group 'faces)
 
-(defcustom shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉")
+(defcustom shrface-bullets-bullet-list org-bullets-bullet-list
   "Bullets for headings"
   :group 'shrface
   :type '(repeat (string :tag "Bullet character")))

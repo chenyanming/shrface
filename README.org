@@ -1,5 +1,5 @@
 #+TITLE:   SHRFACE
-#+DATE:    April 10, 2020
+#+DATE:    April 11, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
 
@@ -82,7 +82,7 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 #+END_SRC
 
 * Prerequisites
-This package uses =shr= and =org-faces=.
+This package uses =shr,= =org-faces= and =org-bullets=
 
 * Configuration
 
@@ -102,21 +102,23 @@ If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you
 ** Default heading bullets (h1 to h6)
 You can configure your farourite bullets for 6 levels of headings.
 
-Here is the default setting in the package:
-
+You can set it with:
 #+BEGIN_SRC emacs-lisp
 (setq shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉"))
 #+END_SRC
 
+PS: The default setting is derived from  =org-bullets-bullet-list=.
+
 ** Default paragraph indentation and fill column
 You can configure the paragraph indentation and fill column for better reading experience
 
-Here are the default setting in the package:
-
+You can set them with:
 #+BEGIN_SRC emacs-lisp
 (setq shrface-paragraph-indentation 2)
 (setq shrface-paragraph-fill-column 120)
 #+END_SRC
+
+PS: The default setting is already 2 and 120
 
 ** Supported faces
 Here are the faces supported:
