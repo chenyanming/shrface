@@ -19,7 +19,7 @@
   - [[#default-heading-bullets-h1-to-h6][Default heading bullets (h1 to h6)]]
   - [[#default-paragraph-indentation-and-fill-column][Default paragraph indentation and fill column]]
   - [[#supported-faces][Supported faces]]
-  - [[#enable-source-codes-highlight][Enable source codes highlight]]
+  - [[#optional-enable-source-codes-highlight][(Optional) Enable source codes highlight]]
 
 * Description
 It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and more!
@@ -146,7 +146,7 @@ Here are the faces supported:
   :group 'shrface-faces)
 #+END_SRC
 
-** Enable source codes highlight
+** (Optional) Enable source codes highlight
 You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight
 
 Add the following codes into your =init.el=:
