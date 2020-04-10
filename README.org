@@ -14,7 +14,7 @@
   - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#prerequisites][Prerequisites]]
 - [[#configuration][Configuration]]
-  - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e, =nov.el= etc]]
+  - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc]]
   - [[#specific-setting-for-novel][Specific setting for =nov.el=]]
   - [[#default-heading-bullets-h1-to-h6][Default heading bullets (h1 to h6)]]
   - [[#default-paragraph-indentation-and-fill-column][Default paragraph indentation and fill column]]
@@ -76,7 +76,7 @@ This package uses =shr= and =org-faces=.
 
 * Configuration
 
-** General Setting for =eww=, =dash-docs=, =mu4e, =nov.el= etc
+** General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc
 Normally, just require the package, and you can make use of all benefits brought
 by the package:
 #+BEGIN_SRC emacs-lisp
