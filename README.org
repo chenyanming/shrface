@@ -151,11 +151,15 @@ You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-ta
 
 #+BEGIN_SRC emacs-lisp
 (use-package shr-tag-pre-highlight
-       :ensure t
-       :after shr
-       :custom-update
-       (shr-external-rendering-functions
-        '((pre . shr-tag-pre-highlight))))
+  :ensure t
+  :after shr
+  :config
+  (add-to-list 'shr-external-rendering-functions
+               '(pre . shr-tag-pre-highlight))
+  (when (version< emacs-version "26")
+    (with-eval-after-load 'eww
+      (advice-add 'eww-display-html :around
+                  'eww-display-html--override-shr-external-rendering-functions))))
 #+END_SRC
 
 If you want to add indentation and =#+BEGIN_SRC=, and =#+END_SRC= for later easy coping to
