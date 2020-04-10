@@ -3,7 +3,7 @@
 ;; Copyright (C) 2020 Damon Chan
 
 ;; Author: Damon Chan
-;; URL: https://github.com/chenyanming/shrface.el
+;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: shr face
 ;; Version: 1
 
