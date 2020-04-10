@@ -11,12 +11,12 @@
   - [[#screenshots-when-using-mu4e][Screenshots when using =mu4e=]]
 - [[#installation][Installation]]
   - [[#require][require]]
-  - [[#use-package][use-package]]
-  - [[#doom-emacs][Doom Emacs]]
+  - [[#or-use-package][or use-package]]
+  - [[#or-doom-emacs][or Doom Emacs]]
 - [[#prerequisites][Prerequisites]]
 - [[#configuration][Configuration]]
-  - [[#eww-dash-docs-and-other-shr-based-packages][=eww=, =dash-docs=, and other =shr= based packages]]
-  - [[#enable-the-shrface-for-novel][Enable the =shrface= for =nov.el=]]
+  - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e, =nov.el= etc]]
+  - [[#specific-setting-for-novel][Specific setting for =nov.el=]]
   - [[#default-heading-bullets-h1-to-h6][Default heading bullets (h1 to h6)]]
   - [[#default-paragraph-indentation-and-fill-column][Default paragraph indentation and fill column]]
   - [[#supported-faces][Supported faces]]
@@ -27,10 +27,10 @@ It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and mo
 
 + Configurable org-like heading faces, heading bullets, paragraph indentation,
   fill-column and more.
-+ Browse the internet with =eww= just like org mode.
-+ Read dash docsets with =dash= and the beauty of org faces.
-+ Read epub files with =nov.el=, just like org mode.
-+ Read html email with =mu4e=, the same reading experience just like org mode
++ Browse the internet with [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] just like org mode.
++ Read dash docsets with[[https://github.com/dash-docs-el/dash-docs][ dash-docs]]  and the beauty of org faces.
++ Read epub files with [[https://github.com/wasamasa/nov.el][nov.el]] , just like org mode.
++ Read html email with [[https://github.com/djcb/mu][mu/mu4e]] , the same reading experience just like org mode
   without formatting html to org file.
 
 ** Screenshots when using =eww=
@@ -50,6 +50,7 @@ It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and mo
 
 
 * Installation
+Choose one of the following installation methods based on your needs:
 
 ** require
 Put =shrface.el= to your load-path. The load-path is usually ~/elisp/. It's set in your ~/.emacs like this:
@@ -60,7 +61,7 @@ Put =shrface.el= to your load-path. The load-path is usually ~/elisp/. It's set 
 #+END_SRC
 
 
-** use-package
+** or use-package
 
 #+BEGIN_SRC emacs-lisp
 (use-package shrface
@@ -69,7 +70,7 @@ Put =shrface.el= to your load-path. The load-path is usually ~/elisp/. It's set 
 
 #+END_SRC
 
-** Doom Emacs
+** or Doom Emacs
 Add the following line to =package.el=
 #+BEGIN_SRC emacs-lisp
 (package! shrface :recipe (:host github :repo "chenyanming/shrface"))
@@ -78,19 +79,19 @@ Add the following line to =package.el=
 Run =./.emacs.d/bin/doom sync=
 
 * Prerequisites
-This module has no prerequisites.
+This package uses =shr= and =org-faces=.
 
 * Configuration
 
-** =eww=, =dash-docs=, and other =shr= based packages
+** General Setting for =eww=, =dash-docs=, =mu4e, =nov.el= etc
 Normally, just require the package, and you can make use of all benefits brought
 by the package:
 #+BEGIN_SRC emacs-lisp
 (require 'shrface)
 #+END_SRC
 
-** Enable the =shrface= for =nov.el=
-If you read epub files using =nov.el=, you can add one more line into your =init.el=
+** Specific setting for =nov.el=
+If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you can add one more line into your =init.el=
 #+BEGIN_SRC emacs-lisp
 (setq nov-shr-rendering-functions shr-external-rendering-functions)
 #+END_SRC
