@@ -207,9 +207,13 @@
                  (shr-ensure-paragraph)
                  (shr-generic dom)
                  (shr-ensure-paragraph)
-                 (setq-local fill-column shrface-paragraph-fill-column)
-                 ;; (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)
-                 (fill-region (point-min) (point-max) nil nil nil)
+                 ;; indent and fill text node
+                 (if (eq "" (dom-text dom))
+                     nil
+                   (progn
+                     (setq-local fill-column shrface-paragraph-fill-column)
+                     (fill-region (point-min) (point-max) nil nil nil)
+                     (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
                  (buffer-string))))
     (insert code)))
 

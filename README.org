@@ -122,8 +122,6 @@ You can set them with:
 
 PS: The default setting is already 2 and 120
 
-TODO: =shrface-paragraph-indentation= has bug, currently disabled for further study.
-
 ** Supported faces
 Here are the faces supported:
 #+BEGIN_SRC emacs-lisp
@@ -203,9 +201,9 @@ org-files, you can overwrite the function as following:
 
 
 #+BEGIN_SRC emacs-lisp
-  (require 'shr-tag-pre-highlight)
-  (add-to-list 'shr-external-rendering-functions '(pre . shrface-shr-tag-pre-highlight))
-  (defun shrface-shr-tag-pre-highlight (pre)
+(require 'shr-tag-pre-highlight)
+(add-to-list 'shr-external-rendering-functions '(pre . shrface-shr-tag-pre-highlight))
+(defun shrface-shr-tag-pre-highlight (pre)
     "Highlighting code in PRE."
     (let* ((shr-folding-mode 'none)
            (shr-current-font 'default)
@@ -213,7 +211,11 @@ org-files, you can overwrite the function as following:
                    (shr-generic pre)
                    (setq-local fill-column 120)
                    (indent-rigidly (point-min) (point-max) 2)
-                   ;; (fill-region (point-min) (point-max) nil nil nil)
+                   (if (eq "" (dom-texts pre))
+                       nil
+                     (progn
+                       (setq-local fill-column shrface-paragraph-fill-column)
+                       (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
                    (buffer-string)))
            (lang (or (shr-tag-pre-highlight-guess-language-attr pre)
                      (let ((sym (language-detection-string code)))
@@ -221,8 +223,8 @@ org-files, you can overwrite the function as following:
            (mode (and lang
                       (shr-tag-pre-highlight--get-lang-mode lang))))
       (shr-ensure-newline)
-      (insert "  ") ; indentation
-      (insert (propertize (concat "#+BEGIN_SRC" lang) 'face 'org-block-begin-line)) ; delete "lang" of this line, if you found the wrong detected langugage is annoying
+      (insert (make-string shrface-paragraph-indentation ?\ )) ; make indent string
+      (insert (propertize (concat "#+BEGIN_SRC " lang) 'face 'org-block-begin-line))
       (shr-ensure-newline)
       (insert
        (or (and (fboundp mode)
@@ -230,11 +232,10 @@ org-files, you can overwrite the function as following:
                   (shr-tag-pre-highlight-fontify code mode)))
            code))
       (shr-ensure-newline)
-      (insert "  ") ; indentation
+      (insert (make-string shrface-paragraph-indentation ?\ )) ; make indent string
       (insert (propertize "#+END_SRC" 'face 'org-block-end-line ) )
       (shr-ensure-newline)))
 #+END_SRC
-
 
 Since the package has not been updated a while, sometimes a wrong language is
 detected, but it is still great for highlight, even just for eye pleasing.
@@ -242,5 +243,10 @@ detected, but it is still great for highlight, even just for eye pleasing.
 If you found the wrong detection is annoying, delete =lang= just like below statement:
 
 #+BEGIN_SRC emacs-lisp
-(insert (propertize (concat "#+BEGIN_SRC" ) 'face 'org-block-begin-line)) ; delete "lang" of this line, if you found the wrong detected langugage is annoying
+(insert (propertize (concat "#+BEGIN_SRC" ) 'face 'org-block-begin-line))
 #+END_SRC
+
+**** Screenshots when both enable =shrface= and the code highlights
+#+html: <p align="center"><img src="img/code-highlight-1.png" width="80%"/></p>
+#+html: <p align="center"><img src="img/code-highlight-2.png" width="80%"/></p>
+
