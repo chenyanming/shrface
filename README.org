@@ -95,7 +95,7 @@ by the package:
 #+END_SRC
 
 ** Specific setting/hacking for =nov.el=
-If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you can add two more line into your =init.el=
+If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you can add two more lines into your =init.el=
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'nov
   (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions)))
