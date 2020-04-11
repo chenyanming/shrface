@@ -208,7 +208,7 @@
                  (shr-generic dom)
                  (shr-ensure-paragraph)
                  (setq-local fill-column shrface-paragraph-fill-column)
-                 (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)
+                 ;; (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)
                  (fill-region (point-min) (point-max) nil nil nil)
                  (buffer-string))))
     (insert code)))

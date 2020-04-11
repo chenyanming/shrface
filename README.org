@@ -16,11 +16,12 @@
 - [[#prerequisites][Prerequisites]]
 - [[#configuration][Configuration]]
   - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc]]
-  - [[#specific-setting-for-novel][Specific setting for =nov.el=]]
+  - [[#specific-settinghacking-for-novel][Specific setting/hacking for =nov.el=]]
   - [[#default-heading-bullets-h1-to-h6][Default heading bullets (h1 to h6)]]
   - [[#default-paragraph-indentation-and-fill-column][Default paragraph indentation and fill column]]
   - [[#supported-faces][Supported faces]]
   - [[#optional-enable-source-codes-highlight][(Optional) Enable source codes highlight]]
+    - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 
 * Description
 It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and more!
@@ -93,10 +94,11 @@ by the package:
 (require 'shrface)
 #+END_SRC
 
-** Specific setting for =nov.el=
-If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you can add one more line into your =init.el=
+** Specific setting/hacking for =nov.el=
+If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you can add two more line into your =init.el=
 #+BEGIN_SRC emacs-lisp
-(setq nov-shr-rendering-functions shr-external-rendering-functions)
+(with-eval-after-load 'nov
+  (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions)))
 #+END_SRC
 
 ** Default heading bullets (h1 to h6)
@@ -119,6 +121,8 @@ You can set them with:
 #+END_SRC
 
 PS: The default setting is already 2 and 120
+
+TODO: =shrface-paragraph-indentation= has bug, currently disabled for further study.
 
 ** Supported faces
 Here are the faces supported:
@@ -192,8 +196,11 @@ You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-ta
                   'eww-display-html--override-shr-external-rendering-functions))))
 #+END_SRC
 
-If you want to add indentation and =#+BEGIN_SRC=, and =#+END_SRC= for later easy coping to
-org-files, you can overwrite the function like me:
+*** Hacking the =shr-tag-pre-highlight.el=
+
+If you want to add indentation and =#+BEGIN_SRC lang=, and =#+END_SRC= for later easy copying to
+org-files, you can overwrite the function as following:
+
 
 #+BEGIN_SRC emacs-lisp
   (require 'shr-tag-pre-highlight)
@@ -228,3 +235,12 @@ org-files, you can overwrite the function like me:
       (shr-ensure-newline)))
 #+END_SRC
 
+
+Since the package has not been updated a while, sometimes a wrong language is
+detected, but it is still great for highlight, even just for eye pleasing.
+
+If you found the wrong detection is annoying, delete =lang= just like below statement:
+
+#+BEGIN_SRC emacs-lisp
+(insert (propertize (concat "#+BEGIN_SRC" ) 'face 'org-block-begin-line)) ; delete "lang" of this line, if you found the wrong detected langugage is annoying
+#+END_SRC
