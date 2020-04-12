@@ -83,31 +83,37 @@
   "Face used for h6 headlines."
   :group 'shrface-faces)
 
-
-(defface shrface-highlight
-  '(
-    (((class color) (min-colors 88) (background light))
-     :background "darkseagreen2")
-    (((class color) (min-colors 88) (background dark))
-     :background "darkolivegreen")
-    (((class color) (min-colors 16) (background light))
-     :background "darkseagreen2")
-    (((class color) (min-colors 16) (background dark))
-     :background "darkolivegreen")
-    (((class color) (min-colors 8))
-     :background "green" :foreground "black")
-    (t :inverse-video t)
-    )
-  "Face for highlighting."
+(defface shrface-highlight '((t :inherit highlight))
+  "Face used for highlight."
   :group 'shrface-faces)
 
+(defface shrface-verbatim '((t :inherit org-verbatim))
+  "Face used for verbatim."
+  :group 'shrface-faces)
 
 ;;; Utility
+
+;;;###autoload
+(defsubst shrface-shr-generic (dom)
+  "Improved shr-generic: fontize the sub dom"
+  (dolist (sub (dom-children dom))
+    (cond ((stringp sub) (shr-insert sub)) ; insert the string dom
+          ((not (equal "" (dom-text (dom-by-tag sub 'code))))
+           (shrface-shr-fontize-dom-child sub '(comment t face shrface-verbatim))) ; insert the fontized <code> dom
+          (t (shr-descend sub)))))      ;insert other sub dom
 
 ;;;###autoload
 (defun shrface-shr-fontize-dom (dom &rest types)
   (let ((start (point))) ;; remember start of inserted region
     (shr-generic dom) ;; inserts the contents of the tag
+    (dolist (type types)
+      (shrface-shr-add-font start (point) type)) ;; puts text properties of TYPES on the inserted contents
+    ))
+
+;;;###autoload
+(defun shrface-shr-fontize-dom-child (dom &rest types)
+  (let ((start (point))) ;; remember start of inserted region
+    (shr-descend dom) ;; inserts the contents of the tag
     (dolist (type types)
       (shrface-shr-add-font start (point) type)) ;; puts text properties of TYPES on the inserted contents
     ))
@@ -123,8 +129,6 @@
       (if (< (line-end-position) end)
           (forward-line 1)
         (goto-char end)))))
-
-
 
 ;;;###autoload
 (defun shrface-shr-urlify (start url &optional title)
@@ -205,7 +209,7 @@
 (defun shrface-tag-p (dom)
   (let* ((code (with-temp-buffer
                  (shr-ensure-paragraph)
-                 (shr-generic dom)
+                 (shrface-shr-generic dom)
                  (shr-ensure-paragraph)
                  ;; indent and fill text node
                  (if (eq "" (dom-text dom))
@@ -214,11 +218,12 @@
                      (setq-local fill-column shrface-paragraph-fill-column)
                      (fill-region (point-min) (point-max) nil nil nil)
                      (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
+                 ;; add verbatim face to inline codes in paragraph
                  (buffer-string))))
     (insert code)))
 
 (defun shrface-tag-em (dom)
-  (shrface-shr-fontize-dom dom '(comment t face highlight)))
+  (shrface-shr-fontize-dom dom '(comment t face shrface-highlight)))
 
 (defun shrface-tag-a (dom)
   (let ((url (dom-attr dom 'href))
