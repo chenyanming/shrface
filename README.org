@@ -46,9 +46,6 @@ It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and mo
   #+html: <p align="center"><img src="img/dash-doc-1.png" width="80%"/></p>
   #+html: <p align="center"><img src="img/dash-doc-2.png" width="80%"/></p>
 
-  Version *1.2*: New face =shrface-verbatim=, unleash the full power of =dash-docs=:
-  #+html: <p align="center"><img src="img/dash-doc-verbatim.png" width="80%"/></p>
-
 ** Screenshots when using =nov.el=
   #+html: <p align="center"><img src="img/epub-1.png" width="80%"/></p>
   #+html: <p align="center"><img src="img/epub-2.png" width="80%"/></p>
@@ -170,9 +167,6 @@ Here are the faces supported:
   "Face used for highlight."
   :group 'shrface-faces)
 
-(defface shrface-verbatim '((t :inherit org-verbatim))
-  "Face used for verbatim."
-  :group 'shrface-faces)
 
 #+END_SRC
 
@@ -253,7 +247,6 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 ** =2020-04-12=
 Version *1.2*:
 - Updated face: =shrface-highlight=
-- New face: =shrface-verbatim=
 
 ** =2020-04-11=
 Version *1.1*:
