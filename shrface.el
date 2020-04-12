@@ -209,7 +209,7 @@
 (defun shrface-tag-p (dom)
   (let* ((code (with-temp-buffer
                  (shr-ensure-paragraph)
-                 (shrface-shr-generic dom)
+                 (shr-generic dom)      ; shrface-verbatim has bug, sometimes eww will crash
                  (shr-ensure-paragraph)
                  ;; indent and fill text node
                  (if (eq "" (dom-text dom))
