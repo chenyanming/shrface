@@ -83,11 +83,11 @@
   "Face used for h6 headlines."
   :group 'shrface-faces)
 
-(defface shrface-highlight '((t :inherit highlight))
+(defface shrface-highlight '((t :inherit org-verbatim))
   "Face used for highlight."
   :group 'shrface-faces)
 
-(defface shrface-verbatim '((t :inherit org-verbatim))
+(defface shrface-code '((t :inherit org-code))
   "Face used for verbatim."
   :group 'shrface-faces)
 
