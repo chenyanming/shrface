@@ -22,6 +22,10 @@
   - [[#supported-faces][Supported faces]]
   - [[#optional-enable-source-codes-highlight][(Optional) Enable source codes highlight]]
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
+- [[#newslogs][News/Logs]]
+  - [[#2020-04-12][=2020-04-12=]]
+  - [[#2020-04-11][=2020-04-11=]]
+  - [[#2020-04-10][=2020-04-10=]]
 
 * Description
 It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and more!
@@ -41,6 +45,9 @@ It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and mo
 ** Screenshots when using =dash-docs=
   #+html: <p align="center"><img src="img/dash-doc-1.png" width="80%"/></p>
   #+html: <p align="center"><img src="img/dash-doc-2.png" width="80%"/></p>
+
+  Version *1.2*: New face =shrface-verbatim=, unleash the full power of =dash-docs=:
+  #+html: <p align="center"><img src="img/dash-doc-verbatim.png" width="80%"/></p>
 
 ** Screenshots when using =nov.el=
   #+html: <p align="center"><img src="img/epub-1.png" width="80%"/></p>
@@ -159,21 +166,12 @@ Here are the faces supported:
   "Face used for h6 headlines."
   :group 'shrface-faces)
 
-(defface shrface-highlight
-  '(
-    (((class color) (min-colors 88) (background light))
-     :background "darkseagreen2")
-    (((class color) (min-colors 88) (background dark))
-     :background "darkolivegreen")
-    (((class color) (min-colors 16) (background light))
-     :background "darkseagreen2")
-    (((class color) (min-colors 16) (background dark))
-     :background "darkolivegreen")
-    (((class color) (min-colors 8))
-     :background "green" :foreground "black")
-    (t :inverse-video t)
-    )
-  "Face for highlighting."
+(defface shrface-highlight '((t :inherit highlight))
+  "Face used for highlight."
+  :group 'shrface-faces)
+
+(defface shrface-verbatim '((t :inherit org-verbatim))
+  "Face used for verbatim."
   :group 'shrface-faces)
 
 #+END_SRC
@@ -250,3 +248,28 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 #+html: <p align="center"><img src="img/code-highlight-1.png" width="80%"/></p>
 #+html: <p align="center"><img src="img/code-highlight-2.png" width="80%"/></p>
 
+* News/Logs
+
+** =2020-04-12=
+Version *1.2*:
+- Updated face: =shrface-highlight=
+- New face: =shrface-verbatim=
+
+** =2020-04-11=
+Version *1.1*:
+- Fixed bug: Wrong indentation handling make some items in paragraph disappear
+  (such as images)
+
+** =2020-04-10=
+Version *1.0*:
+- New face: =shrface-bullets-bullet-list=
+- New face: =shrface-h1-face=
+- New face: =shrface-h2-face=
+- New face: =shrface-h3-face=
+- New face: =shrface-h4-face=
+- New face: =shrface-h5-face=
+- New face: =shrface-h6-face=
+- New face: =shrface-h6-face=
+- New face: =shrface-href-face=
+- New customizable variable: =shrface-paragraph-indentation=
+- New customizable variable: =shrface-paragraph-fill-column=
