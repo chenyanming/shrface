@@ -22,6 +22,7 @@
   - [[#supported-faces][Supported faces]]
   - [[#optional-enable-source-codes-highlight][(Optional) Enable source codes highlight]]
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
+- [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
   - [[#2020-04-12][=2020-04-12=]]
   - [[#2020-04-11][=2020-04-11=]]
@@ -242,6 +243,9 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 #+html: <p align="center"><img src="img/code-highlight-1.png" width="80%"/></p>
 #+html: <p align="center"><img src="img/code-highlight-2.png" width="80%"/></p>
 
+* TODO
+- [] Add new face: =shrface-verbatim=
+ 
 * News/Logs
 
 ** =2020-04-12=
