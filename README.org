@@ -243,7 +243,7 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 #+html: <p align="center"><img src="img/code-highlight-1.png" width="80%"/></p>
 #+html: <p align="center"><img src="img/code-highlight-2.png" width="80%"/></p>
 
-* TODO
+* TODO TODO
 - [] Add new face: =shrface-verbatim=
  
 * News/Logs
