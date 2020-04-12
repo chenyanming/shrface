@@ -83,12 +83,18 @@
   "Face used for h6 headlines."
   :group 'shrface-faces)
 
-(defface shrface-highlight '((t :inherit org-verbatim))
+;; TODO
+(defface shrface-highlight '((t :inherit highlight))
   "Face used for highlight."
   :group 'shrface-faces)
 
+(defface shrface-verbatim '((t :inherit org-verbatim))
+  "Face used for verbatim/emphasis."
+  :group 'shrface-faces)
+
+;; TODO
 (defface shrface-code '((t :inherit org-code))
-  "Face used for verbatim."
+  "Face used for inline code"
   :group 'shrface-faces)
 
 ;;; Utility
@@ -223,7 +229,7 @@
     (insert code)))
 
 (defun shrface-tag-em (dom)
-  (shrface-shr-fontize-dom dom '(comment t face shrface-highlight)))
+  (shrface-shr-fontize-dom dom '(comment t face shrface-verbatim)))
 
 (defun shrface-tag-a (dom)
   (let ((url (dom-attr dom 'href))

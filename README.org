@@ -164,8 +164,8 @@ Here are the faces supported:
   "Face used for h6 headlines."
   :group 'shrface-faces)
 
-(defface shrface-highlight '((t :inherit org-verbatim))
-  "Face used for highlight/emphasis."
+(defface shrface-verbatim '((t :inherit org-verbatim))
+  "Face used for verbatim/emphasis."
   :group 'shrface-faces)
 
 #+END_SRC
@@ -244,12 +244,13 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 
 * TODO TODO
 - [ ] =shrface-code=
+- [ ] =shrface-highlight=
  
 * News/Logs
 
 ** =2020-04-12=
 Version *1.2*:
-- Updated face: =shrface-highlight=
+- New face: =shrface-verbatim=
 
 ** =2020-04-11=
 Version *1.1*:
