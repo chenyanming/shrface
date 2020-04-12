@@ -83,18 +83,16 @@
   "Face used for h6 headlines."
   :group 'shrface-faces)
 
-;; TODO
 (defface shrface-highlight '((t :inherit highlight))
-  "Face used for highlight."
+  ";;TODO Face used for highlight."
   :group 'shrface-faces)
 
 (defface shrface-verbatim '((t :inherit org-verbatim))
   "Face used for verbatim/emphasis."
   :group 'shrface-faces)
 
-;; TODO
 (defface shrface-code '((t :inherit org-code))
-  "Face used for inline code"
+  "TODO Face used for inline code"
   :group 'shrface-faces)
 
 ;;; Utility
@@ -105,7 +103,7 @@
   (dolist (sub (dom-children dom))
     (cond ((stringp sub) (shr-insert sub)) ; insert the string dom
           ((not (equal "" (dom-text (dom-by-tag sub 'code))))
-           (shrface-shr-fontize-dom-child sub '(comment t face shrface-verbatim))) ; insert the fontized <code> dom
+           (shrface-shr-fontize-dom-child sub '(comment t face shrface-code))) ; insert the fontized <code> dom
           (t (shr-descend sub)))))      ;insert other sub dom
 
 ;;;###autoload
