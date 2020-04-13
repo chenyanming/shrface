@@ -204,7 +204,7 @@ during testing with =dash-docs= or =nov.el=
 For example, browse =eww= with
 [[https://github.com/chenyanming/shrface]]
 
-=eww= still keep connect to the remote which sometimes
+=eww= still keep connecting to the remote which sometimes
 will trigger a loop, the only solution so far is after loading the page,
 list all connections through
 
@@ -295,7 +295,7 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 * News/Logs
 
 ** =2020-04-13=
-Version *1.2*:
+Version *1.3*:
 - New face: =shrface-code= (Experimental face, disabled by default)
 
 ** =2020-04-12=
