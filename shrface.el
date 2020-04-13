@@ -5,7 +5,7 @@
 ;; Author: Damon Chan
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: shr face
-;; Version: 1.2
+;; Version: 1.3
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -210,18 +210,19 @@
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
+(defun shrface-tag-code (dom)
+  (shrface-shr-fontize-dom dom '(comment t face shrface-code)))
+
 (defun shrface-tag-p (dom)
   (let* ((code (with-temp-buffer
                  (shr-ensure-paragraph)
-                 (shr-generic dom)      ; shrface-verbatim has bug, sometimes eww will crash
+                 (shr-generic dom)
                  (shr-ensure-paragraph)
                  ;; indent and fill text node
-                 (if (eq "" (dom-text dom))
-                     nil
-                   (progn
+                 (when (not (equal "" (dom-text dom)) )
                      (setq-local fill-column shrface-paragraph-fill-column)
                      (fill-region (point-min) (point-max) nil nil nil)
-                     (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
+                     (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation))
                  ;; add verbatim face to inline codes in paragraph
                  (buffer-string))))
     (insert code)))
@@ -257,5 +258,11 @@
 (add-to-list 'shr-external-rendering-functions '(h6  . shrface-tag-h6))
 (add-to-list 'shr-external-rendering-functions '(a   . shrface-tag-a))
 (add-to-list 'shr-external-rendering-functions '(p   . shrface-tag-p))
+
+;;;
+;;; experimental features
+;;;
+;;; shrface-tag-code is experimental, sometimes eww will hangup.
+;; (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))
 
 (provide 'shrface)
