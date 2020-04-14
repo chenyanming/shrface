@@ -34,7 +34,8 @@
   - [[#2020-04-10][=2020-04-10=]]
 
 * Description
-It is a shr faces package. Org Like faces for shr, dash-docs, eww, nov.el and more!
+It is a shr faces package to help you apply your favourite org faces to shr,
+dash-docs, eww, nov.el, mu4e, and more!
 
 + Configurable org-like heading faces, heading bullets, paragraph indentation,
   fill-column and more.
