@@ -5,7 +5,7 @@
 ;; Author: Damon Chan
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: shr face
-;; Version: 1.3
+;; Version: 1.4
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -246,6 +246,55 @@
       (put-text-property start (1+ start) 'shr-target-id shr-target-id))
     (when url
       (shrface-shr-urlify (or shr-start start) (shr-expand-url url) title))))
+
+
+;;;###autoload
+(defun shrface-imenu-get-tree ()
+  "Produce the index for Imenu."
+  (dolist (x org-imenu-markers) (move-marker x nil))
+  (setq org-imenu-markers nil)
+  (org-with-wide-buffer
+   (goto-char (point-max))
+   (let* ((re (concat "^"
+                      (eval-when-compile
+                        (regexp-opt
+                         shrface-bullets-bullet-list
+                         t))
+                      "\\( .*\\)$"))
+	  (subs (make-vector (1+ org-imenu-depth) nil))
+	  (last-level 0))
+     (while (re-search-backward re nil t)
+       ;; (message (int-to-string (shrface-level (match-string 1))))
+       (let ((level (cl-position (match-string 1) shrface-bullets-bullet-list :test 'equal))
+             (headline (match-string 2)))
+         (message (int-to-string level ))
+         (message headline)
+	       ;; (when  (<= level org-imenu-depth)
+         (when (and (<= level org-imenu-depth) (org-string-nw-p headline))
+	         (let* ((m (point-marker))
+		              (item (propertize headline 'org-imenu-marker m 'org-imenu t)))
+             (message item)
+	           (push m org-imenu-markers)
+	           (if (>= level last-level)
+		             (push (cons item m) (aref subs level))
+	             (push (cons item
+			                     (cl-mapcan #'identity (cl-subseq subs (1+ level))))
+		                 (aref subs level))
+	             (cl-loop for i from (1+ level) to org-imenu-depth
+			                  do (aset subs i nil)))
+	           (setq last-level level)))))
+     (aref subs 0))))
+
+;;; load the imenu setting
+(with-eval-after-load 'nov
+  (add-hook 'nov-mode-hook
+            (lambda ()
+              (setq imenu-create-index-function 'shrface-imenu-get-tree))))
+
+(with-eval-after-load 'eww
+ (add-hook 'eww-mode-hook
+           (lambda ()
+             (setq imenu-create-index-function 'shrface-imenu-get-tree))))
 
 ;;; enable the faces
 
