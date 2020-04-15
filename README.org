@@ -1,5 +1,5 @@
 #+TITLE:   SHRFACE
-#+DATE:    April 15, 2020
+#+DATE:    April 16, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
 
@@ -11,6 +11,9 @@
   - [[#screenshots-when-using-novel][Screenshots when using =nov.el=]]
   - [[#screenshots-when-using-mu4e][Screenshots when using =mu4e=]]
   - [[#screenshots-when-using-imenu-list-helm-imenu-counsel-imenu][Screenshots when using =imenu-list=, =helm-imenu=, =counsel-imenu=]]
+    - [[#version-14-new-feature-imenu-support][Version 1.4: New feature, =imenu= support]]
+  - [[#screenshots-with-outline-minior-mode][Screenshots with =outline= minior mode]]
+    - [[#version-15-new-feature-outline-minior-mode-support-use-org-cycle-and-org-shifttab][Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)]]
 - [[#prerequisites][Prerequisites]]
 - [[#installation][Installation]]
   - [[#ues-package][ues-package]]
@@ -19,6 +22,10 @@
 - [[#configuration][Configuration]]
   - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc]]
   - [[#specific-settinghacking-for-novel][Specific setting/hacking for =nov.el=]]
+  - [[#keybinding-settings][Keybinding Settings]]
+    - [[#spacemacs][Spacemacs]]
+    - [[#doom-emacs-1][Doom emacs]]
+    - [[#other-emacs][Other emacs]]
   - [[#default-heading-bullets-h1-to-h6][Default heading bullets (h1 to h6)]]
   - [[#default-paragraph-indentation-and-fill-column][Default paragraph indentation and fill column]]
   - [[#supported-faces][Supported faces]]
@@ -29,6 +36,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-04-16][=2020-04-16=]]
   - [[#2020-04-15][=2020-04-15=]]
   - [[#2020-04-13][=2020-04-13=]]
   - [[#2020-04-12][=2020-04-12=]]
@@ -47,6 +55,8 @@ dash-docs, eww, nov.el, mu4e, and more!
 + Read html email with [[https://github.com/djcb/mu][mu/mu4e]] , the same reading experience just like org mode
   without formatting html to org file.
 + Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
++ Togle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
+  and =org-cycle/org-shifttab=
 
 ** Screenshots when using =eww=
   #+html: <p align="center"><img src="img/eww-1.png" width="80%"/></p>
@@ -67,11 +77,17 @@ dash-docs, eww, nov.el, mu4e, and more!
   #+html: <p align="center"><img src="img/mu4e.png" width="80%"/></p>
 
 ** Screenshots when using =imenu-list=, =helm-imenu=, =counsel-imenu=
+*** Version 1.4: New feature, =imenu= support
   #+html: <p align="center"><img src="img/imenu-1.png" width="80%"/></p>
   #+html: <p align="center"><img src="img/imenu-2.png" width="80%"/></p>
   #+html: <p align="center"><img src="img/imenu-3.png" width="80%"/></p>
   #+html: <p align="center"><img src="img/imenu-4.png" width="80%"/></p>
 
+** Screenshots with =outline= minior mode
+*** Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)
+  #+html: <p align="center"><img src="img/outline-1.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/outline-2.png" width="80%"/></p>
+ 
 * Prerequisites
 This package uses =shr=, =org-faces=, and =org-bullets=
 
@@ -114,18 +130,62 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 
 ** General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc
 Normally, just require the package, and you can make use of all benefits brought
-by the package expect the experimental features (check the section
-#+html: <a href="#experimental-faces">Experimental faces</a>
-if you want to enable):
+by the package expect the experimental features:
+
 #+BEGIN_SRC emacs-lisp
 (require 'shrface)
 #+END_SRC
+
+Check the experimental faces setup guide here:
+#+html: <a href="#experimental-faces">Experimental faces</a>
+
+This package supports =imenu= and =outline= minior mode, enable by default. However,
+no default keybindings provided. Follow
+#+html: <a href="#keybindings">Experimental faces</a>
+to setup.
 
 ** Specific setting/hacking for =nov.el=
 If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you can add two more lines into your =init.el=
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'nov
   (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions)))
+#+END_SRC
+
+** Keybinding Settings
+You can set the keybinding directly with the original org outline related
+functions, like =org-cycle=, =org-shifttab=, =org-content=, =org-overview=, etc, and
+most of =outline= minior mode functions (prefix with =outline-=) after testing.
+
+Here are examples:
+
+*** Spacemacs
+#+BEGIN_SRC emacs-lisp
+  (evil-define-key 'normal nov-mode-map
+    (kbd "TAB") 'org-cycle
+    (kbd "S-<tab>") 'org-shifttab)
+  (evil-define-key 'normal eww-mode-map
+    (kbd "TAB") 'org-cycle
+    (kbd "S-<tab>") 'org-shifttab)
+
+#+END_SRC
+
+*** Doom emacs
+#+BEGIN_SRC emacs-lisp
+  (map! :map nov-mode-map
+        :n "<tab>" 'org-cycle
+        :n "S-<tab>" 'org-shifttab)
+
+  (map! :map eww-mode-map
+        :n "<tab>" 'org-cycle
+        :n "S-<tab>" 'org-shifttab)
+#+END_SRC
+
+*** Other emacs
+#+BEGIN_SRC emacs-lisp
+  (define-key nov-mode-map (kbd "<tab>") 'org-cycle)
+  (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key eww-mode-map (kbd "<tab>") 'org-cycle)
+  (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab)
 #+END_SRC
 
 ** Default heading bullets (h1 to h6)
@@ -305,9 +365,13 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 - [ ] =shrface-highlight=
  
 * News/Logs
+** =2020-04-16=
+Version *1.5*:
+- New feature: =outline minior mode= support (Enabled by default, but not the keybindings)
+
 ** =2020-04-15=
 Version *1.4*:
-- New feature: imenu support
+- New feature: =imenu= support
 
 ** =2020-04-13=
 Version *1.3*:
