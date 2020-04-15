@@ -156,6 +156,13 @@
           (setq start next)
         (put-text-property start (or next (point)) 'keymap shr-map)))))
 
+
+;;;###autoload
+(defun shrface-bullets-level-string (level)
+  (nth (mod (1- level)
+             (length shrface-bullets-bullet-list))
+        shrface-bullets-bullet-list))
+
 (defun shrface-tag-h1 (dom)
   (shrface-shr-h1 dom '(comment t face shrface-h1-face)))
 
@@ -176,37 +183,37 @@
 
 (defun shrface-shr-h1 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (nth 0 shrface-bullets-bullet-list) " ") 'face 'shrface-h1-face))
+  (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h2 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (nth 1 shrface-bullets-bullet-list) " ") 'face 'shrface-h2-face))
+  (insert (propertize (concat (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h3 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (nth 2 shrface-bullets-bullet-list) " ") 'face 'shrface-h3-face))
+  (insert (propertize (concat (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h4 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (nth 3 shrface-bullets-bullet-list) " ") 'face 'shrface-h4-face))
+  (insert (propertize (concat (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h5 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (nth 4 shrface-bullets-bullet-list) " ") 'face 'shrface-h5-face))
+  (insert (propertize (concat (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h6 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (nth 5 shrface-bullets-bullet-list) " ") 'face 'shrface-h6-face))
+  (insert (propertize (concat (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
