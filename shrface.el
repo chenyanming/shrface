@@ -1,4 +1,4 @@
-;;; shrface.el --- Org-like Faces for shr -*- lexical-binding: t; -*-
+;;; shrface.el --- Apply Org Faces for shr -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020 Damon Chan
 
@@ -19,6 +19,11 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; It is a shr faces package that helps you apply your favourite org faces to
+;; shr
 
 ;;; Code:
 
@@ -99,7 +104,7 @@
 
 ;;;###autoload
 (defsubst shrface-shr-generic (dom)
-  "Improved shr-generic: fontize the sub dom"
+  "TODO: Improved shr-generic: fontize the sub dom"
   (dolist (sub (dom-children dom))
     (cond ((stringp sub) (shr-insert sub)) ; insert the string dom
           ((not (equal "" (dom-text (dom-by-tag sub 'code))))
@@ -116,6 +121,7 @@
 
 ;;;###autoload
 (defun shrface-shr-fontize-dom-child (dom &rest types)
+  "TODO: fontize the sub dom"
   (let ((start (point))) ;; remember start of inserted region
     (shr-descend dom) ;; inserts the contents of the tag
     (dolist (type types)
