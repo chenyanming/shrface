@@ -11,11 +11,11 @@
   - [[#screenshots-when-using-novel][Screenshots when using =nov.el=]]
   - [[#screenshots-when-using-mu4e][Screenshots when using =mu4e=]]
   - [[#screenshots-when-using-imenu-list-helm-imenu-counsel-imenu][Screenshots when using =imenu-list=, =helm-imenu=, =counsel-imenu=]]
+- [[#prerequisites][Prerequisites]]
 - [[#installation][Installation]]
   - [[#ues-package][ues-package]]
   - [[#doom-emacs][Doom Emacs]]
   - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
-- [[#prerequisites][Prerequisites]]
 - [[#configuration][Configuration]]
   - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc]]
   - [[#specific-settinghacking-for-novel][Specific setting/hacking for =nov.el=]]
@@ -41,13 +41,12 @@ dash-docs, eww, nov.el, mu4e, and more!
 
 + Configurable org-like heading faces, heading bullets, paragraph indentation,
   fill-column and more.
-+ Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
-  fill-column and more.
 + Browse the internet with [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] just like org mode.
 + Read dash docsets with[[https://github.com/dash-docs-el/dash-docs][ dash-docs]]  and the beauty of org faces.
 + Read epub files with [[https://github.com/wasamasa/nov.el][nov.el]] , just like org mode.
 + Read html email with [[https://github.com/djcb/mu][mu/mu4e]] , the same reading experience just like org mode
   without formatting html to org file.
++ Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
 
 ** Screenshots when using =eww=
   #+html: <p align="center"><img src="img/eww-1.png" width="80%"/></p>
@@ -73,12 +72,18 @@ dash-docs, eww, nov.el, mu4e, and more!
   #+html: <p align="center"><img src="img/imenu-3.png" width="80%"/></p>
   #+html: <p align="center"><img src="img/imenu-4.png" width="80%"/></p>
 
+* Prerequisites
+This package uses =shr=, =org-faces=, and =org-bullets=
+
 * Installation
 Choose one of the following installation methods based on your needs:
 
 ** ues-package
 
 #+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+   :ensure t)
+
 (use-package shrface
   :after shr
   :quelpa
@@ -104,9 +109,6 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/private/shrface"))
 (require 'shrface)
 #+END_SRC
-
-* Prerequisites
-This package uses =shr=, =org-faces=, and =org-bullets=
 
 * Configuration
 
