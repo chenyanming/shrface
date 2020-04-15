@@ -5,7 +5,7 @@
 ;; Author: Damon Chan
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: shr face
-;; Version: 1.4
+;; Version: 1.5
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 (require 'shr)
 (require 'org-faces)
 (require 'org-bullets)
+(require 'outline)
 
 ;;; shrface
 
@@ -298,16 +299,31 @@
 	           (setq last-level level)))))
      (aref subs 0))))
 
-;;; load the imenu setting
+(defun shrface-regex ()
+  "set regex for outline minior mode"
+  (setq-local outline-regexp (concat (eval-when-compile
+                                       (regexp-opt
+                                        shrface-bullets-bullet-list
+                                        t))
+                                     " +"))
+  (setq-local org-outline-regexp-bol outline-regexp) ; for org-cycle, org-shifttab
+  (setq-local org-outline-regexp outline-regexp) ; for org-cycle, org-shifttab
+  (setq-local org-complex-heading-regexp outline-regexp)) ; for org-cycle, org-shifttab
+
+;;; load the imenu and outline setting
 (with-eval-after-load 'nov
   (add-hook 'nov-mode-hook
             (lambda ()
-              (setq imenu-create-index-function 'shrface-imenu-get-tree))))
+              (setq imenu-create-index-function 'shrface-imenu-get-tree)
+              (shrface-regex)
+              (outline-minor-mode))))
 
 (with-eval-after-load 'eww
- (add-hook 'eww-mode-hook
-           (lambda ()
-             (setq imenu-create-index-function 'shrface-imenu-get-tree))))
+  (add-hook 'eww-mode-hook
+            (lambda ()
+              (setq imenu-create-index-function 'shrface-imenu-get-tree)
+              (shrface-regex)
+              (outline-minor-mode))))
 
 ;;; enable the faces
 
