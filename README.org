@@ -212,15 +212,19 @@ PS: The bullets setting can be derived from =org-bullets-bullet-list=, if =org-b
 is available.
 
 ** Default paragraph indentation and fill column
-You can configure the paragraph indentation and fill column for better reading experience
+You can configure the *paragraph* indentation (obsolete, default is 0, because the
+indentation is managed by =org-indent-mode= started from version 1.6, but you can
+still use it for more indentation spaces) and fill column for better reading
+experience. These two settings is useful when you read =epub= files that have lots
+of paragraphs, like novels.
 
 You can set them with:
 #+BEGIN_SRC emacs-lisp
-(setq shrface-paragraph-indentation 2)
+(setq shrface-paragraph-indentation 0)
 (setq shrface-paragraph-fill-column 120)
 #+END_SRC
 
-PS: The default setting is already 2 and 120
+PS: The default setting is 0 and 120
 
 ** Supported faces
 Here are the faces supported:
