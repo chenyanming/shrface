@@ -64,15 +64,15 @@
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
 
-(defvar shrface-outline-regexp (concat " ?+" (eval-when-compile
+(defvar shrface-outline-regexp (eval-when-compile
+                                 (concat " ?+"
                                          (regexp-opt
                                           shrface-bullets-bullet-list
-                                          t))
-                                       " +")
+                                          t) " +"))
   "TODO: Regexp to match shrface headlines.")
 
-(defvar shrface-outline-regexp-bol (concat " ?+"
-                                           (eval-when-compile
+(defvar shrface-outline-regexp-bol (eval-when-compile
+                                     (concat " ?+"
                                              (regexp-opt
                                               shrface-bullets-bullet-list
                                               t) "\\( +\\)"))
