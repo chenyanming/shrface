@@ -7,7 +7,7 @@
 ;; Keywords: shr face
 ;; Created: 10 April 2020
 ;; Version: 1.6
-;; Package-Requires: ((org-bullets "0.2.4") (org "9.0"))
+;; Package-Requires: ((org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
