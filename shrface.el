@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: shr face
 ;; Created: 10 April 2020
-;; Version: 1.5
+;; Version: 1.6
 ;; Package-Requires: ((org-bullets "0.2.4") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -51,7 +51,7 @@
   :group 'shrface
   :type '(repeat (string :tag "Bullet character")))
 
-(defcustom shrface-paragraph-indentation 2
+(defcustom shrface-paragraph-indentation 0
   "Indentation for paragraph"
   :group 'shrface
   :type 'integer)
@@ -64,19 +64,19 @@
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
 
-(defvar shrface-outline-regexp (concat (eval-when-compile
+(defvar shrface-outline-regexp (concat " ?+" (eval-when-compile
                                          (regexp-opt
                                           shrface-bullets-bullet-list
                                           t))
                                        " +")
   "TODO: Regexp to match shrface headlines.")
 
-(defvar shrface-outline-regexp-bol (concat "^"
+(defvar shrface-outline-regexp-bol (concat " ?+"
                                            (eval-when-compile
                                              (regexp-opt
                                               shrface-bullets-bullet-list
                                               t))
-                                           "\\( .*\\)$")
+                                           "\\( +\\)")
   "TODO: Regexp to match shrface headlines.
 This is similar to `shrface-outline-regexp' but additionally makes
 sure that we are at the beginning of the line.")
@@ -214,36 +214,42 @@ sure that we are at the beginning of the line.")
 (defun shrface-shr-h1 (dom &rest types)
   (shr-ensure-paragraph)
   (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face))
+  ;; (insert (propertize  "* " 'face 'shrface-h1-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h2 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face))
+  (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face))
+  ;; (insert (propertize  "** " 'face 'shrface-h2-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h3 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face))
+  (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face))
+  ;; (insert (propertize  "*** " 'face 'shrface-h3-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h4 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face))
+  (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face))
+  ;; (insert (propertize  "**** " 'face 'shrface-h4-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h5 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face))
+  (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face))
+  ;; (insert (propertize  "***** " 'face 'shrface-h5-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h6 (dom &rest types)
   (shr-ensure-paragraph)
-  (insert (propertize (concat (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face))
+  (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face))
+  ;; (insert (propertize  "****** " 'face 'shrface-h6-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
@@ -258,9 +264,10 @@ sure that we are at the beginning of the line.")
                  ;; indent and fill text node
                  ;; Temporary solution, not the best
                  (when (not (equal "" (dom-text dom)) )
-                     (setq-local fill-column shrface-paragraph-fill-column)
-                     (fill-region (point-min) (point-max) nil nil nil)
-                     (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation))
+                   (setq-local fill-column shrface-paragraph-fill-column)
+                   (fill-region (point-min) (point-max) nil nil nil)
+                   (if (not (equal 0 shrface-paragraph-indentation))
+                       (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
                  (buffer-string))))
     (insert code)))
 
@@ -292,7 +299,7 @@ sure that we are at the beginning of the line.")
   (setq org-imenu-markers nil)
   (org-with-wide-buffer
    (goto-char (point-max))
-   (let* ((re shrface-outline-regexp-bol)
+   (let* ((re shrface-outline-regexp)
           (subs (make-vector (1+ org-imenu-depth) nil))
           (last-level 0))
      (while (re-search-backward re nil t)
@@ -336,14 +343,19 @@ sure that we are at the beginning of the line.")
             (lambda ()
               (setq imenu-create-index-function 'shrface-imenu-get-tree)
               (shrface-regexp)
-              (outline-minor-mode))))
+              (outline-minor-mode)
+              (org-indent-mode))))
 
 (with-eval-after-load 'eww
   (add-hook 'eww-mode-hook
             (lambda ()
               (setq imenu-create-index-function 'shrface-imenu-get-tree)
-              (shrface-regexp)
-              (outline-minor-mode))))
+              (shrface-regexp)))
+
+  (add-hook 'eww-after-render-hook
+            (lambda ()
+              (outline-minor-mode)
+              (org-indent-mode))))
 
 ;;; enable the faces
 
