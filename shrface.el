@@ -61,6 +61,9 @@
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
 
+(defvar shrface-level 'shrface-level
+  "a header's nesting level in an outline.")
+
 (defface shrface-href-face '((t :inherit org-link))
   "Face used for href"
   :group 'shrface-faces)
@@ -299,8 +302,13 @@
 	           (setq last-level level)))))
      (aref subs 0))))
 
-(defun shrface-regex ()
-  "set regex for outline minior mode"
+
+(defun shrface-level ()
+  "Function of no args to compute a header's nesting level in an outline."
+  (1+ (cl-position (match-string 1) shrface-bullets-bullet-list :test 'equal)))
+
+(defun shrface-regexp ()
+  "set regexp for outline minior mode"
   (setq-local outline-regexp (concat (eval-when-compile
                                        (regexp-opt
                                         shrface-bullets-bullet-list
@@ -308,21 +316,22 @@
                                      " +"))
   (setq-local org-outline-regexp-bol outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-outline-regexp outline-regexp) ; for org-cycle, org-shifttab
-  (setq-local org-complex-heading-regexp outline-regexp)) ; for org-cycle, org-shifttab
+  (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
+  (setq-local outline-level shrface-level))
 
 ;;; load the imenu and outline setting
 (with-eval-after-load 'nov
   (add-hook 'nov-mode-hook
             (lambda ()
               (setq imenu-create-index-function 'shrface-imenu-get-tree)
-              (shrface-regex)
+              (shrface-regexp)
               (outline-minor-mode))))
 
 (with-eval-after-load 'eww
   (add-hook 'eww-mode-hook
             (lambda ()
               (setq imenu-create-index-function 'shrface-imenu-get-tree)
-              (shrface-regex)
+              (shrface-regexp)
               (outline-minor-mode))))
 
 ;;; enable the faces
