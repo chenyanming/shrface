@@ -75,8 +75,16 @@
                                            (eval-when-compile
                                              (regexp-opt
                                               shrface-bullets-bullet-list
-                                              t))
-                                           "\\( +\\)")
+                                              t) "\\( +\\)"))
+  "TODO: Regexp to match shrface headlines.
+This is similar to `shrface-outline-regexp' but additionally makes
+sure that we are at the beginning of the line.")
+
+(defvar shrface-imenu-regexp-bol (eval-when-compile
+                                   (concat "^\\(?: ?+\\)"
+                                           (regexp-opt
+                                            shrface-bullets-bullet-list
+                                            t) "\\( .*\\)$"))
   "TODO: Regexp to match shrface headlines.
 This is similar to `shrface-outline-regexp' but additionally makes
 sure that we are at the beginning of the line.")
@@ -299,7 +307,7 @@ sure that we are at the beginning of the line.")
   (setq org-imenu-markers nil)
   (org-with-wide-buffer
    (goto-char (point-max))
-   (let* ((re shrface-outline-regexp)
+   (let* ((re shrface-imenu-regexp-bol)
           (subs (make-vector (1+ org-imenu-depth) nil))
           (last-level 0))
      (while (re-search-backward re nil t)
