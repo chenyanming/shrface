@@ -99,9 +99,6 @@ Choose one of the following installation methods based on your needs:
 ** ues-package
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-bullets
-   :ensure t)
-
 (use-package shrface
   :after shr
   :quelpa
