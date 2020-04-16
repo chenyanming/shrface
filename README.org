@@ -141,7 +141,7 @@ Check the experimental faces setup guide here:
 
 This package supports =imenu= and =outline= minior mode, enable by default. However,
 no default keybindings provided. Follow
-#+html: <a href="#keybindings">Experimental faces</a>
+#+html: <a href="#keybindings">Keybinding-Settings</a>
 to setup.
 
 ** Specific setting/hacking for =nov.el=
@@ -160,32 +160,40 @@ Here are examples:
 
 *** Spacemacs
 #+BEGIN_SRC emacs-lisp
+(with-eval-after-load' nov
   (evil-define-key 'normal nov-mode-map
     (kbd "TAB") 'org-cycle
-    (kbd "S-<tab>") 'org-shifttab)
+    (kbd "S-<tab>") 'org-shifttab))
+
+(with-eval-after-load' eww
   (evil-define-key 'normal eww-mode-map
     (kbd "TAB") 'org-cycle
-    (kbd "S-<tab>") 'org-shifttab)
+    (kbd "S-<tab>") 'org-shifttab))
 
 #+END_SRC
 
 *** Doom emacs
 #+BEGIN_SRC emacs-lisp
   (map! :map nov-mode-map
+        :after nov
         :n "<tab>" 'org-cycle
         :n "S-<tab>" 'org-shifttab)
 
   (map! :map eww-mode-map
+        :after eww
         :n "<tab>" 'org-cycle
         :n "S-<tab>" 'org-shifttab)
 #+END_SRC
 
 *** Other emacs
 #+BEGIN_SRC emacs-lisp
+(with-eval-after-load' nov
   (define-key nov-mode-map (kbd "<tab>") 'org-cycle)
-  (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab))
+
+(with-eval-after-load' eww
   (define-key eww-mode-map (kbd "<tab>") 'org-cycle)
-  (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab))
 #+END_SRC
 
 ** Default heading bullets (h1 to h6)
@@ -363,6 +371,7 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 * TODO TODO
 - [ ] =shrface-code=
 - [ ] =shrface-highlight=
+- [ ] =shrface-todo=
  
 * News/Logs
 ** =2020-04-16=
