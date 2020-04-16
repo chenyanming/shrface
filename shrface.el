@@ -65,7 +65,7 @@
   "Face name to use for href.")
 
 (defvar shrface-level 'shrface-level
-  "a header's nesting level in an outline.")
+  "Calculate the header's nesting level in an outline.")
 
 (defface shrface-href-face '((t :inherit org-link))
   "Face used for href"
@@ -239,11 +239,11 @@
                  (shr-generic dom)
                  (shr-ensure-paragraph)
                  ;; indent and fill text node
+                 ;; Temporary solution, not the best
                  (when (not (equal "" (dom-text dom)) )
                      (setq-local fill-column shrface-paragraph-fill-column)
                      (fill-region (point-min) (point-max) nil nil nil)
                      (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation))
-                 ;; add verbatim face to inline codes in paragraph
                  (buffer-string))))
     (insert code)))
 
@@ -281,28 +281,28 @@
                          shrface-bullets-bullet-list
                          t))
                       "\\( .*\\)$"))
-	  (subs (make-vector (1+ org-imenu-depth) nil))
-	  (last-level 0))
+          (subs (make-vector (1+ org-imenu-depth) nil))
+          (last-level 0))
      (while (re-search-backward re nil t)
        ;; (message (int-to-string (shrface-level (match-string 1))))
        (let ((level (cl-position (match-string 1) shrface-bullets-bullet-list :test 'equal))
              (headline (match-string 2)))
          (message (int-to-string level ))
          (message headline)
-	       ;; (when  (<= level org-imenu-depth)
+         ;; (when  (<= level org-imenu-depth)
          (when (and (<= level org-imenu-depth) (org-string-nw-p headline))
-	         (let* ((m (point-marker))
-		              (item (propertize headline 'org-imenu-marker m 'org-imenu t)))
+           (let* ((m (point-marker))
+                  (item (propertize headline 'org-imenu-marker m 'org-imenu t)))
              (message item)
-	           (push m org-imenu-markers)
-	           (if (>= level last-level)
-		             (push (cons item m) (aref subs level))
-	             (push (cons item
-			                     (cl-mapcan #'identity (cl-subseq subs (1+ level))))
-		                 (aref subs level))
-	             (cl-loop for i from (1+ level) to org-imenu-depth
-			                  do (aset subs i nil)))
-	           (setq last-level level)))))
+             (push m org-imenu-markers)
+             (if (>= level last-level)
+                 (push (cons item m) (aref subs level))
+               (push (cons item
+                           (cl-mapcan #'identity (cl-subseq subs (1+ level))))
+                     (aref subs level))
+               (cl-loop for i from (1+ level) to org-imenu-depth
+                        do (aset subs i nil)))
+             (setq last-level level)))))
      (aref subs 0))))
 
 
