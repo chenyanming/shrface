@@ -141,7 +141,7 @@ Check the experimental faces setup guide here:
 
 This package supports =imenu= and =outline= minior mode, enable by default. However,
 no default keybindings provided. Follow
-#+html: <a href="#keybindings">Keybinding-Settings</a>
+#+html: <a href="#keybinding-settings">Keybinding Settings</a>
 to setup.
 
 ** Specific setting/hacking for =nov.el=
