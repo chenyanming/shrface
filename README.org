@@ -36,6 +36,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-04-17][=2020-04-17=]]
   - [[#2020-04-16][=2020-04-16=]]
   - [[#2020-04-15][=2020-04-15=]]
   - [[#2020-04-13][=2020-04-13=]]
@@ -57,39 +58,40 @@ dash-docs, eww, nov.el, mu4e, and more!
 + Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
 + Togle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
   and =org-cycle/org-shifttab=
++ Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
 
 ** Screenshots when using =eww=
-  #+html: <p align="center"><img src="img/eww-1.png" width="80%"/></p>
-  #+html: <p align="center"><img src="img/eww-2.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/eww-1.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/eww-2.png" width="50%"/></p>
 
 ** Screenshots when using =dash-docs=
-  #+html: <p align="center"><img src="img/dash-doc-1.png" width="80%"/></p>
-  #+html: <p align="center"><img src="img/dash-doc-2.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/dash-doc-1.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/dash-doc-2.png" width="50%"/></p>
 
 *** Version 1.3: New face =shrface-code=, unleash the full power of =dash-docs=
-  #+html: <p align="center"><img src="img/dash-docs-code.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/dash-docs-code.png" width="50%"/></p>
 
 ** Screenshots when using =nov.el=
-  #+html: <p align="center"><img src="img/epub-1.png" width="80%"/></p>
-  #+html: <p align="center"><img src="img/epub-2.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/epub-1.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/epub-2.png" width="50%"/></p>
 
 ** Screenshots when using =mu4e=
-  #+html: <p align="center"><img src="img/mu4e.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/mu4e.png" width="50%"/></p>
 
 ** Screenshots when using =imenu-list=, =helm-imenu=, =counsel-imenu=
 *** Version 1.4: New feature, =imenu= support
-  #+html: <p align="center"><img src="img/imenu-1.png" width="80%"/></p>
-  #+html: <p align="center"><img src="img/imenu-2.png" width="80%"/></p>
-  #+html: <p align="center"><img src="img/imenu-3.png" width="80%"/></p>
-  #+html: <p align="center"><img src="img/imenu-4.png" width="80%"/></p>
+  #+html: <p align="center"><img src="img/imenu-1.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/imenu-2.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/imenu-3.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/imenu-4.png" width="50%"/></p>
 
 ** Screenshots with =outline= minior mode
 *** Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)
-  #+html: <p align="center"><img src="img/outline-1.png" width="80%"/></p>
-  #+html: <p align="center"><img src="img/outline-2.png" width="80%"/></p>
- 
+  #+html: <p align="center"><img src="img/outline-1.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/outline-2.png" width="50%"/></p>
+
 * Prerequisites
-This package uses =shr=, =org-faces=, and =org-bullets=
+This package uses =shr=, =org=, =imenu=, =outline=, and =org-bullets= (optional)
 
 * Installation
 Choose one of the following installation methods based on your needs:
@@ -139,10 +141,12 @@ by the package expect the experimental features:
 Check the experimental faces setup guide here:
 #+html: <a href="#experimental-faces">Experimental faces</a>
 
-This package supports =imenu= and =outline= minior mode, enable by default. However,
-no default keybindings provided. Follow
+This package supports =imenu=, =outline minior mode=, and =org-indent-mode=. All are
+enable by default (Maybe change to configurable in the future). However, no
+default keybindings provided.
+
+Follow the following guide to setup the keybindings.
 #+html: <a href="#keybinding-settings">Keybinding Settings</a>
-to setup.
 
 ** Specific setting/hacking for =nov.el=
 If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you can add two more lines into your =init.el=
@@ -204,7 +208,8 @@ You can set it with:
 (setq shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉"))
 #+END_SRC
 
-PS: The default setting is derived from  =org-bullets-bullet-list=.
+PS: The default setting is derived from  =org-bullets-bullet-list=, if =org-bullets=
+is available.
 
 ** Default paragraph indentation and fill column
 You can configure the paragraph indentation and fill column for better reading experience
@@ -375,6 +380,10 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 - [ ] =shrface-babel=
  
 * News/Logs
+** =2020-04-17=
+Version *1.6*:
+- New feature:  =org-indent-mode= support (Enabled by default)
+
 ** =2020-04-16=
 Version *1.5*:
 - New feature: =outline minior mode= support (Enabled by default, but not the keybindings)
