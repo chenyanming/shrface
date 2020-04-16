@@ -372,6 +372,7 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 - [ ] =shrface-code=
 - [ ] =shrface-highlight=
 - [ ] =shrface-todo=
+- [ ] =shrface-babel=
  
 * News/Logs
 ** =2020-04-16=

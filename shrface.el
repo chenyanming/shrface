@@ -64,6 +64,23 @@
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
 
+(defvar shrface-outline-regexp (concat (eval-when-compile
+                                         (regexp-opt
+                                          shrface-bullets-bullet-list
+                                          t))
+                                       " +")
+  "TODO: Regexp to match shrface headlines.")
+
+(defvar shrface-outline-regexp-bol (concat "^"
+                                           (eval-when-compile
+                                             (regexp-opt
+                                              shrface-bullets-bullet-list
+                                              t))
+                                           "\\( .*\\)$")
+  "TODO: Regexp to match shrface headlines.
+This is similar to `shrface-outline-regexp' but additionally makes
+sure that we are at the beginning of the line.")
+
 (defvar shrface-level 'shrface-level
   "Calculate the header's nesting level in an outline.")
 
@@ -275,17 +292,12 @@
   (setq org-imenu-markers nil)
   (org-with-wide-buffer
    (goto-char (point-max))
-   (let* ((re (concat "^"
-                      (eval-when-compile
-                        (regexp-opt
-                         shrface-bullets-bullet-list
-                         t))
-                      "\\( .*\\)$"))
+   (let* ((re shrface-outline-regexp-bol)
           (subs (make-vector (1+ org-imenu-depth) nil))
           (last-level 0))
      (while (re-search-backward re nil t)
        ;; (message (int-to-string (shrface-level (match-string 1))))
-       (let ((level (cl-position (match-string 1) shrface-bullets-bullet-list :test 'equal))
+       (let ((level (1- (funcall shrface-level)))
              (headline (match-string 2)))
          (message (int-to-string level ))
          (message headline)
@@ -312,11 +324,7 @@
 
 (defun shrface-regexp ()
   "set regexp for outline minior mode"
-  (setq-local outline-regexp (concat (eval-when-compile
-                                       (regexp-opt
-                                        shrface-bullets-bullet-list
-                                        t))
-                                     " +"))
+  (setq-local outline-regexp shrface-outline-regexp)
   (setq-local org-outline-regexp-bol outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-outline-regexp outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
