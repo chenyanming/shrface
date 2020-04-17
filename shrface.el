@@ -377,7 +377,7 @@ sure that we are at the beginning of the line.")
   (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
   (setq-local outline-level shrface-level))
 
-;;; load generate settings for shr
+;;; load general settings for shr
 (with-eval-after-load 'shr
   (shrface-shr-item-bullet))
 
