@@ -72,6 +72,11 @@
   :group 'shrface
   :type 'integer)
 
+(defcustom shrface-item-bullet "➤"
+  "Bullet used for unordered lists."
+  :group 'shrface
+  :type 'character)
+
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
 
@@ -101,7 +106,7 @@ This is similar to `shrface-outline-regexp' but additionally makes
 sure that we are at the beginning of the line.")
 
 (defvar shrface-level 'shrface-level
-  "Calculate the header's nesting level in an outline.")
+  "Compute the header's nesting level in an outline.")
 
 (defface shrface-href-face '((t :inherit org-link))
   "Face used for href"
@@ -141,6 +146,10 @@ sure that we are at the beginning of the line.")
 
 (defface shrface-code '((t :inherit org-code))
   "TODO Face used for inline code"
+  :group 'shrface-faces)
+
+(defface shrface-item-bullet-face '((t :inherit org-list-dt))
+  "Face used for unordered list bullet"
   :group 'shrface-faces)
 
 ;;; Utility
@@ -213,22 +222,32 @@ sure that we are at the beginning of the line.")
         shrface-bullets-bullet-list))
 
 (defun shrface-tag-h1 (dom)
+  "Fontize tag h1"
   (shrface-shr-h1 dom '(comment t face shrface-h1-face)))
 
 (defun shrface-tag-h2 (dom)
+  "Fontize tag h2"
   (shrface-shr-h2 dom '(comment t face shrface-h2-face)))
 
 (defun shrface-tag-h3 (dom)
+  "Fontize tag h3"
   (shrface-shr-h3 dom '(comment t face shrface-h3-face)))
 
 (defun shrface-tag-h4 (dom)
+  "Fontize tag h4"
   (shrface-shr-h4 dom '(comment t face shrface-h4-face)))
 
 (defun shrface-tag-h5 (dom)
+  "Fontize tag h5"
   (shrface-shr-h5 dom '(comment t face shrface-h5-face)))
 
 (defun shrface-tag-h6 (dom)
+  "Fontize tag h6"
   (shrface-shr-h6 dom '(comment t face shrface-h6-face)))
+
+(defun shrface-shr-item-bullet ()
+  "Fontize shr-bullet"
+  (setq shr-bullet (propertize (concat shrface-item-bullet " ") 'face 'shrface-item-bullet-face)))
 
 (defun shrface-shr-h1 (dom &rest types)
   (shr-ensure-paragraph)
@@ -273,9 +292,11 @@ sure that we are at the beginning of the line.")
   (shr-ensure-paragraph))
 
 (defun shrface-tag-code (dom)
+  "Fontize tag code"
   (shrface-shr-fontize-dom dom '(comment t face shrface-code)))
 
 (defun shrface-tag-p (dom)
+  "Fontize tag p"
   (let* ((code (with-temp-buffer
                  (shr-ensure-paragraph)
                  (shr-generic dom)
@@ -291,9 +312,11 @@ sure that we are at the beginning of the line.")
     (insert code)))
 
 (defun shrface-tag-em (dom)
+  "Fontize tag em"
   (shrface-shr-fontize-dom dom '(comment t face shrface-verbatim)))
 
 (defun shrface-tag-a (dom)
+  "Fontize tag a"
   (let ((url (dom-attr dom 'href))
         (title (dom-attr dom 'title))
         (start (point))
@@ -309,7 +332,6 @@ sure that we are at the beginning of the line.")
       (put-text-property start (1+ start) 'shr-target-id shr-target-id))
     (when url
       (shrface-shr-urlify (or shr-start start) (shr-expand-url url) title))))
-
 
 ;;;###autoload
 (defun shrface-imenu-get-tree ()
@@ -343,7 +365,6 @@ sure that we are at the beginning of the line.")
              (setq last-level level)))))
      (aref subs 0))))
 
-
 (defun shrface-level ()
   "Function of no args to compute a header's nesting level in an outline."
   (1+ (cl-position (match-string 1) shrface-bullets-bullet-list :test 'equal)))
@@ -356,7 +377,11 @@ sure that we are at the beginning of the line.")
   (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
   (setq-local outline-level shrface-level))
 
-;;; load the imenu and outline setting
+;;; load generate settings for shr
+(with-eval-after-load 'shr
+  (shrface-shr-item-bullet))
+
+;;; load the settings for nov
 (with-eval-after-load 'nov
   (add-hook 'nov-mode-hook
             (lambda ()
@@ -365,6 +390,7 @@ sure that we are at the beginning of the line.")
               (outline-minor-mode)
               (org-indent-mode))))
 
+;;; load the settings for eww
 (with-eval-after-load 'eww
   (add-hook 'eww-mode-hook
             (lambda ()
