@@ -51,9 +51,13 @@
   :group 'shrface
   :group 'faces)
 
-(defcustom shrface-bullets-bullet-list (or (bound-and-true-p org-bullets-bullet-list)
-                                           (bound-and-true-p org-superstar-headline-bullets-list)
-                                         '("◉" "○" "●" "✿" "◆" "◉"))
+(defcustom shrface-bullets-bullet-list
+  (or (bound-and-true-p org-bullets-bullet-list)
+      (bound-and-true-p org-superstar-headline-bullets-list)
+      '("◉"
+        "○"
+        "✸"
+        "✿"))
   "Bullets for headings"
   :group 'shrface
   :type '(repeat (string :tag "Bullet character")))

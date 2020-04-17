@@ -198,15 +198,17 @@ Here are examples:
 #+END_SRC
 
 ** Default heading bullets (h1 to h6)
-You can configure your farourite bullets for 6 levels of headings.
+You can configure your farourite bullets up to 6 levels of headings (cycled
+through if less than 6 bullets in setting).
 
 You can set it with:
 #+BEGIN_SRC emacs-lisp
-(setq shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉"))
+(setq shrface-bullets-bullet-list '("◉" "○" "✸" "✿" "◆" "◉"))
 #+END_SRC
 
-PS: The bullets setting can be derived from =org-bullets-bullet-list=, if =org-bullets=
-is available.
+PS: The bullets setting can be derived from =org-bullets-bullet-list= or
+=org-superstar-headline-bullets-list=, if [[https://github.com/sabof/org-bullets][org-bullets]] or [[https://github.com/integral-dw/org-superstar-mode][org-superstar]] is
+available.
 
 ** Default paragraph indentation and fill column
 You can configure the *paragraph* indentation (obsolete, default is 0, because the
