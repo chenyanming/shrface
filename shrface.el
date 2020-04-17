@@ -32,6 +32,13 @@
 (require 'shr)
 (require 'org-faces)
 (require 'outline)
+(require 'org-indent)
+
+(ignore-errors
+;; in case the users lazy load org-mode before require shrface
+;; require org-superstar and org-bullets
+  (require 'org-superstar)
+  (require 'org-bullets))
 
 ;;; shrface
 
@@ -44,8 +51,8 @@
   :group 'shrface
   :group 'faces)
 
-(defcustom shrface-bullets-bullet-list (if (bound-and-true-p org-bullets-bullet-list)
-                                           org-bullets-bullet-list
+(defcustom shrface-bullets-bullet-list (or (bound-and-true-p org-bullets-bullet-list)
+                                           (bound-and-true-p org-superstar-headline-bullets-list)
                                          '("◉" "○" "●" "✿" "◆" "◉"))
   "Bullets for headings"
   :group 'shrface
