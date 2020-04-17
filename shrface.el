@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: shr face
 ;; Created: 10 April 2020
-;; Version: 1.6
+;; Version: 1.7
 ;; Package-Requires: ((org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify

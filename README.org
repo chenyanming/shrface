@@ -12,7 +12,7 @@
   - [[#screenshots-when-using-mu4e][Screenshots when using =mu4e=]]
   - [[#screenshots-when-using-imenu-list-helm-imenu-counsel-imenu][Screenshots when using =imenu-list=, =helm-imenu=, =counsel-imenu=]]
     - [[#version-14-new-feature-imenu-support][Version 1.4: New feature, =imenu= support]]
-  - [[#screenshots-with-outline-minior-mode][Screenshots with =outline= minior mode]]
+  - [[#screenshots-with-outline-minior-mode-and-org-indent-mode][Screenshots with =outline minior mode= and =org-indent-mode=]]
     - [[#version-15-new-feature-outline-minior-mode-support-use-org-cycle-and-org-shifttab][Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)]]
 - [[#prerequisites][Prerequisites]]
 - [[#installation][Installation]]
@@ -26,10 +26,11 @@
     - [[#spacemacs][Spacemacs]]
     - [[#doom-emacs-1][Doom emacs]]
     - [[#other-emacs][Other emacs]]
-  - [[#default-heading-bullets-h1-to-h6][Default heading bullets (h1 to h6)]]
-  - [[#default-paragraph-indentation-and-fill-column][Default paragraph indentation and fill column]]
+  - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
+  - [[#item-bullet][Item bullet]]
+  - [[#paragraph-indentation-and-fill-column][Paragraph indentation and fill column]]
   - [[#supported-faces][Supported faces]]
-  - [[#experimental-faces][Experimental faces]]
+  - [[#experimental-faces][Experimental face(s)]]
     - [[#enable-the-shrface-code][Enable the =shrface-code=]]
     - [[#important-notes-on-experimental-faces][Important notes on experimental faces]]
   - [[#optional-enable-source-codes-highlight][(Optional) Enable source codes highlight]]
@@ -45,11 +46,11 @@
   - [[#2020-04-10][=2020-04-10=]]
 
 * Description
-It is a shr faces package that helps you apply your favourite org faces to shr,
-dash-docs, eww, nov.el, mu4e, and more!
+It is a shr faces package that helps you apply your favourite org faces to =shr=,
+=dash-docs=, =eww=, =nov.el=, =mu4e=, and more!
 
-+ Configurable org-like heading faces, heading bullets, paragraph indentation,
-  fill-column and more.
++ Configurable org-like heading faces, headline bullets, paragraph indentation,
+  fill-column, item bullet and more.
 + Browse the internet with [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] just like org mode.
 + Read dash docsets with[[https://github.com/dash-docs-el/dash-docs][ dash-docs]]  and the beauty of org faces.
 + Read epub files with [[https://github.com/wasamasa/nov.el][nov.el]] , just like org mode.
@@ -61,34 +62,34 @@ dash-docs, eww, nov.el, mu4e, and more!
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
 
 ** Screenshots when using =eww=
-  #+html: <p align="center"><img src="img/eww-1.png" width="50%"/></p>
-  #+html: <p align="center"><img src="img/eww-2.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/eww-1.png" width="60%"/></p>
+  #+html: <p align="center"><img src="img/eww-2.png" width="60%"/></p>
 
 ** Screenshots when using =dash-docs=
-  #+html: <p align="center"><img src="img/dash-doc-1.png" width="50%"/></p>
-  #+html: <p align="center"><img src="img/dash-doc-2.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/dash-doc-1.png" width="60%"/></p>
+  #+html: <p align="center"><img src="img/dash-doc-2.png" width="60%"/></p>
 
 *** Version 1.3: New face =shrface-code=, unleash the full power of =dash-docs=
-  #+html: <p align="center"><img src="img/dash-docs-code.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/dash-docs-code.png" width="60%"/></p>
 
 ** Screenshots when using =nov.el=
-  #+html: <p align="center"><img src="img/epub-1.png" width="50%"/></p>
-  #+html: <p align="center"><img src="img/epub-2.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/epub-1.png" width="60%"/></p>
+  #+html: <p align="center"><img src="img/epub-2.png" width="60%"/></p>
 
 ** Screenshots when using =mu4e=
-  #+html: <p align="center"><img src="img/mu4e.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/mu4e.png" width="60%"/></p>
 
 ** Screenshots when using =imenu-list=, =helm-imenu=, =counsel-imenu=
 *** Version 1.4: New feature, =imenu= support
-  #+html: <p align="center"><img src="img/imenu-1.png" width="50%"/></p>
-  #+html: <p align="center"><img src="img/imenu-2.png" width="50%"/></p>
-  #+html: <p align="center"><img src="img/imenu-3.png" width="50%"/></p>
-  #+html: <p align="center"><img src="img/imenu-4.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/imenu-1.png" width="60%"/></p>
+  #+html: <p align="center"><img src="img/imenu-2.png" width="60%"/></p>
+  #+html: <p align="center"><img src="img/imenu-3.png" width="60%"/></p>
+  #+html: <p align="center"><img src="img/imenu-4.png" width="60%"/></p>
 
-** Screenshots with =outline= minior mode
+** Screenshots with =outline minior mode= and =org-indent-mode=
 *** Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)
-  #+html: <p align="center"><img src="img/outline-1.png" width="50%"/></p>
-  #+html: <p align="center"><img src="img/outline-2.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/indent-1.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/indent-2.png" width="50%"/></p>
 
 * Prerequisites
 This package uses =shr=, =org=, =imenu=, =outline=
@@ -197,20 +198,31 @@ Here are examples:
   (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab))
 #+END_SRC
 
-** Default heading bullets (h1 to h6)
+** Headline bullets (h1 to h6)
 You can configure your farourite bullets up to 6 levels of headings (cycled
 through if less than 6 bullets in setting).
 
 You can set it with:
 #+BEGIN_SRC emacs-lisp
-(setq shrface-bullets-bullet-list '("◉" "○" "✸" "✿" "◆" "◉"))
+(setq shrface-bullets-bullet-list '("◉" "○" "✸" "✿"))
 #+END_SRC
 
 PS: The bullets setting can be derived from =org-bullets-bullet-list= or
 =org-superstar-headline-bullets-list=, if [[https://github.com/sabof/org-bullets][org-bullets]] or [[https://github.com/integral-dw/org-superstar-mode][org-superstar]] is
 available.
 
-** Default paragraph indentation and fill column
+** Item bullet
+You can configure your favorite item bullet for shrface
+
+You can set it with:
+#+BEGIN_SRC emacs-lisp
+(setq shrface-item-bullet "➤")
+#+END_SRC
+
+PS: Only one type of item bullet is supported, prettified by
+=shrface-item-bullet-face=
+
+** Paragraph indentation and fill column
 You can configure the *paragraph* indentation (obsolete, default is 0, because the
 indentation is managed by =org-indent-mode= started from version 1.6, but you can
 still use it for more indentation spaces) and fill column for better reading
@@ -228,11 +240,16 @@ PS: The default setting is 0 and 120
 ** Supported faces
 Here are the faces supported:
 #+BEGIN_SRC emacs-lisp
-(defvar shrface-bullets-bullet-list '("◉" "○" "●" "✿" "◆" "◉")
-  "Bullets for headings")
-
-(defvar shrface-href-face 'shrface-href-face
-  "Face name to use for href.")
+(defcustom shrface-bullets-bullet-list
+  (or (bound-and-true-p org-bullets-bullet-list)
+      (bound-and-true-p org-superstar-headline-bullets-list)
+      '("◉"
+        "○"
+        "✸"
+        "✿"))
+  "Bullets for headings"
+  :group 'shrface
+  :type '(repeat (string :tag "Bullet character")))
 
 (defface shrface-href-face '((t :inherit org-link))
   "Face used for href"
@@ -266,9 +283,13 @@ Here are the faces supported:
   "Face used for verbatim/emphasis."
   :group 'shrface-faces)
 
+(defface shrface-item-bullet-face '((t :inherit org-list-dt))
+  "Face used for unordered list bullet"
+  :group 'shrface-faces)
+
 #+END_SRC
 
-** Experimental faces
+** Experimental face(s)
 
 #+BEGIN_SRC emacs-lisp
 (defface shrface-code '((t :inherit org-code))
@@ -384,6 +405,10 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
  
 * News/Logs
 ** =2020-04-17=
+Version *1.7*:
+- New feature:  =shrface-item-bullet=
+- New face:  =shrface-item-bullet-face=
+
 Version *1.6*:
 - New feature:  =org-indent-mode= support (Enabled by default)
 
