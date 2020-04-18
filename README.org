@@ -145,7 +145,7 @@ Check the experimental faces setup guide here:
 #+html: <a href="#experimental-faces">Experimental faces</a>
 
 *** shrface-mode
-From version 1.8, =shrface-mode= is adapted, for it is more flexible to
+From version =1.8=, =shrface-mode= is adapted, for it is more flexible to
 enable/disable the following additional features:
 1. =imenu=
 2. =outline-minior-mode=
@@ -154,7 +154,7 @@ enable/disable the following additional features:
 For example, to enable shrface-mode to =eww= or =nov=
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'eww
-    (add-hook 'eww-after-render-hook 'shrface-mode))
+    (add-hook 'eww-after-render-hook 'shrface-mode)) ; this will affect eww, dash-docs and mu4e
   (with-eval-after-load 'nov
     (add-hook 'nov-mode-hook 'shrface-mode))
 #+END_SRC
@@ -433,7 +433,7 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 ** =2020-04-18=
 Version *1.8*:
 - New face:  =shrface-item-number-face=
-- New Minor:  =shrface-mode=
+- New Minor Mode:  =shrface-mode=
 
 ** =2020-04-17=
 Version *1.7*:
