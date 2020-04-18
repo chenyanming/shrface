@@ -162,7 +162,10 @@ You can set the keybinding directly with the original org outline related
 functions, like =org-cycle=, =org-shifttab=, =org-content=, =org-overview=, etc, and
 most of =outline= minior mode functions (prefix with =outline-=) after testing.
 
-Here are examples:
+Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt= is
+ hard coded and override it is inappropriate (It is better to update =org.el=
+ directly). But you can use [[https://github.com/tj64/outline-magic][outline-magic]] to support better outline cycle
+ feature.
 
 *** Spacemacs
 #+BEGIN_SRC emacs-lisp
