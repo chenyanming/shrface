@@ -77,6 +77,12 @@
   :group 'shrface
   :type 'character)
 
+(defcustom shrface-mode-hook nil
+  "Hook run after enable shrface-mode buffers.
+This hook is evaluated when enable `shrface-mode'."
+  :group 'shrface
+  :type 'hook)
+
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
 
@@ -457,7 +463,8 @@ Argument DOM dom."
         (setq imenu-create-index-function #'shrface-imenu-get-tree)
         (shrface-regexp)
         (outline-minor-mode)
-        (org-indent-mode))
+        (org-indent-mode)
+        (run-hooks 'shrface-mode-hook))
     (progn
       (shrface-shr-item-bullet)
       (setq imenu-create-index-function nil)
