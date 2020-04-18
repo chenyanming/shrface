@@ -444,30 +444,25 @@ Argument DOM dom."
   (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
   (setq-local outline-level shrface-level))
 
-;;; load general settings for shr
-(with-eval-after-load 'shr
-  (shrface-shr-item-bullet))
-
-;;; load the settings for nov
-(with-eval-after-load 'nov
-  (add-hook 'nov-mode-hook
-            (lambda ()
-              (setq imenu-create-index-function #'shrface-imenu-get-tree)
-              (shrface-regexp)
-              (outline-minor-mode)
-              (org-indent-mode))))
-
-;;; load the settings for eww
-(with-eval-after-load 'eww
-  (add-hook 'eww-mode-hook
-            (lambda ()
-              (setq imenu-create-index-function #'shrface-imenu-get-tree)
-              (shrface-regexp)))
-
-  (add-hook 'eww-after-render-hook
-            (lambda ()
-              (outline-minor-mode)
-              (org-indent-mode))))
+;;;###autoload
+(define-minor-mode shrface-mode
+  "Toggle shr minor mode.
+1. imenu
+2. outline-minor-mode
+3. org-indent-mode "
+  :group 'shrface
+  (if shrface-mode
+      (progn
+        (shrface-shr-item-bullet)
+        (setq imenu-create-index-function #'shrface-imenu-get-tree)
+        (shrface-regexp)
+        (outline-minor-mode)
+        (org-indent-mode))
+    (progn
+      (shrface-shr-item-bullet)
+      (setq imenu-create-index-function nil)
+      (outline-minor-mode -1)
+      (org-indent-mode -1))))
 
 ;;; enable the faces
 
