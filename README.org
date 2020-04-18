@@ -154,6 +154,9 @@ If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you
   (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions)))
 #+END_SRC
 
+PS: Since =nov-shr-rendering-functions= is not a customizable variable. Therefore,
+this setting is not included into the package.
+
 ** Keybinding Settings
 You can set the keybinding directly with the original org outline related
 functions, like =org-cycle=, =org-shifttab=, =org-content=, =org-overview=, etc, and
