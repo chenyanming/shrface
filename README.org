@@ -21,6 +21,8 @@
   - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#configuration][Configuration]]
   - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc]]
+    - [[#enable-the-shrface][Enable the shrface]]
+    - [[#shrface-mode][shrface-mode]]
   - [[#specific-settinghacking-for-novel][Specific setting/hacking for =nov.el=]]
   - [[#keybinding-settings][Keybinding Settings]]
     - [[#spacemacs][Spacemacs]]
@@ -130,8 +132,10 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 * Configuration
 
 ** General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc
-Normally, just require the package, and you can make use of all benefits brought
-by the package expect the experimental features:
+*** Enable the shrface
+Require the package, and you can enable all faces expect the experimental face(s):
+Check this section to see the supported faces:
+#+html: <a href="#supported-faces">Supported Faces</a>
 
 #+BEGIN_SRC emacs-lisp
 (require 'shrface)
@@ -140,9 +144,20 @@ by the package expect the experimental features:
 Check the experimental faces setup guide here:
 #+html: <a href="#experimental-faces">Experimental faces</a>
 
-This package supports =imenu=, =outline minior mode=, and =org-indent-mode=. All are
-enable by default (Maybe change to configurable in the future). However, no
-default keybindings provided.
+*** shrface-mode
+From version 1.8, =shrface-mode= is adapted, for it is more flexible to
+enable/disable the following additional features:
+1. =imenu=
+2. =outline-minior-mode=
+3. =org-indent-mode=
+
+For example, to enable shrface-mode to =eww= or =nov=
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'eww
+    (add-hook 'eww-after-render-hook 'shrface-mode))
+  (with-eval-after-load 'nov
+    (add-hook 'nov-mode-hook 'shrface-mode))
+#+END_SRC
 
 Follow the following guide to setup the keybindings.
 #+html: <a href="#keybinding-settings">Keybinding Settings</a>
@@ -418,6 +433,7 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 ** =2020-04-18=
 Version *1.8*:
 - New face:  =shrface-item-number-face=
+- New Minor:  =shrface-mode=
 
 ** =2020-04-17=
 Version *1.7*:
