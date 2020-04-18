@@ -163,16 +163,15 @@ Here are examples:
 
 *** Spacemacs
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load' nov
-  (evil-define-key 'normal nov-mode-map
-    (kbd "TAB") 'org-cycle
-    (kbd "S-<tab>") 'org-shifttab))
+  (with-eval-after-load 'nov
+    (evil-define-key '(evilified normal) nov-mode-map
+      (kbd "<tab>") 'org-cycle
+      (kbd "<S-tab>") 'org-shifttab))
 
-(with-eval-after-load' eww
-  (evil-define-key 'normal eww-mode-map
-    (kbd "TAB") 'org-cycle
-    (kbd "S-<tab>") 'org-shifttab))
-
+  (with-eval-after-load 'eww
+    (evil-define-key '(evilified normal) eww-mode-map
+      (kbd "<tab>") 'org-cycle
+      (kbd "<S-tab>") 'org-shifttab))
 #+END_SRC
 
 *** Doom emacs
@@ -190,11 +189,11 @@ Here are examples:
 
 *** Other emacs
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load' nov
+(with-eval-after-load 'nov
   (define-key nov-mode-map (kbd "<tab>") 'org-cycle)
   (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab))
 
-(with-eval-after-load' eww
+(with-eval-after-load 'eww
   (define-key eww-mode-map (kbd "<tab>") 'org-cycle)
   (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab))
 #+END_SRC
