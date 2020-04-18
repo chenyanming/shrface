@@ -58,17 +58,17 @@
         "○"
         "✸"
         "✿"))
-  "Bullets for headings"
+  "Bullets for headings."
   :group 'shrface
   :type '(repeat (string :tag "Bullet character")))
 
 (defcustom shrface-paragraph-indentation 0
-  "Indentation for paragraph"
+  "Indentation for paragraph."
   :group 'shrface
   :type 'integer)
 
 (defcustom  shrface-paragraph-fill-column 120
-  "Fill columns for paragraph"
+  "Fill columns for paragraph."
   :group 'shrface
   :type 'integer)
 
@@ -157,7 +157,7 @@ sure that we are at the beginning of the line.")
 
 ;;;###autoload
 (defsubst shrface-shr-generic (dom)
-  "TODO: Improved shr-generic: fontize the sub dom"
+  "TODO: Improved shr-generic: fontize the sub DOM."
   (dolist (sub (dom-children dom))
     (cond ((stringp sub) (shr-insert sub)) ; insert the string dom
           ((not (equal "" (dom-text (dom-by-tag sub 'code))))
@@ -166,6 +166,7 @@ sure that we are at the beginning of the line.")
 
 ;;;###autoload
 (defun shrface-shr-fontize-dom (dom &rest types)
+  "Fontize the sub Optional argument TYPES  DOM."
   (let ((start (point))) ;; remember start of inserted region
     (shr-generic dom) ;; inserts the contents of the tag
     (dolist (type types)
@@ -174,7 +175,8 @@ sure that we are at the beginning of the line.")
 
 ;;;###autoload
 (defun shrface-shr-fontize-dom-child (dom &rest types)
-  "TODO: fontize the sub dom"
+  "TODO: fontize the sub DOM.
+Optional argument TYPES face attributes."
   (let ((start (point))) ;; remember start of inserted region
     (shr-descend dom) ;; inserts the contents of the tag
     (dolist (type types)
@@ -183,6 +185,10 @@ sure that we are at the beginning of the line.")
 
 ;;;###autoload
 (defun shrface-shr-add-font (start end type)
+  "Fontize the string.
+Argument START start point.
+Argument END end point.
+Argument TYPE face attributes."
   (save-excursion
     (goto-char start)
     (while (< (point) end)
@@ -195,6 +201,9 @@ sure that we are at the beginning of the line.")
 
 ;;;###autoload
 (defun shrface-shr-urlify (start url &optional title)
+  "Fontize the URL.
+Argument START start point.
+Argument END the url."
   (shr-add-font start (point) 'shr-link)
   (add-text-properties
    start (point)
@@ -215,42 +224,52 @@ sure that we are at the beginning of the line.")
           (setq start next)
         (put-text-property start (or next (point)) 'keymap shr-map)))))
 
-
 ;;;###autoload
 (defun shrface-bullets-level-string (level)
+  "Return the bullets in cycle way.
+Argument LEVEL the headline level."
   (nth (mod (1- level)
              (length shrface-bullets-bullet-list))
         shrface-bullets-bullet-list))
 
 (defun shrface-tag-h1 (dom)
-  "Fontize tag h1"
+  "Fontize tag h1.
+Argument DOM dom."
   (shrface-shr-h1 dom '(comment t face shrface-h1-face)))
 
 (defun shrface-tag-h2 (dom)
-  "Fontize tag h2"
+  "Fontize tag h2.
+Argument DOM dom."
   (shrface-shr-h2 dom '(comment t face shrface-h2-face)))
 
 (defun shrface-tag-h3 (dom)
-  "Fontize tag h3"
+  "Fontize tag h3.
+Argument DOM dom."
   (shrface-shr-h3 dom '(comment t face shrface-h3-face)))
 
 (defun shrface-tag-h4 (dom)
-  "Fontize tag h4"
+  "Fontize tag h4.
+Argument DOM dom."
   (shrface-shr-h4 dom '(comment t face shrface-h4-face)))
 
 (defun shrface-tag-h5 (dom)
-  "Fontize tag h5"
+  "Fontize tag h5.
+Argument DOM dom."
   (shrface-shr-h5 dom '(comment t face shrface-h5-face)))
 
 (defun shrface-tag-h6 (dom)
-  "Fontize tag h6"
+  "Fontize tag h6.
+Argument DOM dom."
   (shrface-shr-h6 dom '(comment t face shrface-h6-face)))
 
 (defun shrface-shr-item-bullet ()
-  "Fontize shr-bullet"
+  "Build a `shr-bullet' based on `shrface-item-bullet'."
   (setq shr-bullet (concat shrface-item-bullet " ")))
 
 (defun shrface-shr-h1 (dom &rest types)
+  "Insert the Fontized tag h1.
+Argument DOM dom.
+Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face))
   ;; (insert (propertize  "* " 'face 'shrface-h1-face))
@@ -258,6 +277,9 @@ sure that we are at the beginning of the line.")
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h2 (dom &rest types)
+  "Insert the Fontized tag h2.
+Argument DOM dom.
+Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face))
   ;; (insert (propertize  "** " 'face 'shrface-h2-face))
@@ -265,6 +287,9 @@ sure that we are at the beginning of the line.")
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h3 (dom &rest types)
+  "Insert the Fontized tag h3.
+Argument DOM dom.
+Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face))
   ;; (insert (propertize  "*** " 'face 'shrface-h3-face))
@@ -272,6 +297,9 @@ sure that we are at the beginning of the line.")
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h4 (dom &rest types)
+  "Insert the Fontized tag h4.
+Argument DOM dom.
+Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face))
   ;; (insert (propertize  "**** " 'face 'shrface-h4-face))
@@ -279,6 +307,9 @@ sure that we are at the beginning of the line.")
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h5 (dom &rest types)
+  "Insert the Fontized tag h5.
+Argument DOM dom.
+Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face))
   ;; (insert (propertize  "***** " 'face 'shrface-h5-face))
@@ -286,6 +317,9 @@ sure that we are at the beginning of the line.")
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h6 (dom &rest types)
+  "Insert the Fontized tag h6.
+Argument DOM .
+Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face))
   ;; (insert (propertize  "****** " 'face 'shrface-h6-face))
@@ -293,11 +327,13 @@ sure that we are at the beginning of the line.")
   (shr-ensure-paragraph))
 
 (defun shrface-tag-code (dom)
-  "Fontize tag code"
+  "Fontize tag code.
+Argument DOM dom."
   (shrface-shr-fontize-dom dom '(comment t face shrface-code)))
 
 (defun shrface-tag-p (dom)
-  "Fontize tag p"
+  "Fontize tag p.
+Argument DOM dom."
   (let* ((code (with-temp-buffer
                  (shr-ensure-paragraph)
                  (shr-generic dom)
@@ -313,11 +349,13 @@ sure that we are at the beginning of the line.")
     (insert code)))
 
 (defun shrface-tag-em (dom)
-  "Fontize tag em"
+  "Fontize tag em.
+Argument DOM dom."
   (shrface-shr-fontize-dom dom '(comment t face shrface-verbatim)))
 
 (defun shrface-tag-a (dom)
-  "Fontize tag a"
+  "Fontize tag a.
+Argument DOM dom."
   (let ((url (dom-attr dom 'href))
         (title (dom-attr dom 'title))
         (start (point))
@@ -335,7 +373,8 @@ sure that we are at the beginning of the line.")
       (shrface-shr-urlify (or shr-start start) (shr-expand-url url) title))))
 
 (defun shrface-tag-li (dom)
-  "Fontize tag li"
+  "Fontize tag li.
+Argument DOM dom."
   (shr-ensure-newline)
   ;; (setq shr-indentation 40)
   (let ((start (point)))
@@ -398,7 +437,7 @@ sure that we are at the beginning of the line.")
   (1+ (cl-position (match-string 1) shrface-bullets-bullet-list :test 'equal)))
 
 (defun shrface-regexp ()
-  "set regexp for outline minior mode"
+  "Set regexp for outline minior mode."
   (setq-local outline-regexp shrface-outline-regexp)
   (setq-local org-outline-regexp-bol outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-outline-regexp outline-regexp) ; for org-cycle, org-shifttab
@@ -413,7 +452,7 @@ sure that we are at the beginning of the line.")
 (with-eval-after-load 'nov
   (add-hook 'nov-mode-hook
             (lambda ()
-              (setq imenu-create-index-function 'shrface-imenu-get-tree)
+              (setq imenu-create-index-function #'shrface-imenu-get-tree)
               (shrface-regexp)
               (outline-minor-mode)
               (org-indent-mode))))
@@ -422,7 +461,7 @@ sure that we are at the beginning of the line.")
 (with-eval-after-load 'eww
   (add-hook 'eww-mode-hook
             (lambda ()
-              (setq imenu-create-index-function 'shrface-imenu-get-tree)
+              (setq imenu-create-index-function #'shrface-imenu-get-tree)
               (shrface-regexp)))
 
   (add-hook 'eww-after-render-hook
