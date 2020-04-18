@@ -37,6 +37,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-04-18][=2020-04-18=]]
   - [[#2020-04-17][=2020-04-17=]]
   - [[#2020-04-16][=2020-04-16=]]
   - [[#2020-04-15][=2020-04-15=]]
@@ -287,6 +288,10 @@ Here are the faces supported:
   "Face used for unordered list bullet"
   :group 'shrface-faces)
 
+(defface shrface-item-number-face '((t :inherit org-list-dt))
+  "Face used for ordered list numbers"
+  :group 'shrface-faces)
+
 #+END_SRC
 
 ** Experimental face(s)
@@ -404,6 +409,11 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 - [ ] =shrface-babel=
  
 * News/Logs
+
+** =2020-04-18=
+Version *1.8*:
+- New face:  =shrface-item-number-face=
+
 ** =2020-04-17=
 Version *1.7*:
 - New feature:  =shrface-item-bullet=
