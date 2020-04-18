@@ -4,10 +4,10 @@
 
 ;; Author: Damon Chan <elecming@gmail.com>
 ;; URL: https://github.com/chenyanming/shrface
-;; Keywords: shr face
+;; Keywords: faces
 ;; Created: 10 April 2020
 ;; Version: 1.7
-;; Package-Requires: ((org "9.0"))
+;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
