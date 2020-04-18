@@ -80,27 +80,24 @@
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href.")
 
-(defvar shrface-outline-regexp (eval-when-compile
-                                 (concat " ?+"
-                                         (regexp-opt
-                                          shrface-bullets-bullet-list
-                                          t) " +"))
+(defvar shrface-outline-regexp (concat " ?+"
+                                       (regexp-opt
+                                        shrface-bullets-bullet-list
+                                        t) " +")
   "TODO: Regexp to match shrface headlines.")
 
-(defvar shrface-outline-regexp-bol (eval-when-compile
-                                     (concat " ?+"
-                                             (regexp-opt
-                                              shrface-bullets-bullet-list
-                                              t) "\\( +\\)"))
+(defvar shrface-outline-regexp-bol (concat " ?+"
+                                           (regexp-opt
+                                            shrface-bullets-bullet-list
+                                            t) "\\( +\\)")
   "TODO: Regexp to match shrface headlines.
 This is similar to `shrface-outline-regexp' but additionally makes
 sure that we are at the beginning of the line.")
 
-(defvar shrface-imenu-regexp-bol (eval-when-compile
-                                   (concat "^\\(?: ?+\\)"
-                                           (regexp-opt
-                                            shrface-bullets-bullet-list
-                                            t) "\\( .*\\)$"))
+(defvar shrface-imenu-regexp-bol (concat "^\\(?: ?+\\)"
+                                         (regexp-opt
+                                          shrface-bullets-bullet-list
+                                          t) "\\( .*\\)$")
   "TODO: Regexp to match shrface headlines.
 This is similar to `shrface-outline-regexp' but additionally makes
 sure that we are at the beginning of the line.")
@@ -150,6 +147,10 @@ sure that we are at the beginning of the line.")
 
 (defface shrface-item-bullet-face '((t :inherit org-list-dt))
   "Face used for unordered list bullet"
+  :group 'shrface-faces)
+
+(defface shrface-item-number-face '((t :inherit org-list-dt))
+  "Face used for ordered list numbers"
   :group 'shrface-faces)
 
 ;;; Utility
@@ -247,7 +248,7 @@ sure that we are at the beginning of the line.")
 
 (defun shrface-shr-item-bullet ()
   "Fontize shr-bullet"
-  (setq shr-bullet (propertize (concat shrface-item-bullet " ") 'face 'shrface-item-bullet-face)))
+  (setq shr-bullet (concat shrface-item-bullet " ")))
 
 (defun shrface-shr-h1 (dom &rest types)
   (shr-ensure-paragraph)
@@ -333,6 +334,33 @@ sure that we are at the beginning of the line.")
     (when url
       (shrface-shr-urlify (or shr-start start) (shr-expand-url url) title))))
 
+(defun shrface-tag-li (dom)
+  "Fontize tag li"
+  (shr-ensure-newline)
+  ;; (setq shr-indentation 40)
+  (let ((start (point)))
+    (let* ((bullet
+            (if (numberp shr-list-mode)
+                (prog1
+                    (format "%d " shr-list-mode)
+                  (setq shr-list-mode (1+ shr-list-mode)))
+              (car shr-internal-bullet)))
+           (width (if (numberp shr-list-mode)
+                      (shr-string-pixel-width bullet)
+                    (cdr shr-internal-bullet))))
+      (ignore-errors
+        (if (numberp shr-list-mode)
+            (insert (propertize bullet 'face 'shrface-item-number-face))
+          (insert (propertize bullet 'face 'shrface-item-bullet-face))))
+      (shr-mark-fill start)
+      (let ((shr-indentation (+ shr-indentation width)))
+        (put-text-property start (1+ start)
+                           'shr-continuation-indentation shr-indentation)
+        (put-text-property start (1+ start) 'shr-prefix-length (length bullet))
+        (shr-generic dom))))
+  (unless (bolp)
+    (insert "\n")))
+
 ;;;###autoload
 (defun shrface-imenu-get-tree ()
   "Produce the index for Imenu."
@@ -413,6 +441,7 @@ sure that we are at the beginning of the line.")
 (add-to-list 'shr-external-rendering-functions '(h6  . shrface-tag-h6))
 (add-to-list 'shr-external-rendering-functions '(a   . shrface-tag-a))
 (add-to-list 'shr-external-rendering-functions '(p   . shrface-tag-p))
+(add-to-list 'shr-external-rendering-functions '(li   . shrface-tag-li))
 
 ;;;
 ;;; experimental features
