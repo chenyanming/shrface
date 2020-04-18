@@ -20,7 +20,7 @@
   - [[#doom-emacs][Doom Emacs]]
   - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#configuration][Configuration]]
-  - [[#general-setting-for-eww-dash-docs-mu4e-novel-etc][General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc]]
+  - [[#general-settings][General Settings]]
     - [[#enable-the-shrface][Enable the shrface]]
     - [[#shrface-mode][shrface-mode]]
   - [[#specific-settinghacking-for-novel][Specific setting/hacking for =nov.el=]]
@@ -131,7 +131,7 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 
 * Configuration
 
-** General Setting for =eww=, =dash-docs=, =mu4e=, =nov.el= etc
+** General Settings
 *** Enable the shrface
 Require the package, and you can enable all faces expect the experimental face(s):
 Check this section to see the supported faces:
@@ -151,13 +151,17 @@ enable/disable the following additional features:
 2. =outline-minior-mode=
 3. =org-indent-mode=
 
-For example, to enable shrface-mode to =eww= or =nov=
+For example, to enable =shrface-mode= to =eww=, =nov= or =mu4e=
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'eww
-    (add-hook 'eww-after-render-hook 'shrface-mode)) ; this will affect eww, dash-docs and mu4e
+    (add-hook 'eww-after-render-hook 'shrface-mode)) ; this will affect eww and dash-docs
   (with-eval-after-load 'nov
     (add-hook 'nov-mode-hook 'shrface-mode))
+  (with-eval-after-load 'mu4e
+    (add-hook 'mu4e-view-mode-hook 'shrface-mode))
 #+END_SRC
+
+Of course, you can enable/disable =shrface-mode= via =M-x=
 
 Follow the following guide to setup the keybindings.
 #+html: <a href="#keybinding-settings">Keybinding Settings</a>
