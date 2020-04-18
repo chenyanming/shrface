@@ -23,7 +23,7 @@
   - [[#general-settings][General Settings]]
     - [[#enable-the-shrface][Enable the shrface]]
     - [[#shrface-mode][shrface-mode]]
-  - [[#specific-settinghacking-for-novel][Specific setting/hacking for =nov.el=]]
+    - [[#notes-about-setting-for-novel][Notes about setting for =nov.el=]]
   - [[#keybinding-settings][Keybinding Settings]]
     - [[#spacemacs][Spacemacs]]
     - [[#doom-emacs-1][Doom emacs]]
@@ -156,6 +156,7 @@ For example, to enable =shrface-mode= to =eww=, =nov= or =mu4e=
   (with-eval-after-load 'eww
     (add-hook 'eww-after-render-hook 'shrface-mode)) ; this will affect eww and dash-docs
   (with-eval-after-load 'nov
+    (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
     (add-hook 'nov-mode-hook 'shrface-mode))
   (with-eval-after-load 'mu4e
     (add-hook 'mu4e-view-mode-hook 'shrface-mode))
@@ -166,15 +167,13 @@ Of course, you can enable/disable =shrface-mode= via =M-x=
 Follow the following guide to setup the keybindings.
 #+html: <a href="#keybinding-settings">Keybinding Settings</a>
 
-** Specific setting/hacking for =nov.el=
-If you read epub files using [[https://github.com/wasamasa/nov.el][nov.el]], you can add two more lines into your =init.el=
+*** Notes about setting for =nov.el=
+Since =nov-shr-rendering-functions= is not a customizable variable. Therefore,
+following setting is not included into the package at this moment.
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'nov
-  (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions)))
+(setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
 #+END_SRC
 
-PS: Since =nov-shr-rendering-functions= is not a customizable variable. Therefore,
-this setting is not included into the package.
 
 ** Keybinding Settings
 You can set the keybinding directly with the original org outline related
