@@ -182,8 +182,7 @@ most of =outline= minior mode functions (prefix with =outline-=) after testing.
 
 Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt= is
  hard coded and override it is inappropriate (It is better to update =org.el=
- directly). But you can use [[https://github.com/tj64/outline-magic][outline-magic]] to support better outline cycle
- feature.
+ directly). Besides, you can use [[https://github.com/tj64/outline-magic][outline-magic]] as alternative.
 
 *** Spacemacs
 #+BEGIN_SRC emacs-lisp
