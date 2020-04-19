@@ -457,38 +457,40 @@ Argument DOM dom."
 2. outline-minor-mode
 3. org-indent-mode "
   :group 'shrface
-  (if shrface-mode
-      (progn
-        (shrface-shr-item-bullet)
-        (setq imenu-create-index-function #'shrface-imenu-get-tree)
-        (shrface-regexp)
-        (outline-minor-mode)
-        (org-indent-mode)
-        (run-hooks 'shrface-mode-hook))
-    (progn
-      (shrface-shr-item-bullet)
-      (setq imenu-create-index-function nil)
-      (outline-minor-mode -1)
-      (org-indent-mode -1))))
+  (cond
+   (shrface-mode
+    (shrface-regexp)
+    (shrface-shr-item-bullet)
+    (setq imenu-create-index-function #'shrface-imenu-get-tree)
+    (outline-minor-mode)
+    (org-indent-mode)
+    (run-hooks 'shrface-mode-hook))
+   (t
+    (shrface-shr-item-bullet)
+    (setq imenu-create-index-function nil)
+    (outline-minor-mode -1)
+    (org-indent-mode -1))))
 
-;;; enable the faces
+(defun shrface-basic ()
+  "enable the baisc faces"
+  (interactive)
+  (add-to-list 'shr-external-rendering-functions '(em  . shrface-tag-em))
+  (add-to-list 'shr-external-rendering-functions '(h1  . shrface-tag-h1))
+  (add-to-list 'shr-external-rendering-functions '(h2  . shrface-tag-h2))
+  (add-to-list 'shr-external-rendering-functions '(h3  . shrface-tag-h3))
+  (add-to-list 'shr-external-rendering-functions '(h4  . shrface-tag-h4))
+  (add-to-list 'shr-external-rendering-functions '(h5  . shrface-tag-h5))
+  (add-to-list 'shr-external-rendering-functions '(h6  . shrface-tag-h6))
+  (add-to-list 'shr-external-rendering-functions '(a   . shrface-tag-a))
+  (add-to-list 'shr-external-rendering-functions '(p   . shrface-tag-p))
+  (add-to-list 'shr-external-rendering-functions '(li   . shrface-tag-li)))
 
-(add-to-list 'shr-external-rendering-functions '(em  . shrface-tag-em))
-(add-to-list 'shr-external-rendering-functions '(h1  . shrface-tag-h1))
-(add-to-list 'shr-external-rendering-functions '(h2  . shrface-tag-h2))
-(add-to-list 'shr-external-rendering-functions '(h3  . shrface-tag-h3))
-(add-to-list 'shr-external-rendering-functions '(h4  . shrface-tag-h4))
-(add-to-list 'shr-external-rendering-functions '(h5  . shrface-tag-h5))
-(add-to-list 'shr-external-rendering-functions '(h6  . shrface-tag-h6))
-(add-to-list 'shr-external-rendering-functions '(a   . shrface-tag-a))
-(add-to-list 'shr-external-rendering-functions '(p   . shrface-tag-p))
-(add-to-list 'shr-external-rendering-functions '(li   . shrface-tag-li))
+(defun shrface-trial ()
+  "experimental features
+shrface-tag-code is experimental, sometimes eww will hangup."
+  (interactive)
+  (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code)))
 
-;;;
-;;; experimental features
-;;;
-;;; shrface-tag-code is experimental, sometimes eww will hangup.
-;; (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))
 
 (provide 'shrface)
 ;;; shrface.el ends here

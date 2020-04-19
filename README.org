@@ -39,6 +39,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-04-19][=2020-04-19=]]
   - [[#2020-04-18][=2020-04-18=]]
   - [[#2020-04-17][=2020-04-17=]]
   - [[#2020-04-16][=2020-04-16=]]
@@ -133,16 +134,27 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 
 ** General Settings
 *** Enable the shrface
-Require the package, and you can enable all faces expect the experimental face(s):
-Check this section to see the supported faces:
-#+html: <a href="#supported-faces">Supported Faces</a>
+
+From version =1.9=, users have to enable the =shrface= by themselves, by calling
+=(shrface-basic)= or =(shrface-trail)= after =(require'shrface)=
 
 #+BEGIN_SRC emacs-lisp
-(require 'shrface)
+(with-eval-after-load 'shr
+  (require 'shrface)
+  (shrface-basic) ; enable shrfaces, must be called before loading eww/dash-docs/nov.el
+  (shrface-trial)) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
+
 #+END_SRC
 
-Check the experimental faces setup guide here:
-#+html: <a href="#experimental-faces">Experimental faces</a>
+- Check this section to see the supported faces:
+    #+html: <a href="#supported-faces">Supported Faces</a>
+
+- Check the experimental faces notes here:
+    #+html: <a href="#experimental-faces">Experimental faces</a>
+
+- There is another function =(shrface-plus)= to extent =shrface= to support more non-org
+buffers, check here
+    https://github.com/chenyanming/shrface-plus
 
 *** shrface-mode
 From version =1.8=, =shrface-mode= is adapted, for it is more flexible to
@@ -329,7 +341,7 @@ Here are the faces supported:
 statement to enable it:
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'shr-external-rendering-functions '(code . shrface-tag-code))
+(shrface-trial)
 #+END_SRC
 
 *** Important notes on experimental faces
@@ -431,6 +443,10 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 - [ ] =shrface-babel=
  
 * News/Logs
+
+** =2020-04-19=
+Version *1.9*:
+- New Functions: =shrface-basic= and =shrface-trail=
 
 ** =2020-04-18=
 Version *1.8*:
