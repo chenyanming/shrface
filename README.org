@@ -136,13 +136,19 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 *** Enable the shrface
 
 From version =1.9=, users have to enable the =shrface= by themselves, by calling
-=(shrface-basic)= or =(shrface-trail)= after =(require'shrface)=
+=(shrface-basic)= or =(shrface-trail)= after =(require 'shrface)=. Be sure to wrap all
+the following settings mentioned in this document into =(with-eval-after-load
+'shr)=, it can save you a lot of boot up time.
 
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'shr
+(with-eval-after-load 'shr ; lazy load is very important, it can save you a lot of boot up time
   (require 'shrface)
   (shrface-basic) ; enable shrfaces, must be called before loading eww/dash-docs/nov.el
-  (shrface-trial)) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
+  (shrface-trial) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
+;;
+;; put other settings here
+;;
+  )
 
 #+END_SRC
 
