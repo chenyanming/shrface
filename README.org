@@ -20,21 +20,20 @@
   - [[#doom-emacs][Doom Emacs]]
   - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#configuration][Configuration]]
-  - [[#general-settings][General Settings]]
-    - [[#enable-the-shrface][Enable the shrface]]
-    - [[#shrface-mode][shrface-mode]]
+  - [[#quick-start][Quick Start]]
     - [[#notes-about-setting-for-novel][Notes about setting for =nov.el=]]
   - [[#keybinding-settings][Keybinding Settings]]
     - [[#spacemacs][Spacemacs]]
     - [[#doom-emacs-1][Doom emacs]]
     - [[#other-emacs][Other emacs]]
-  - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
-  - [[#item-bullet][Item bullet]]
-  - [[#paragraph-indentation-and-fill-column][Paragraph indentation and fill column]]
-  - [[#supported-faces][Supported faces]]
-  - [[#experimental-faces][Experimental face(s)]]
-    - [[#enable-the-shrface-code][Enable the =shrface-code=]]
-    - [[#important-notes-on-experimental-faces][Important notes on experimental faces]]
+  - [[#features-anatomy][Features Anatomy]]
+    - [[#shrface-basic-and-shrface-trail][shrface-basic and shrface-trail]]
+    - [[#shrface-mode][shrface-mode]]
+    - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
+    - [[#item-bullet][Item bullet]]
+    - [[#paragraph-indentation-and-fill-column][Paragraph indentation and fill column]]
+    - [[#supported-faces][Supported faces]]
+    - [[#experimental-faces][Experimental face(s)]]
   - [[#optional-enable-source-codes-highlight][(Optional) Enable source codes highlight]]
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
@@ -133,8 +132,7 @@ git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
 
 * Configuration
 
-** General Settings
-*** Enable the shrface
+** Quick Start
 
 From version =1.9=, users have to enable the =shrface= by themselves, by calling
 =(shrface-basic)= or =(shrface-trail)= after =(require 'shrface)=. Be sure to wrap all
@@ -146,10 +144,19 @@ the following settings mentioned in this document into =(with-eval-after-load
   (require 'shrface)
   (shrface-basic) ; enable shrfaces, must be called before loading eww/dash-docs/nov.el
   (shrface-trial) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
-;;
-;; put other settings here
-;;
-  )
+
+  ;; eww support
+  (with-eval-after-load 'eww
+    (add-hook 'eww-after-render-hook 'shrface-mode))
+
+  ;; nov support
+  (with-eval-after-load 'nov
+    (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
+    (add-hook 'nov-mode-hook 'shrface-mode))
+
+  ;; mu4e support
+  (with-eval-after-load 'mu4e
+    (add-hook 'mu4e-view-mode-hook 'shrface-mode)))
 
 #+END_SRC
 
@@ -163,36 +170,13 @@ the following settings mentioned in this document into =(with-eval-after-load
 buffers, check here
     https://github.com/chenyanming/shrface-plus
 
-*** shrface-mode
-From version =1.8=, =shrface-mode= is adapted, for it is more flexible to
-enable/disable the following additional features:
-1. =imenu=
-2. =outline-minior-mode=
-3. =org-indent-mode=
-
-For example, to enable =shrface-mode= to =eww=, =nov= or =mu4e=
-#+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'eww
-    (add-hook 'eww-after-render-hook 'shrface-mode)) ; this will affect eww and dash-docs
-  (with-eval-after-load 'nov
-    (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-    (add-hook 'nov-mode-hook 'shrface-mode))
-  (with-eval-after-load 'mu4e
-    (add-hook 'mu4e-view-mode-hook 'shrface-mode))
-#+END_SRC
-
-Of course, you can enable/disable =shrface-mode= via =M-x=
-
-Follow the following guide to setup the keybindings.
-#+html: <a href="#keybinding-settings">Keybinding Settings</a>
-
 *** Notes about setting for =nov.el=
 Since =nov-shr-rendering-functions= is not a customizable variable. Therefore,
 following setting is not included into the package at this moment.
+
 #+BEGIN_SRC emacs-lisp
 (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
 #+END_SRC
-
 
 ** Keybinding Settings
 You can set the keybinding directly with the original org outline related
@@ -240,7 +224,35 @@ Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt
   (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab))
 #+END_SRC
 
-** Headline bullets (h1 to h6)
+** Features Anatomy
+*** shrface-basic and shrface-trail
+
+By calling =shrface-baisic= and =shrface-trail=, you will enable shrfaces globally.
+
+*** shrface-mode
+From version =1.8=, =shrface-mode= is adapted, for it is more flexible to
+enable/disable the following additional features:
+1. =imenu=
+2. =outline-minior-mode=
+3. =org-indent-mode=
+
+For example, to enable =shrface-mode= to =eww=, =nov= or =mu4e=
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'eww
+    (add-hook 'eww-after-render-hook 'shrface-mode)) ; this will affect eww and dash-docs
+  (with-eval-after-load 'nov
+    (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
+    (add-hook 'nov-mode-hook 'shrface-mode))
+  (with-eval-after-load 'mu4e
+    (add-hook 'mu4e-view-mode-hook 'shrface-mode))
+#+END_SRC
+
+Besides, you can enable/disable =shrface-mode= via =M-x=
+
+Follow the following guide to setup the keybindings.
+#+html: <a href="#keybinding-settings">Keybinding Settings</a>
+
+*** Headline bullets (h1 to h6)
 You can configure your farourite bullets up to 6 levels of headings (cycled
 through if less than 6 bullets in setting).
 
@@ -253,7 +265,7 @@ PS: The bullets setting can be derived from =org-bullets-bullet-list= or
 =org-superstar-headline-bullets-list=, if [[https://github.com/sabof/org-bullets][org-bullets]] or [[https://github.com/integral-dw/org-superstar-mode][org-superstar]] is
 available.
 
-** Item bullet
+*** Item bullet
 You can configure your favorite item bullet for shrface
 
 You can set it with:
@@ -264,7 +276,7 @@ You can set it with:
 PS: Only one type of item bullet is supported, prettified by
 =shrface-item-bullet-face=
 
-** Paragraph indentation and fill column
+*** Paragraph indentation and fill column
 You can configure the *paragraph* indentation (obsolete, default is 0, because the
 indentation is managed by =org-indent-mode= started from version 1.6, but you can
 still use it for more indentation spaces) and fill column for better reading
@@ -279,7 +291,7 @@ You can set them with:
 
 PS: The default setting is 0 and 120
 
-** Supported faces
+*** Supported faces
 Here are the faces supported:
 #+BEGIN_SRC emacs-lisp
 (defcustom shrface-bullets-bullet-list
@@ -339,7 +351,7 @@ Here are the faces supported:
 
 #+END_SRC
 
-** Experimental face(s)
+*** Experimental face(s)
 
 #+BEGIN_SRC emacs-lisp
 (defface shrface-code '((t :inherit org-code))
@@ -347,7 +359,7 @@ Here are the faces supported:
   :group 'shrface-faces)
 #+END_SRC
 
-*** Enable the =shrface-code=
+**** Enable the =shrface-code=
 =shrface-code= is disable by default, but you can add the following
 statement to enable it:
 
@@ -355,7 +367,7 @@ statement to enable it:
 (shrface-trial)
 #+END_SRC
 
-*** Important notes on experimental faces
+**** Important notes on experimental faces
 Please notice, =shrface-code= is an experimental face, which may make =eww= hangup
 at some specific websites (not all). However, it work perfectly with local html files
 during testing with =dash-docs= or =nov.el=
