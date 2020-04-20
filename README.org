@@ -1,5 +1,5 @@
 #+TITLE:   SHRFACE
-#+DATE:    April 17, 2020
+#+DATE:    April 20, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
 
@@ -39,6 +39,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-04-20][=2020-04-20=]]
   - [[#2020-04-19][=2020-04-19=]]
   - [[#2020-04-18][=2020-04-18=]]
   - [[#2020-04-17][=2020-04-17=]]
@@ -449,6 +450,10 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 - [ ] =shrface-babel=
  
 * News/Logs
+
+** =2020-04-20=
+Version *2.0*:
+- New face:  =shrface-description-list-term-face=
 
 ** =2020-04-19=
 Version *1.9*:

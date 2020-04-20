@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 1.9
+;; Version: 2.0
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -112,31 +112,31 @@ sure that we are at the beginning of the line.")
   "Compute the header's nesting level in an outline.")
 
 (defface shrface-href-face '((t :inherit org-link))
-  "Face used for href"
+  "Face used for <href>"
   :group 'shrface-faces)
 
 (defface shrface-h1-face '((t :inherit org-level-1))
-  "Face used for h1 headlines."
+  "Face used for <h1> headlines."
   :group 'shrface-faces)
 
 (defface shrface-h2-face '((t :inherit org-level-2))
-  "Face used for h2 headlines."
+  "Face used for <h2> headlines."
   :group 'shrface-faces)
 
 (defface shrface-h3-face '((t :inherit org-level-3))
-  "Face used for h3 headlines."
+  "Face used for <h3> headlines."
   :group 'shrface-faces)
 
 (defface shrface-h4-face  '((t :inherit org-level-4))
-  "Face used for h4 headlines."
+  "Face used for <h4> headlines."
   :group 'shrface-faces)
 
 (defface shrface-h5-face  '((t :inherit org-level-5))
-  "Face used for h5 headlines."
+  "Face used for <h5> headlines."
   :group 'shrface-faces)
 
 (defface shrface-h6-face '((t :inherit org-level-6))
-  "Face used for h6 headlines."
+  "Face used for <h6> headlines."
   :group 'shrface-faces)
 
 (defface shrface-highlight '((t :inherit highlight))
@@ -144,11 +144,11 @@ sure that we are at the beginning of the line.")
   :group 'shrface-faces)
 
 (defface shrface-verbatim '((t :inherit org-verbatim))
-  "Face used for verbatim/emphasis."
+  "Face used for verbatim/emphasis - <em>."
   :group 'shrface-faces)
 
 (defface shrface-code '((t :inherit org-code))
-  "TODO Face used for inline code"
+  "TODO Face used for inline <code>"
   :group 'shrface-faces)
 
 (defface shrface-item-bullet-face '((t :inherit org-list-dt))
@@ -157,6 +157,10 @@ sure that we are at the beginning of the line.")
 
 (defface shrface-item-number-face '((t :inherit org-list-dt))
   "Face used for ordered list numbers"
+  :group 'shrface-faces)
+
+(defface shrface-description-list-term-face '((t :inherit org-list-dt))
+  "Face used for description list terms <dt>"
   :group 'shrface-faces)
 
 ;;; Utility
@@ -406,6 +410,14 @@ Argument DOM dom."
   (unless (bolp)
     (insert "\n")))
 
+
+(defun shr-tag-dt (dom)
+  "Fontize tag dt.
+Argument DOM dom."
+  (shr-ensure-newline)
+  (shrface-shr-fontize-dom dom '(comment t face shrface-description-list-term-face))
+  (shr-ensure-newline))
+
 ;;;###autoload
 (defun shrface-imenu-get-tree ()
   "Produce the index for Imenu."
@@ -483,7 +495,8 @@ Argument DOM dom."
   (add-to-list 'shr-external-rendering-functions '(h6  . shrface-tag-h6))
   (add-to-list 'shr-external-rendering-functions '(a   . shrface-tag-a))
   (add-to-list 'shr-external-rendering-functions '(p   . shrface-tag-p))
-  (add-to-list 'shr-external-rendering-functions '(li   . shrface-tag-li)))
+  (add-to-list 'shr-external-rendering-functions '(li   . shrface-tag-li))
+  (add-to-list 'shr-external-rendering-functions '(dt   . shr-tag-dt)))
 
 (defun shrface-trial ()
   "experimental features
