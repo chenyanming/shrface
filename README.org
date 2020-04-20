@@ -51,7 +51,7 @@
 
 * Description
 It is a shr faces package that helps you apply your favourite org faces to =shr=,
-=dash-docs=, =eww=, =nov.el=, =mu4e=, and more!
+=dash-docs=, =eww=, =nov.el=, and =mu4e=.
 
 + Configurable org-like heading faces, headline bullets, paragraph indentation,
   fill-column, item bullet and more.
@@ -64,6 +64,16 @@ It is a shr faces package that helps you apply your favourite org faces to =shr=
 + Togle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
   and =org-cycle/org-shifttab=
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
+
+#+BEGIN_QUOTE
+The project target is to apply org features to =shr=, and all libraries that
+render HTML with =shr= (Simple HTML Renderer).
+
+As [[https://www.emacswiki.org/emacs/HtmlRendering][EmacsWiki]] says:
+
+=shr.el= is an HTML renderer in Emacs as of version 24.4 (based on libxml2, it was
+originally a part of Gnus). It’s the basis of the web browser =eww=.
+#+END_QUOTE
 
 ** Screenshots when using =eww=
   #+html: <p align="center"><img src="img/eww-1.png" width="60%"/></p>
@@ -166,9 +176,9 @@ the following settings mentioned in this document into =(with-eval-after-load
 - Check the experimental faces notes here:
     #+html: <a href="#experimental-faces">Experimental faces</a>
 
-- There is another function =(shrface-plus)= to extent =shrface= to support more non-org
-buffers, check here
-    https://github.com/chenyanming/shrface-plus
+- There is another library =inherit-org= to inherit org faces to even more non-org
+buffers (but it is no dependency/relationships with =shrface=), check here
+https://github.com/chenyanming/inherit-org
 
 *** Notes about setting for =nov.el=
 Since =nov-shr-rendering-functions= is not a customizable variable. Therefore,
