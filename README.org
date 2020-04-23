@@ -173,6 +173,7 @@ the following settings mentioned in this document into =(with-eval-after-load
 
   ;; nov support
   (with-eval-after-load 'nov
+    (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))) ; reset nov-shr-rendering-functions, in case of the list get bigger and bigger
     (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
     (add-hook 'nov-mode-hook 'shrface-mode))
 
@@ -197,6 +198,7 @@ Since =nov-shr-rendering-functions= is not a customizable variable. Therefore,
 following setting is not included into the package at this moment.
 
 #+BEGIN_SRC emacs-lisp
+(setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))) ; reset nov-shr-rendering-functions, in case of the list get bigger and bigger
 (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
 #+END_SRC
 
