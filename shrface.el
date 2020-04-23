@@ -154,7 +154,7 @@ sure that we are at the beginning of the line.")
   "Default <href> face if `shrface-href-versatile' is nil"
   :group 'shrface-faces)
 
-(defface shrface-href-other-face '((t :inherit org-link :foreground "#87cefa"))
+(defface shrface-href-other-face '((t :inherit org-link :foreground "#81A1C1"))
   "Face used for <href> other than http:// https:// ftp://
 file:// mailto:// if `shrface-href-versatile' is NON-nil. For
 example, it can be used for fontifying charter links with epub
@@ -171,17 +171,17 @@ NON-nil"
 NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-ftp-face '((t :inherit org-link :foreground "#3D9970"))
+(defface shrface-href-ftp-face '((t :inherit org-link :foreground "#5E81AC"))
   "Face used for <href>, ftp:// if `shrface-href-versatile' is
 NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-file-face '((t :inherit org-link :foreground "#2ECC40"))
+(defface shrface-href-file-face '((t :inherit org-link :foreground "#87cefa"))
   "Face used for <href>, file:// if `shrface-href-versatile' is
 NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-mailto-face '((t :inherit org-link :foreground "#FF851B"))
+(defface shrface-href-mailto-face '((t :inherit org-link :foreground "#8FBCBB"))
   "Face used for <href>, mailto:// if `shrface-href-versatile' is
 NON-nil"
   :group 'shrface-faces)
