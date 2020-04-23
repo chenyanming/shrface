@@ -210,12 +210,16 @@ Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt
   (with-eval-after-load 'nov
     (evil-define-key '(evilified normal) nov-mode-map
       (kbd "<tab>") 'org-cycle
-      (kbd "<S-tab>") 'org-shifttab))
+      (kbd "<S-tab>") 'org-shifttab
+      (kbd "<tab>") 'outline-next-visible-heading
+      (kbd "<S-tab>") 'outline-previous-visible-heading))
 
   (with-eval-after-load 'eww
     (evil-define-key '(evilified normal) eww-mode-map
       (kbd "<tab>") 'org-cycle
-      (kbd "<S-tab>") 'org-shifttab))
+      (kbd "<S-tab>") 'org-shifttab
+      (kbd "C-j") 'outline-next-visible-heading
+      (kbd "C-k") 'outline-previous-visible-heading))
 #+END_SRC
 
 *** Doom emacs
@@ -223,23 +227,31 @@ Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt
   (map! :map nov-mode-map
         :after nov
         :n "<tab>" 'org-cycle
-        :n "S-<tab>" 'org-shifttab)
+        :n "S-<tab>" 'org-shifttab
+        :n "C-j" 'outline-next-visible-heading
+        :n "C-k" 'outline-previous-visible-heading)
 
   (map! :map eww-mode-map
         :after eww
         :n "<tab>" 'org-cycle
-        :n "S-<tab>" 'org-shifttab)
+        :n "S-<tab>" 'org-shifttab
+        :n "C-j" 'outline-next-visible-heading
+        :n "C-k" 'outline-previous-visible-heading)
 #+END_SRC
 
 *** Other emacs
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'nov
   (define-key nov-mode-map (kbd "<tab>") 'org-cycle)
-  (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab))
+  (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key nov-mode-map (kbd "C-j") 'outline-next-visible-heading)
+  (define-key nov-mode-map (kbd "C-k") 'outline-previous-visible-heading))
 
 (with-eval-after-load 'eww
   (define-key eww-mode-map (kbd "<tab>") 'org-cycle)
-  (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab))
+  (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key eww-mode-map (kbd "C-j") 'outline-next-visible-heading)
+  (define-key eww-mode-map (kbd "C-k") 'outline-previous-visible-heading))
 #+END_SRC
 
 ** Features Anatomy
