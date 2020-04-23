@@ -33,7 +33,6 @@
 (require 'org-faces)
 (require 'outline)
 (require 'org-indent)
-(require 'replace)
 
 (ignore-errors
 ;; in case the users lazy load org-mode before require shrface
@@ -85,7 +84,25 @@ This hook is evaluated when enable `shrface-mode'."
   :type 'hook)
 
 (defvar shrface-href-face 'shrface-href-face
-  "Face name to use for href.")
+  "Obselete, use `shrface-href-other-face' instead")
+
+(defvar shrface-href-http-face 'shrface-href-http-face
+  "Face name to use for href http://.")
+
+(defvar shrface-href-https-face 'shrface-href-https-face
+  "Face name to use for href https://.")
+
+(defvar shrface-href-ftp-face 'shrface-href-ftp-face
+  "Face name to use for href ftp://.")
+
+(defvar shrface-href-file-face 'shrface-href-file-face
+  "Face name to use for href file://.")
+
+(defvar shrface-href-mailto-face 'shrface-href-mailto-face
+  "Face name to use for href mailto://.")
+
+(defvar shrface-href-other-face 'shrface-href-other-face
+  "Face name to use for other href.")
 
 (defvar shrface-outline-regexp (concat " ?+"
                                        (regexp-opt
@@ -113,7 +130,35 @@ sure that we are at the beginning of the line.")
   "Compute the header's nesting level in an outline.")
 
 (defface shrface-href-face '((t :inherit org-link))
-  "Face used for <href>"
+  "Obselete face, use `shrface-href-other-face' instead
+other than http:// https:// ftp:// file:// mailto://
+For example, it can be used for fontifying charter links with epub files when using nov.el."
+  :group 'shrface-faces)
+
+(defface shrface-href-other-face '((t :inherit org-link))
+  " Face used for <href>
+Other than http:// https:// ftp:// file:// mailto://
+For example, it can be used for fontifying charter links with epub files when using nov.el."
+  :group 'shrface-faces)
+
+(defface shrface-href-http-face '((t :inherit org-link))
+  "Face used for <href>, http://"
+  :group 'shrface-faces)
+
+(defface shrface-href-https-face '((t :inherit org-link))
+  "Face used for <href>, https://"
+  :group 'shrface-faces)
+
+(defface shrface-href-ftp-face '((t :inherit org-link))
+  "Face used for <href>, ftp://"
+  :group 'shrface-faces)
+
+(defface shrface-href-file-face '((t :inherit org-link))
+  "Face used for <href>, file://"
+  :group 'shrface-faces)
+
+(defface shrface-href-mailto-face '((t :inherit org-link))
+  "Face used for <href>, mailto://"
   :group 'shrface-faces)
 
 (defface shrface-h1-face '((t :inherit org-level-1))
@@ -216,18 +261,30 @@ Argument TYPE face attributes."
 Argument START start point.
 Argument END the url."
   (shr-add-font start (point) 'shr-link)
-  (add-text-properties
-   start (point)
-   (list 'shr-url url
-         'help-echo (let ((iri (or (ignore-errors
-                                     (decode-coding-string
-                                      (url-unhex-string url)
-                                      'utf-8 t))
-                                   url)))
-                      (if title (format "%s (%s)" iri title) iri))
-         'follow-link t
-         'face shrface-href-face
-         'mouse-face 'highlight))
+  (let* ((extract (let ((string url)
+                        (regexp "\\(https\\)\\|\\(http\\)\\|\\(ftp\\)\\|\\(file\\)\\|\\(mailto\\):"))
+                    (ignore-errors      ; in case of the url is not string
+                      (when (string-match regexp string)
+                        (match-string 0 string)))))
+         (face (cond
+                ((equal extract "http")  shrface-href-http-face)
+                ((equal extract "https") shrface-href-https-face)
+                ((equal extract "ftp") shrface-href-ftp-face)
+                ((equal extract "file") shrface-href-file-face)
+                ((equal extract "mailto") shrface-href-mailto-face)
+                (t  shrface-href-other-face))))
+    (add-text-properties
+     start (point)
+     (list 'shr-url url
+           'help-echo (let ((iri (or (ignore-errors
+                                       (decode-coding-string
+                                        (url-unhex-string url)
+                                        'utf-8 t))
+                                     url)))
+                        (if title (format "%s (%s)" iri title) iri))
+           'follow-link t
+           'face face
+           'mouse-face 'highlight)))
   (while (and start
               (< start (point)))
     (let ((next (next-single-property-change start 'keymap nil (point))))
