@@ -129,6 +129,22 @@ sure that we are at the beginning of the line.")
 (defvar shrface-level 'shrface-level
   "Compute the header's nesting level in an outline.")
 
+(defvar shrface-supported-faces-alist
+  '((em  . shrface-tag-em)
+    (h1  . shrface-tag-h1)
+    (h2  . shrface-tag-h2)
+    (h3  . shrface-tag-h3)
+    (h4  . shrface-tag-h4)
+    (h5  . shrface-tag-h5)
+    (h6  . shrface-tag-h6)
+    (a   . shrface-tag-a)
+    (p   . shrface-tag-p)
+    (li   . shrface-tag-li)
+    (dt   . shrface-tag-dt)
+    ;; (code   . shrface-tag-code)
+    )
+  "Alist of shrface supported faces except experimental faces")
+
 (defface shrface-href-face '((t :inherit org-link))
   "Obselete face, use `shrface-href-other-face' instead
 other than http:// https:// ftp:// file:// mailto://
@@ -531,42 +547,55 @@ Argument DOM dom."
   "Toggle shr minor mode.
 1. imenu
 2. outline-minor-mode
-3. org-indent-mode "
+3. org-indent-mode
+But the shrface-ioccur can still work"
   :group 'shrface
   (cond
    (shrface-mode
+    ;; (shrface-basic)
+    ;; (shrface-trial)
     (shrface-regexp)
-    (shrface-shr-item-bullet)
     (setq imenu-create-index-function #'shrface-imenu-get-tree)
     (outline-minor-mode)
     (org-indent-mode)
     (run-hooks 'shrface-mode-hook))
    (t
-    (shrface-shr-item-bullet)
+    ;; (shrface-resume)
+    ;; (setq shr-bullet "* ")
     (setq imenu-create-index-function nil)
     (outline-minor-mode -1)
     (org-indent-mode -1))))
 
-(defun shrface-basic ()
-  "enable the baisc faces"
+(defun shrface-basic()
+  "Enable the shrface faces. Need to be called once before
+loading eww, nov.el, dash-docs, mu4e, after shr."
   (interactive)
-  (add-to-list 'shr-external-rendering-functions '(em  . shrface-tag-em))
-  (add-to-list 'shr-external-rendering-functions '(h1  . shrface-tag-h1))
-  (add-to-list 'shr-external-rendering-functions '(h2  . shrface-tag-h2))
-  (add-to-list 'shr-external-rendering-functions '(h3  . shrface-tag-h3))
-  (add-to-list 'shr-external-rendering-functions '(h4  . shrface-tag-h4))
-  (add-to-list 'shr-external-rendering-functions '(h5  . shrface-tag-h5))
-  (add-to-list 'shr-external-rendering-functions '(h6  . shrface-tag-h6))
-  (add-to-list 'shr-external-rendering-functions '(a   . shrface-tag-a))
-  (add-to-list 'shr-external-rendering-functions '(p   . shrface-tag-p))
-  (add-to-list 'shr-external-rendering-functions '(li   . shrface-tag-li))
-  (add-to-list 'shr-external-rendering-functions '(dt   . shrface-tag-dt)))
+  (shrface-shr-item-bullet)
+  (dolist (sub shrface-supported-faces-alist)
+    (unless (member sub shr-external-rendering-functions)
+      (add-to-list 'shr-external-rendering-functions sub)))
+  ;; this setting is still needed to be setup by the user
+  ;; (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
+  ;; (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
+  )
+
+(defun shrface-resume ()
+  "Resume the original faces. You can use it to resume the
+original faces. All shrface faces will be disabled. Can be called
+at any time."
+  (interactive)
+  (setq shr-external-rendering-functions nil)
+  ;; this setting is still needed to be setup by the user
+  ;; (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
+  (setq shr-bullet "* "))
 
 (defun shrface-trial ()
-  "experimental features
-shrface-tag-code is experimental, sometimes eww will hangup."
+  "Experimental features. Need to be called once before loading
+eww, nov, dash-docs, mu4e, after shr. shrface-tag-code is
+experimental, sometimes eww will hangup."
   (interactive)
-  (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code)))
+  (unless (member '(code . shrface-tag-code) shr-external-rendering-functions)
+    (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))))
 
 
 (provide 'shrface)
