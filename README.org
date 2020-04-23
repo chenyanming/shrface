@@ -189,8 +189,8 @@ the following settings mentioned in this document into =(with-eval-after-load
     #+html: <a href="#experimental-faces">Experimental faces</a>
 
 - There is another library =inherit-org= to inherit org faces to even more non-org
-buffers (but it is no dependency/relationships with =shrface=), check here
-https://github.com/chenyanming/inherit-org
+  buffers, and it is no dependency/relationships with =shrface=, check here
+    https://github.com/chenyanming/inherit-org
 
 *** Notes about setting for =nov.el=
 Since =nov-shr-rendering-functions= is not a customizable variable. Therefore,
@@ -543,7 +543,6 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 #+html: <p align="center"><img src="img/code-highlight-2.png" width="80%"/></p>
 
 * TODO TODO
-- [ ] =shrface-code=
 - [ ] =shrface-highlight=
 - [ ] =shrface-todo=
 - [ ] =shrface-babel=
