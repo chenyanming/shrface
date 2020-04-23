@@ -58,7 +58,7 @@ It is a shr faces package that helps you apply your favourite org faces to =shr=
 =dash-docs=, =eww=, =nov.el=, and =mu4e=.
 
 + Configurable org-like heading faces, headline bullets, paragraph indentation,
-  fill-column, item bullet and more.
+  fill-column, item bullet, hyper links(http/https/file/mailto/etc) face and so on.
 + Browse the internet with [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] just like org mode.
 + Read dash docsets with[[https://github.com/dash-docs-el/dash-docs][ dash-docs]]  and the beauty of org faces.
 + Read epub files with [[https://github.com/wasamasa/nov.el][nov.el]] , just like org mode.
@@ -337,8 +337,36 @@ Here are the faces supported:
   :group 'shrface
   :type '(repeat (string :tag "Bullet character")))
 
-(defface shrface-href-face '((t :inherit org-link))
-  "Face used for <href>"
+;; (defface shrface-href-face '((t :inherit org-link))
+;;   "Obselete face, use `shrface-href-other-face' instead
+;; other than http:// https:// ftp:// file:// mailto://
+;; For example, it can be used for fontifying charter links with epub files when using nov.el."
+;;   :group 'shrface-faces)
+
+(defface shrface-href-other-face '((t :inherit org-link))
+  " Face used for <href>
+Other than http:// https:// ftp:// file:// mailto://
+For example, it can be used for fontifying charter links with epub files when using nov.el."
+  :group 'shrface-faces)
+
+(defface shrface-href-http-face '((t :inherit org-link))
+  "Face used for <href>, http://"
+  :group 'shrface-faces)
+
+(defface shrface-href-https-face '((t :inherit org-link))
+  "Face used for <href>, https://"
+  :group 'shrface-faces)
+
+(defface shrface-href-ftp-face '((t :inherit org-link))
+  "Face used for <href>, ftp://"
+  :group 'shrface-faces)
+
+(defface shrface-href-file-face '((t :inherit org-link))
+  "Face used for <href>, file://"
+  :group 'shrface-faces)
+
+(defface shrface-href-mailto-face '((t :inherit org-link))
+  "Face used for <href>, mailto://"
   :group 'shrface-faces)
 
 (defface shrface-h1-face '((t :inherit org-level-1))
@@ -502,6 +530,13 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 ** =2020-04-23=
 Version *2.1*:
 - New Feature:  =shrface-occur=
+- Split face =shrface-href-face= to the following new faces:
+  - =shrface-href-http-face=
+  - =shrface-href-https-face=
+  - =shrface-href-ftp-face=
+  - =shrface-href-file-face=
+  - =shrface-href-mailto-face=
+  - =shrface-href-other-face=
 
 ** =2020-04-20=
 Version *2.0*:
