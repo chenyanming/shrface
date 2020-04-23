@@ -14,6 +14,8 @@
     - [[#version-14-new-feature-imenu-support][Version 1.4: New feature, =imenu= support]]
   - [[#screenshots-with-outline-minior-mode-and-org-indent-mode][Screenshots with =outline minior mode= and =org-indent-mode=]]
     - [[#version-15-new-feature-outline-minior-mode-support-use-org-cycle-and-org-shifttab][Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)]]
+  - [[#screenshots-with-shrface-occur][Screenshots with =shrface-occur=]]
+    - [[#version-21-new-feature-list-all-headlines-with-occur][Version 2.1: New feature, list all headlines with =occur=]]
 - [[#prerequisites][Prerequisites]]
 - [[#installation][Installation]]
   - [[#ues-package][ues-package]]
@@ -28,6 +30,7 @@
     - [[#other-emacs][Other emacs]]
   - [[#features-anatomy][Features Anatomy]]
     - [[#shrface-basic-and-shrface-trail][shrface-basic and shrface-trail]]
+    - [[#shrface-occur][shrface-occur]]
     - [[#shrface-mode][shrface-mode]]
     - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
     - [[#item-bullet][Item bullet]]
@@ -38,6 +41,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-04-23][=2020-04-23=]]
   - [[#2020-04-20][=2020-04-20=]]
   - [[#2020-04-19][=2020-04-19=]]
   - [[#2020-04-18][=2020-04-18=]]
@@ -60,7 +64,7 @@ It is a shr faces package that helps you apply your favourite org faces to =shr=
 + Read epub files with [[https://github.com/wasamasa/nov.el][nov.el]] , just like org mode.
 + Read html email with [[https://github.com/djcb/mu][mu/mu4e]] , the same reading experience just like org mode
   without formatting html to org file.
-+ Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
++ Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu= or =occur=
 + Togle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
   and =org-cycle/org-shifttab=
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
@@ -105,8 +109,12 @@ originally a part of Gnus). It’s the basis of the web browser =eww=.
   #+html: <p align="center"><img src="img/indent-1.png" width="50%"/></p>
   #+html: <p align="center"><img src="img/indent-2.png" width="50%"/></p>
 
+** Screenshots with =shrface-occur=
+*** Version 2.1: New feature, list all headlines with =occur=
+  #+html: <p align="center"><img src="img/occur.png" width="50%"/></p>
+
 * Prerequisites
-This package uses =shr=, =org=, =imenu=, =outline=
+This package uses =shr=, =org=, =imenu=, =outline=, =occur=
 
 * Installation
 Choose one of the following installation methods based on your needs:
@@ -236,8 +244,10 @@ Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt
 
 ** Features Anatomy
 *** shrface-basic and shrface-trail
-
 By calling =shrface-baisic= and =shrface-trail=, you will enable shrfaces globally.
+
+*** shrface-occur
+=M-x= =shrface-occur= to list all headlines, and you can easily jump between them.
 
 *** shrface-mode
 From version =1.8=, =shrface-mode= is adapted, for it is more flexible to
@@ -476,6 +486,10 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 - [ ] =shrface-babel=
  
 * News/Logs
+
+** =2020-04-23=
+Version *2.1*:
+- New Feature:  =shrface-occur=
 
 ** =2020-04-20=
 Version *2.0*:

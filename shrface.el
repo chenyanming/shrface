@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.0
+;; Version: 2.1
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -33,6 +33,7 @@
 (require 'org-faces)
 (require 'outline)
 (require 'org-indent)
+(require 'replace)
 
 (ignore-errors
 ;; in case the users lazy load org-mode before require shrface
@@ -410,8 +411,7 @@ Argument DOM dom."
   (unless (bolp)
     (insert "\n")))
 
-
-(defun shr-tag-dt (dom)
+(defun shrface-tag-dt (dom)
   "Fontize tag dt.
 Argument DOM dom."
   (shr-ensure-newline)
@@ -462,6 +462,13 @@ Argument DOM dom."
   (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
   (setq-local outline-level shrface-level))
 
+
+;;;###autoload
+(defun shrface-occur ()
+  "Use `occur' to find all `shrface-tag-h1' to `shrface-tag-h6'."
+  (interactive)
+  (occur shrface-outline-regexp))
+
 ;;;###autoload
 (define-minor-mode shrface-mode
   "Toggle shr minor mode.
@@ -496,7 +503,7 @@ Argument DOM dom."
   (add-to-list 'shr-external-rendering-functions '(a   . shrface-tag-a))
   (add-to-list 'shr-external-rendering-functions '(p   . shrface-tag-p))
   (add-to-list 'shr-external-rendering-functions '(li   . shrface-tag-li))
-  (add-to-list 'shr-external-rendering-functions '(dt   . shr-tag-dt)))
+  (add-to-list 'shr-external-rendering-functions '(dt   . shrface-tag-dt)))
 
 (defun shrface-trial ()
   "experimental features
