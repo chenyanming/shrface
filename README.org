@@ -35,6 +35,7 @@
     - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
     - [[#item-bullet][Item bullet]]
     - [[#paragraph-indentation-and-fill-column][Paragraph indentation and fill column]]
+    - [[#versatile-url][Versatile URL]]
     - [[#supported-faces][Supported faces]]
     - [[#experimental-faces][Experimental face(s)]]
   - [[#optional-enable-source-codes-highlight][(Optional) Enable source codes highlight]]
@@ -162,7 +163,10 @@ the following settings mentioned in this document into =(with-eval-after-load
   (require 'shrface)
   (shrface-basic) ; enable shrfaces, must be called before loading eww/dash-docs/nov.el
   (shrface-trial) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
-
+  (setq shrface-href-versatile t) ; enable versatile URL faces support
+                                  ; (http/https/ftp/file/mailto/other), if
+                                  ; `shrface-href-versatile' is NON-nil, default
+                                  ; face `shrface-href-face' would be used.
   ;; eww support
   (with-eval-after-load 'eww
     (add-hook 'eww-after-render-hook 'shrface-mode))
@@ -323,6 +327,21 @@ You can set them with:
 
 PS: The default setting is 0 and 120
 
+*** Versatile URL
+You can enable versatile URL faces support simply by:
+#+BEGIN_SRC emacs-lisp
+(setq shrface-href-versatile t)
+#+END_SRC
+
+The following types of URL can be customized.
+
+- http
+- https
+- ftp
+- file
+- mailto
+- other
+
 *** Supported faces
 Here are the faces supported:
 #+BEGIN_SRC emacs-lisp
@@ -337,36 +356,40 @@ Here are the faces supported:
   :group 'shrface
   :type '(repeat (string :tag "Bullet character")))
 
-;; (defface shrface-href-face '((t :inherit org-link))
-;;   "Obselete face, use `shrface-href-other-face' instead
-;; other than http:// https:// ftp:// file:// mailto://
-;; For example, it can be used for fontifying charter links with epub files when using nov.el."
-;;   :group 'shrface-faces)
-
-(defface shrface-href-other-face '((t :inherit org-link))
-  " Face used for <href>
-Other than http:// https:// ftp:// file:// mailto://
-For example, it can be used for fontifying charter links with epub files when using nov.el."
+(defface shrface-href-face '((t :inherit org-link))
+  "Default <href> face if `shrface-href-versatile' is nil"
   :group 'shrface-faces)
 
-(defface shrface-href-http-face '((t :inherit org-link))
-  "Face used for <href>, http://"
+(defface shrface-href-other-face '((t :inherit org-link :foreground "#87cefa"))
+  "Face used for <href> other than http:// https:// ftp://
+file:// mailto:// if `shrface-href-versatile' is NON-nil. For
+example, it can be used for fontifying charter links with epub
+files when using nov.el."
   :group 'shrface-faces)
 
-(defface shrface-href-https-face '((t :inherit org-link))
-  "Face used for <href>, https://"
+(defface shrface-href-http-face '((t :inherit org-link :foreground "#39CCCC"))
+  "Face used for <href>, http:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-ftp-face '((t :inherit org-link))
-  "Face used for <href>, ftp://"
+(defface shrface-href-https-face '((t :inherit org-link :foreground "#7FDBFF"))
+  "Face used for <href>, https:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-file-face '((t :inherit org-link))
-  "Face used for <href>, file://"
+(defface shrface-href-ftp-face '((t :inherit org-link :foreground "#3D9970"))
+  "Face used for <href>, ftp:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-mailto-face '((t :inherit org-link))
-  "Face used for <href>, mailto://"
+(defface shrface-href-file-face '((t :inherit org-link :foreground "#2ECC40"))
+  "Face used for <href>, file:// if `shrface-href-versatile' is
+NON-nil"
+  :group 'shrface-faces)
+
+(defface shrface-href-mailto-face '((t :inherit org-link :foreground "#FF851B"))
+  "Face used for <href>, mailto:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-h1-face '((t :inherit org-level-1))
@@ -530,7 +553,7 @@ If you found the wrong detection is annoying, delete =lang= just like below stat
 ** =2020-04-23=
 Version *2.1*:
 - New Feature:  =shrface-occur=
-- Split face =shrface-href-face= to the following new faces:
+- New faces:
   - =shrface-href-http-face=
   - =shrface-href-https-face=
   - =shrface-href-ftp-face=

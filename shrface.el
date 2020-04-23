@@ -83,8 +83,13 @@ This hook is evaluated when enable `shrface-mode'."
   :group 'shrface
   :type 'hook)
 
+(defcustom shrface-href-versatile nil
+  "NON-nil to enable versatile href faces"
+  :group 'shrface
+  :type 'boolean)
+
 (defvar shrface-href-face 'shrface-href-face
-  "Obselete, use `shrface-href-other-face' instead")
+  "Face name to use for href if `shrface-href-versatile' is nil")
 
 (defvar shrface-href-http-face 'shrface-href-http-face
   "Face name to use for href http://.")
@@ -146,35 +151,39 @@ sure that we are at the beginning of the line.")
   "Alist of shrface supported faces except experimental faces")
 
 (defface shrface-href-face '((t :inherit org-link))
-  "Obselete face, use `shrface-href-other-face' instead
-other than http:// https:// ftp:// file:// mailto://
-For example, it can be used for fontifying charter links with epub files when using nov.el."
+  "Default <href> face if `shrface-href-versatile' is nil"
   :group 'shrface-faces)
 
-(defface shrface-href-other-face '((t :inherit org-link))
-  " Face used for <href>
-Other than http:// https:// ftp:// file:// mailto://
-For example, it can be used for fontifying charter links with epub files when using nov.el."
+(defface shrface-href-other-face '((t :inherit org-link :foreground "#87cefa"))
+  "Face used for <href> other than http:// https:// ftp://
+file:// mailto:// if `shrface-href-versatile' is NON-nil. For
+example, it can be used for fontifying charter links with epub
+files when using nov.el."
   :group 'shrface-faces)
 
-(defface shrface-href-http-face '((t :inherit org-link))
-  "Face used for <href>, http://"
+(defface shrface-href-http-face '((t :inherit org-link :foreground "#39CCCC"))
+  "Face used for <href>, http:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-https-face '((t :inherit org-link))
-  "Face used for <href>, https://"
+(defface shrface-href-https-face '((t :inherit org-link :foreground "#7FDBFF"))
+  "Face used for <href>, https:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-ftp-face '((t :inherit org-link))
-  "Face used for <href>, ftp://"
+(defface shrface-href-ftp-face '((t :inherit org-link :foreground "#3D9970"))
+  "Face used for <href>, ftp:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-file-face '((t :inherit org-link))
-  "Face used for <href>, file://"
+(defface shrface-href-file-face '((t :inherit org-link :foreground "#2ECC40"))
+  "Face used for <href>, file:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
-(defface shrface-href-mailto-face '((t :inherit org-link))
-  "Face used for <href>, mailto://"
+(defface shrface-href-mailto-face '((t :inherit org-link :foreground "#FF851B"))
+  "Face used for <href>, mailto:// if `shrface-href-versatile' is
+NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-h1-face '((t :inherit org-level-1))
@@ -277,18 +286,31 @@ Argument TYPE face attributes."
 Argument START start point.
 Argument END the url."
   (shr-add-font start (point) 'shr-link)
-  (let* ((extract (let ((string url)
-                        (regexp "\\(https\\)\\|\\(http\\)\\|\\(ftp\\)\\|\\(file\\)\\|\\(mailto\\):"))
-                    (ignore-errors      ; in case of the url is not string
-                      (when (string-match regexp string)
-                        (match-string 0 string)))))
-         (face (cond
-                ((equal extract "http")  shrface-href-http-face)
-                ((equal extract "https") shrface-href-https-face)
-                ((equal extract "ftp") shrface-href-ftp-face)
-                ((equal extract "file") shrface-href-file-face)
-                ((equal extract "mailto") shrface-href-mailto-face)
-                (t  shrface-href-other-face))))
+  (if shrface-href-versatile
+    (let* ((extract (let ((string url)
+                          (regexp "\\(https\\)\\|\\(http\\)\\|\\(ftp\\)\\|\\(file\\)\\|\\(mailto\\):"))
+                      (ignore-errors    ; in case of the url is not string
+                        (when (string-match regexp string)
+                          (match-string 0 string)))))
+           (face (cond
+                  ((equal extract "http")  shrface-href-http-face)
+                  ((equal extract "https") shrface-href-https-face)
+                  ((equal extract "ftp") shrface-href-ftp-face)
+                  ((equal extract "file") shrface-href-file-face)
+                  ((equal extract "mailto") shrface-href-mailto-face)
+                  (t  shrface-href-other-face))))
+      (add-text-properties
+       start (point)
+       (list 'shr-url url
+             'help-echo (let ((iri (or (ignore-errors
+                                         (decode-coding-string
+                                          (url-unhex-string url)
+                                          'utf-8 t))
+                                       url)))
+                          (if title (format "%s (%s)" iri title) iri))
+             'follow-link t
+             'face face
+             'mouse-face 'highlight)))
     (add-text-properties
      start (point)
      (list 'shr-url url
@@ -299,7 +321,7 @@ Argument END the url."
                                      url)))
                         (if title (format "%s (%s)" iri title) iri))
            'follow-link t
-           'face face
+           'face shrface-href-face
            'mouse-face 'highlight)))
   (while (and start
               (< start (point)))
