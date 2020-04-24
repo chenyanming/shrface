@@ -109,28 +109,6 @@ This hook is evaluated when enable `shrface-mode'."
 (defvar shrface-href-other-face 'shrface-href-other-face
   "Face name to use for other href.")
 
-(defvar shrface-outline-regexp (concat " ?+"
-                                       (regexp-opt
-                                        shrface-bullets-bullet-list
-                                        t) " +")
-  "TODO: Regexp to match shrface headlines.")
-
-(defvar shrface-outline-regexp-bol (concat " ?+"
-                                           (regexp-opt
-                                            shrface-bullets-bullet-list
-                                            t) "\\( +\\)")
-  "TODO: Regexp to match shrface headlines.
-This is similar to `shrface-outline-regexp' but additionally makes
-sure that we are at the beginning of the line.")
-
-(defvar shrface-imenu-regexp-bol (concat "^\\(?: ?+\\)"
-                                         (regexp-opt
-                                          shrface-bullets-bullet-list
-                                          t) "\\( .*\\)$")
-  "TODO: Regexp to match shrface headlines.
-This is similar to `shrface-outline-regexp' but additionally makes
-sure that we are at the beginning of the line.")
-
 (defvar shrface-level 'shrface-level
   "Compute the header's nesting level in an outline.")
 
@@ -338,6 +316,31 @@ Argument LEVEL the headline level."
              (length shrface-bullets-bullet-list))
         shrface-bullets-bullet-list))
 
+(defun shrface-outline-regexp ()
+  "TODO: Regexp to match shrface headlines."
+  (concat " ?+"
+          (regexp-opt
+           shrface-bullets-bullet-list
+           t) " +"))
+
+(defun shrface-outline-regexp-bol ()
+  "TODO: Regexp to match shrface headlines.
+This is similar to `shrface-outline-regexp' but additionally makes
+sure that we are at the beginning of the line."
+  (concat " ?+"
+          (regexp-opt
+           shrface-bullets-bullet-list
+           t) "\\( +\\)"))
+
+(defun shrface-imenu-regexp-bol ()
+  "TODO: Regexp to match shrface headlines.
+This is similar to `shrface-outline-regexp' but additionally makes
+sure that we are at the beginning of the line."
+  (concat "^\\(?: ?+\\)"
+          (regexp-opt
+           shrface-bullets-bullet-list
+           t) "\\( .*\\)$"))
+
 (defun shrface-tag-h1 (dom)
   "Fontize tag h1.
 Argument DOM dom."
@@ -520,7 +523,7 @@ Argument DOM dom."
   (setq org-imenu-markers nil)
   (org-with-wide-buffer
    (goto-char (point-max))
-   (let* ((re shrface-imenu-regexp-bol)
+   (let* ((re (shrface-imenu-regexp-bol))
           (subs (make-vector (1+ org-imenu-depth) nil))
           (last-level 0))
      (while (re-search-backward re nil t)
@@ -551,7 +554,7 @@ Argument DOM dom."
 
 (defun shrface-regexp ()
   "Set regexp for outline minior mode."
-  (setq-local outline-regexp shrface-outline-regexp)
+  (setq-local outline-regexp (shrface-outline-regexp))
   (setq-local org-outline-regexp-bol outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-outline-regexp outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-complex-heading-regexp outline-regexp) ; for org-cycle, org-shifttab
@@ -562,7 +565,7 @@ Argument DOM dom."
 (defun shrface-occur ()
   "Use `occur' to find all `shrface-tag-h1' to `shrface-tag-h6'."
   (interactive)
-  (occur shrface-outline-regexp))
+  (occur (shrface-outline-regexp)))
 
 ;;;###autoload
 (define-minor-mode shrface-mode
