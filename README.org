@@ -218,8 +218,8 @@ Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt
     (evil-define-key '(evilified normal) nov-mode-map
       (kbd "<tab>") 'org-cycle
       (kbd "<S-tab>") 'org-shifttab
-      (kbd "<tab>") 'outline-next-visible-heading
-      (kbd "<S-tab>") 'outline-previous-visible-heading))
+      (kbd "C-j") 'outline-next-visible-heading
+      (kbd "C-k") 'outline-previous-visible-heading))
 
   (with-eval-after-load 'eww
     (evil-define-key '(evilified normal) eww-mode-map
