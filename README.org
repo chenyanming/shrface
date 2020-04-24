@@ -279,6 +279,7 @@ For example, to enable =shrface-mode= to =eww=, =nov= or =mu4e=
   (with-eval-after-load 'eww
     (add-hook 'eww-after-render-hook 'shrface-mode)) ; this will affect eww and dash-docs
   (with-eval-after-load 'nov
+    (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))) ; reset nov-shr-rendering-functions, in case of the list get bigger and bigger
     (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
     (add-hook 'nov-mode-hook 'shrface-mode))
   (with-eval-after-load 'mu4e
@@ -445,8 +446,8 @@ NON-nil"
 #+END_SRC
 
 **** Enable the =shrface-code=
-=shrface-code= is disable by default, but you can add the following
-statement to enable it:
+=shrface-code= is experimental face, and it is not stable to use, but you can
+still add the following statement to enable it:
 
 #+BEGIN_SRC emacs-lisp
 (shrface-trial)
@@ -473,7 +474,8 @@ then press "d" to kill the connections before the hangup.
 Welcome test and report.
 
 ** (Optional) Enable source codes highlight
-You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight
+You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight and
+background color.
 
 #+BEGIN_SRC emacs-lisp
 (use-package shr-tag-pre-highlight
@@ -490,59 +492,60 @@ You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-ta
 
 *** Hacking the =shr-tag-pre-highlight.el=
 
-If you want to add indentation and =#+BEGIN_SRC lang=, and =#+END_SRC= for later easy copying to
-org-files, you can overwrite the function as following:
-
+If you want to add indentation, background color, =#+BEGIN_SRC lang=, and =#+END_SRC= for, you can overwrite the function as following:
 
 #+BEGIN_SRC emacs-lisp
 (require 'shr-tag-pre-highlight)
 (add-to-list 'shr-external-rendering-functions '(pre . shrface-shr-tag-pre-highlight))
 (defun shrface-shr-tag-pre-highlight (pre)
-    "Highlighting code in PRE."
-    (let* ((shr-folding-mode 'none)
-           (shr-current-font 'default)
-           (code (with-temp-buffer
-                   (shr-generic pre)
-                   (setq-local fill-column 120)
-                   (indent-rigidly (point-min) (point-max) 2)
-                   (if (eq "" (dom-texts pre))
-                       nil
-                     (progn
-                       (setq-local fill-column shrface-paragraph-fill-column)
-                       (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
-                   (buffer-string)))
-           (lang (or (shr-tag-pre-highlight-guess-language-attr pre)
-                     (let ((sym (language-detection-string code)))
-                       (and sym (symbol-name sym)))))
-           (mode (and lang
-                      (shr-tag-pre-highlight--get-lang-mode lang))))
-      (shr-ensure-newline)
-      (insert (make-string shrface-paragraph-indentation ?\ )) ; make indent string
-      (insert (propertize (concat "#+BEGIN_SRC " lang) 'face 'org-block-begin-line))
-      (shr-ensure-newline)
-      (insert
-       (or (and (fboundp mode)
-                (with-demoted-errors "Error while fontifying: %S"
-                  (shr-tag-pre-highlight-fontify code mode)))
-           code))
-      (shr-ensure-newline)
-      (insert (make-string shrface-paragraph-indentation ?\ )) ; make indent string
-      (insert (propertize "#+END_SRC" 'face 'org-block-end-line ) )
-      (shr-ensure-newline)))
+  "Highlighting code in PRE."
+  (let* ((shr-folding-mode 'none)
+         (shr-current-font 'default)
+         (code (with-temp-buffer
+                 (shr-generic pre)
+                 (setq-local fill-column 120)
+                 (indent-rigidly (point-min) (point-max) 2)
+                 (if (eq "" (dom-texts pre))
+                     nil
+                   (progn
+                     (setq-local fill-column shrface-paragraph-fill-column)
+                     (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
+                 (buffer-string)))
+         (lang (or (shr-tag-pre-highlight-guess-language-attr pre)
+                   (let ((sym (language-detection-string code)))
+                     (and sym (symbol-name sym)))))
+         (mode (and lang
+                    (shr-tag-pre-highlight--get-lang-mode lang))))
+    (shr-ensure-newline)
+    (insert (make-string shrface-paragraph-indentation ?\ )) ; make indent string
+    ;; (insert (propertize (concat "#+BEGIN_SRC " lang) 'face 'org-block-begin-line))
+    (shr-ensure-newline)
+    (setq start (point))
+    (insert
+     (or (and (fboundp mode)
+              (with-demoted-errors "Error while fontifying: %S"
+                (shrface-tag-pre-highlight-fontify code mode)
+                ))
+         code))
+    (shr-ensure-newline)
+    (setq end (point))
+    (insert (make-string shrface-paragraph-indentation ?\ )) ; make indent string
+    ;; (insert (propertize "#+END_SRC" 'face 'org-block-end-line ) )
+    (let* ((beg start)
+           (xx (make-overlay beg end)))
+      (overlay-put xx 'face '(:background "#292b2e" :height 150)))
+    (shr-ensure-newline)
+    (insert "\n")))
 #+END_SRC
 
-Since the package has not been updated a while, sometimes a wrong language is
-detected, but it is still great for highlight, even just for eye pleasing.
-
-If you found the wrong detection is annoying, delete =lang= just like below statement:
+Sometimes a wrong language is detected, but it is still great for highlight, even just for eye pleasing. If you found the wrong detection is annoying, delete =lang= just like below statement:
 
 #+BEGIN_SRC emacs-lisp
 (insert (propertize (concat "#+BEGIN_SRC" ) 'face 'org-block-begin-line))
 #+END_SRC
 
 **** Screenshots when both enable =shrface= and the code highlights
-#+html: <p align="center"><img src="img/code-highlight-1.png" width="80%"/></p>
-#+html: <p align="center"><img src="img/code-highlight-2.png" width="80%"/></p>
+#+html: <p align="center"><img src="img/code-highlight.png" width="80%"/></p>
 
 * TODO TODO
 - [ ] =shrface-highlight=
