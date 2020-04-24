@@ -58,9 +58,10 @@
 It is a shr faces package that helps you apply your favourite org faces to =shr=,
 =dash-docs=, =eww=, =nov.el=, and =mu4e=.
 
-+ Configurable org-like heading faces, headline bullets, paragraph indentation,
-  fill-column, item bullet, hyper links(http/https/file/mailto/etc) face and so on.
-+ Browse the internet with [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] just like org mode.
++ Configurable org-like heading faces, headline bullets, item bullets,paragraph
+  indentation, fill-column, item bullet, versatile hyper
+  links(http/https/file/mailto/etc) face and so on.
++ Browse the internet or local html file with [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] just like org mode.
 + Read dash docsets with[[https://github.com/dash-docs-el/dash-docs][ dash-docs]]  and the beauty of org faces.
 + Read epub files with [[https://github.com/wasamasa/nov.el][nov.el]] , just like org mode.
 + Read html email with [[https://github.com/djcb/mu][mu/mu4e]] , the same reading experience just like org mode
