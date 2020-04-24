@@ -166,7 +166,7 @@ the following settings mentioned in this document into =(with-eval-after-load
   (shrface-trial) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
   (setq shrface-href-versatile t) ; enable versatile URL faces support
                                   ; (http/https/ftp/file/mailto/other), if
-                                  ; `shrface-href-versatile' is NON-nil, default
+                                  ; `shrface-href-versatile' is nil, default
                                   ; face `shrface-href-face' would be used.
   ;; eww support
   (with-eval-after-load 'eww
