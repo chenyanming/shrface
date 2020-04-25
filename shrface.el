@@ -454,7 +454,7 @@ Argument DOM dom."
                  (shr-ensure-paragraph)
                  ;; indent and fill text node
                  ;; Temporary solution, not the best
-                 (when (not (equal "" (dom-text dom)) )
+                 (unless (equal "" (dom-text dom))
                    (setq-local fill-column shrface-paragraph-fill-column)
                    (fill-region (point-min) (point-max) nil nil nil)
                    (if (not (equal 0 shrface-paragraph-indentation))
