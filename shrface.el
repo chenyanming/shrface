@@ -88,6 +88,12 @@ This hook is evaluated when enable `shrface-mode'."
   :group 'shrface
   :type 'boolean)
 
+(defcustom shrface-imenu-depth 5
+  "The maximum level for Imenu access to Org headlines.
+This also applied for speedbar access."
+  :group 'shrface
+  :type 'integer)
+
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href if `shrface-href-versatile' is nil")
 
@@ -292,7 +298,7 @@ Argument END the url."
                       (ignore-errors    ; in case of the url is not string
                         (when (string-match regexp string)
                           (match-string 0 string)))))
-           (face (cond
+           (match (cond
                   ((equal extract "http")  shrface-href-http-face)
                   ((equal extract "https") shrface-href-https-face)
                   ((equal extract "ftp") shrface-href-ftp-face)
@@ -309,8 +315,9 @@ Argument END the url."
                                        url)))
                           (if title (format "%s (%s)" iri title) iri))
              'follow-link t
-             'face face
-             'mouse-face 'highlight)))
+             'face match
+             `,match t
+              'mouse-face 'highlight)))
     (add-text-properties
      start (point)
      (list 'shr-url url
@@ -521,7 +528,7 @@ Argument DOM dom."
   (org-with-wide-buffer
    (goto-char (point-max))
    (let* ((re shrface-imenu-regexp-bol)
-          (subs (make-vector (1+ org-imenu-depth) nil))
+          (subs (make-vector (1+ shrface-imenu-depth) nil))
           (last-level 0))
      (while (re-search-backward re nil t)
        ;; (message (int-to-string (shrface-level (match-string 1))))
@@ -529,8 +536,8 @@ Argument DOM dom."
              (headline (match-string 2)))
          (message (int-to-string level ))
          (message headline)
-         ;; (when  (<= level org-imenu-depth)
-         (when (and (<= level org-imenu-depth) (org-string-nw-p headline))
+         ;; (when  (<= level shrface-imenu-depth)
+         (when (and (<= level shrface-imenu-depth) (org-string-nw-p headline))
            (let* ((m (point-marker))
                   (item (propertize headline 'org-imenu-marker m 'org-imenu t)))
              (message item)
@@ -540,7 +547,7 @@ Argument DOM dom."
                (push (cons item
                            (cl-mapcan #'identity (cl-subseq subs (1+ level))))
                      (aref subs level))
-               (cl-loop for i from (1+ level) to org-imenu-depth
+               (cl-loop for i from (1+ level) to shrface-imenu-depth
                         do (aset subs i nil)))
              (setq last-level level)))))
      (aref subs 0))))
@@ -619,6 +626,138 @@ experimental, sometimes eww will hangup."
   (unless (member '(code . shrface-tag-code) shr-external-rendering-functions)
     (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))))
 
+(defun shrface-links()
+  "Collect the positions of href links in the current buffer."
+  (interactive)
+  (setq buf-name "*shrface-links*")
+  (let (occur-buf
+        (active-bufs (delq nil (mapcar #'(lambda (buf)
+                                           (when (buffer-live-p buf) buf))
+                                       (list (current-buffer))))))
+    ;; Handle the case where one of the buffers we're searching is the
+    ;; output buffer.  Just rename it.
+    (when (member buf-name (mapcar 'buffer-name active-bufs))
+      (with-current-buffer (get-buffer buf-name)
+        (rename-uniquely)))
+    ;; Now find or create the output buffer.
+    ;; If we just renamed that buffer, we will make a new one here.
+    (setq occur-buf (get-buffer-create buf-name))
+    (with-current-buffer occur-buf
+      (shrface-regexp)
+      (erase-buffer))
+    (shrface-href-collect shrface-href-https-face "https" occur-buf)
+    (shrface-href-collect shrface-href-http-face "http" occur-buf)
+    (shrface-href-collect shrface-href-file-face "file" occur-buf)
+    (shrface-href-collect shrface-href-mailto-face "mailto" occur-buf)
+    (shrface-href-collect shrface-href-other-face "other" occur-buf)
+    (when (buffer-live-p occur-buf)
+      (split-window-sensibly)
+      (other-window 1)
+      (switch-to-buffer occur-buf)
+      (outline-minor-mode)
+      (org-indent-mode))))
+
+(defun shrface-href-collect (href-face title buf-name)
+  "Collect the positions of URLs in the current buffer."
+  (interactive)
+
+  (with-current-buffer buf-name
+    (setq beg (point))
+    (insert (propertize (concat (shrface-bullets-level-string 1) " " title "\n") 'face 'shrface-h1-face))
+    (setq end (point))
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "<tab>") 'org-cycle)
+      (define-key map (kbd "S-<tab>") 'org-shifttab)
+      (put-text-property beg end 'keymap map)))
+
+  (save-excursion
+    (save-restriction
+      (narrow-to-region
+       (point-min)
+       (point-max))
+      (goto-char (point-min))
+      (let (beg end candidates file)
+        (setq file (current-buffer))
+        (setq end
+              (if (get-text-property (point) `,href-face)
+                  (point)
+                (text-property-any
+                 (point) (point-max) `,href-face nil)))
+
+        (while (setq beg (text-property-not-all
+                          end (point-max) `,href-face nil))
+          (goto-char beg)
+          (setq url (get-text-property beg 'shr-url))
+          ;; Skip leading newlines in the next link text.  They make things very
+          ;; ugly when running `shrface-analysis' since the characters to jump to
+          ;; each link will be displayed on the line before its visible text.
+          (skip-chars-forward "\n")
+          (setq beg (point))
+          ;; Handle the case where a link is all newlines by skipping them.
+          (if (get-text-property (point) `,href-face)
+              (progn
+                (setq end (next-single-property-change (point) `,href-face nil (point-max)))
+                ;; When link at the end of buffer, end will be set to nil.
+                (if (eq end nil)
+                    (setq end (point-max)))
+                (push (cons (buffer-substring-no-properties beg end) beg)
+                      candidates)
+                (setq string (buffer-substring-no-properties beg end))
+
+                  (with-current-buffer buf-name
+                      (setq start (point))
+                      (insert
+                       (concat
+                        (propertize
+                         (format "%s\n%s %s\n" string (all-the-icons-icon-for-url url) url)
+                         ;; 'face list-matching-lines-current-line-face
+                         'mouse-face 'mode-line-highlight
+                         'help-echo "mouse-1: go to this occurrence") "\n"))
+                      (setq final (point))
+                      (let ((map (make-sparse-keymap)))
+                        (define-key map [mouse-1] 'shrface-mouse-1)
+                        (define-key map [mouse-2] 'shrface-mouse-2)
+                        (put-text-property start final 'keymap map))
+                      (put-text-property start final 'shrface-buffer file)
+                      (put-text-property start final 'shrface-url url)
+                      (put-text-property start final 'shrface-beg beg)
+                      (put-text-property start final 'shrface-end end)))))
+        (nreverse candidates)))))
+
+(defun shrface-mouse-1 (event)
+  "visit the location click on."
+  (interactive "e")
+  (message "click mouse-1")
+  ;; (text-properties-at (point))
+  ;; (message (get-text-property (point) 'shrface-url))
+  (let ((window (posn-window (event-end event)))
+        (pos (posn-point (event-end event)))
+        file)
+    (if (not (windowp window))
+        (error "No URL chosen"))
+    (with-current-buffer (window-buffer window)
+      (let ((beg (get-text-property (point) 'shrface-beg))
+            (end (get-text-property (point) 'shrface-end))
+            (buffer (get-text-property (point) 'shrface-buffer)))
+        (other-window 1)
+        (switch-to-buffer buffer)
+        ;; (remove-overlays)
+        ;; (goto-char beg)
+        ;; (setq xx (make-overlay beg end))
+        ;; (overlay-put xx 'face '(:background "gray" :foreground "black"))
+        (set-mark beg)
+        (goto-char end)))))
+
+(defun shrface-mouse-2 (event)
+  "Browser the url click on."
+  (interactive "e")
+  (message "click mouse-2")
+  (let ((window (posn-window (event-end event)))
+        (pos (posn-point (event-end event))))
+    (if (not (windowp window))
+        (error "No URL chosen"))
+    (with-current-buffer (window-buffer window)
+      (browse-url (get-text-property (point) 'shrface-url)))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
