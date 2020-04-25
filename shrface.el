@@ -626,8 +626,13 @@ experimental, sometimes eww will hangup."
   (unless (member '(code . shrface-tag-code) shr-external-rendering-functions)
     (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))))
 
+;;; shrface-analysis
+
 (defun shrface-links()
-  "Collect the positions of href links in the current buffer."
+  "`shrface-links' the links anaysis feature of
+`shrface-analysis'. Collect the positions of href links in the
+current buffer and display the clickable result in
+*shrface-links* buffer"
   (interactive)
   (setq buf-name "*shrface-links*")
   (let (occur-buf
