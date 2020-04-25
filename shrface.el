@@ -657,24 +657,29 @@ current buffer and display the clickable result in
     (shrface-href-collect shrface-href-mailto-face "mailto" occur-buf)
     (shrface-href-collect shrface-href-other-face "other" occur-buf)
     (when (buffer-live-p occur-buf)
-      (split-window-sensibly)
-      (other-window 1)
-      (switch-to-buffer occur-buf)
+      ;; (split-window-sensibly)
+      (switch-to-buffer-other-window occur-buf)
       (outline-minor-mode)
-      (org-indent-mode))))
+      (org-indent-mode)
+      (goto-char (point-min)))))
 
 (defun shrface-href-collect (href-face title buf-name)
-  "Collect the positions of URLs in the current buffer."
+  "Collect the positions of URLs in the current buffer.
+Argument HREF-FACE the face to be collected.
+Argument TITLE the section title
+Argument BUF-NAME the buffer the results reside"
   (interactive)
 
-  (with-current-buffer buf-name
-    (setq beg (point))
-    (insert (propertize (concat (shrface-bullets-level-string 1) " " title "\n") 'face 'shrface-h1-face))
-    (setq end (point))
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "<tab>") 'org-cycle)
-      (define-key map (kbd "S-<tab>") 'org-shifttab)
-      (put-text-property beg end 'keymap map)))
+  ;; check whether `href-face' exist in the whole buffer or not
+  (if (text-property-not-all (point-min) (point-max) `,href-face nil)
+      (with-current-buffer buf-name
+        (setq beg (point))
+        (insert (propertize (concat (shrface-bullets-level-string 1) " " title "\n") 'face 'shrface-h1-face))
+        (setq end (point))
+        (let ((map (make-sparse-keymap)))
+          (define-key map (kbd "<tab>") 'org-cycle)
+          (define-key map (kbd "S-<tab>") 'org-shifttab)
+          (put-text-property beg end 'keymap map))))
 
   (save-excursion
     (save-restriction
@@ -710,37 +715,37 @@ current buffer and display the clickable result in
                       candidates)
                 (setq string (buffer-substring-no-properties beg end))
 
-                  (with-current-buffer buf-name
-                    (setq start (point))
-                    (insert
-                     (if (fboundp 'all-the-icons-icon-for-url)
-                         (all-the-icons-icon-for-url url :height 1.2)
-                       ""))
-                    (insert
-                      (propertize
-                       (format " %s" string)
-                       'face 'shrface-h2-face
-                       'mouse-face 'mode-line-highlight
-                       'help-echo "mouse-1: go to this occurrence") "\n")
-                    (insert (propertize "  " 'face 'shrface-h2-face))
-                    (insert
-                     (concat
-                      (propertize
-                       (format "%s" url)
-                       'face shrface-href-face
-                       'mouse-face 'mode-line-highlight
-                       'help-echo "mouse-1: go to this occurrence") "\n"))
-                    ;; (insert "\n")
-                    (setq final (point))
-                    (let ((map (make-sparse-keymap)))
-                      (define-key map [mouse-1] 'shrface-mouse-1)
-                      (define-key map (kbd "<RET>") 'shrface-mouse-1)
-                      (define-key map [mouse-3] 'shrface-mouse-2)
-                      (put-text-property start final 'keymap map))
-                    (put-text-property start final 'shrface-buffer file)
-                    (put-text-property start final 'shrface-url url)
-                    (put-text-property start final 'shrface-beg beg)
-                    (put-text-property start final 'shrface-end end)))))
+                (with-current-buffer buf-name
+                  (setq start (point))
+                  (insert
+                   (if (fboundp 'all-the-icons-icon-for-url)
+                       (all-the-icons-icon-for-url url :height 1.1)
+                     ""))
+                  (insert
+                   (propertize
+                    (format " %s" string)
+                    'face 'shrface-h3-face
+                    'mouse-face 'mode-line-highlight
+                    'help-echo "mouse-1: go to this occurrence") "\n")
+                  (insert (propertize "  " 'face 'shrface-h3-face))
+                  (insert
+                   (concat
+                    (propertize
+                     (format "%s" url)
+                     'face shrface-href-face
+                     'mouse-face 'mode-line-highlight
+                     'help-echo "mouse-1: go to this occurrence") "\n"))
+                  ;; (insert "\n")
+                  (setq final (point))
+                  (let ((map (make-sparse-keymap)))
+                    (define-key map [mouse-1] 'shrface-mouse-1)
+                    (define-key map (kbd "<RET>") 'shrface-mouse-1)
+                    (define-key map [mouse-3] 'shrface-mouse-2)
+                    (put-text-property start final 'keymap map))
+                  (put-text-property start final 'shrface-buffer file)
+                  (put-text-property start final 'shrface-url url)
+                  (put-text-property start final 'shrface-beg beg)
+                  (put-text-property start final 'shrface-end end)))))
         (nreverse candidates)))))
 
 (defun shrface-mouse-1 (event)
