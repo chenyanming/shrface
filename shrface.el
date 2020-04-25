@@ -618,8 +618,7 @@ Need to be called once before loading eww, nov.el, dash-docs, mu4e, after shr."
   ;; (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
 
   ;; setup occur flash
-  (add-hook 'occur-mode-find-occurrence-hook 'shrface-occur-flash)
-  )
+  (add-hook 'occur-mode-find-occurrence-hook 'shrface-occur-flash))
 
 (defun shrface-resume ()
   "Resume the original faces.
@@ -794,8 +793,7 @@ Argument EVENT mouse event."
         ;; (set-mark beg)
         ;; (goto-char end)
         (shrface-flash-show beg end 'shrface-highlight 0.5)
-        (overlay-put compilation-highlight-overlay 'window (selected-window))
-        ))))
+        (overlay-put compilation-highlight-overlay 'window (selected-window))))))
 
 (defun shrface-mouse-2 (event)
   "Copy the url click on.
