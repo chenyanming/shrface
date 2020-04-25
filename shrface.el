@@ -833,6 +833,7 @@ Argument EVENT mouse event."
       (remove-overlays)
       (goto-char beg)
       (shrface-flash-show beg end 'shrface-highlight 0.5)
+      (overlay-put compilation-highlight-overlay 'window (selected-window))
       ;; (setq xx (make-overlay beg end))
       ;; (overlay-put xx 'face '(:background "gray" :foreground "black"))
       ;; (overlay-put xx 'face 'shrface-highlight)
