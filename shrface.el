@@ -1,4 +1,4 @@
-;;; shrface.el --- Extend shr/eww with org features and anaysis capability -*- lexical-binding: t; -*-
+;;; shrface.el --- Extend shr/eww with org features and analysis capability -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020 Damon Chan
 
@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.1
+;; Version: 2.2
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -90,8 +90,7 @@ This hook is evaluated when enable variable `shrface-mode'."
   :type 'boolean)
 
 (defcustom shrface-imenu-depth 5
-  "The maximum level for Imenu access to Org headlines.
-This also applied for speedbar access."
+  "The maximum level for Imenu access to shrface headlines."
   :group 'shrface
   :type 'integer)
 
@@ -573,7 +572,7 @@ Argument DOM dom."
   (occur shrface-outline-regexp))
 
 (defun shrface-occur-flash ()
-  "Flash the occurance line."
+  "Flash the occurrence line."
   (save-excursion
     (beginning-of-visual-line)
     (setq pos (point))

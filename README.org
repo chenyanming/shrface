@@ -1,21 +1,23 @@
 #+TITLE:   SHRFACE
-#+DATE:    April 23, 2020
+#+DATE:    April 26, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
 
 * Table of Contents :TOC_3:noexport:
 - [[#description][Description]]
-  - [[#screenshots-when-using-eww][Screenshots when using =eww=]]
-  - [[#screenshots-when-using-dash-docs][Screenshots when using =dash-docs=]]
+  - [[#eww][=eww=]]
+  - [[#dash-docs][=dash-docs=]]
     - [[#version-13-new-face-shrface-code-unleash-the-full-power-of-dash-docs][Version 1.3: New face =shrface-code=, unleash the full power of =dash-docs=]]
-  - [[#screenshots-when-using-novel][Screenshots when using =nov.el=]]
-  - [[#screenshots-when-using-mu4e][Screenshots when using =mu4e=]]
-  - [[#screenshots-when-using-imenu-list-helm-imenu-counsel-imenu][Screenshots when using =imenu-list=, =helm-imenu=, =counsel-imenu=]]
+  - [[#novel][=nov.el=]]
+  - [[#mu4e][=mu4e=]]
+  - [[#imenu-list-helm-imenu-counsel-imenu][=imenu-list=, =helm-imenu=, =counsel-imenu=]]
     - [[#version-14-new-feature-imenu-support][Version 1.4: New feature, =imenu= support]]
-  - [[#screenshots-with-outline-minior-mode-and-org-indent-mode][Screenshots with =outline minior mode= and =org-indent-mode=]]
+  - [[#outline-minior-mode-and-org-indent-mode][=outline minior mode= and =org-indent-mode=]]
     - [[#version-15-new-feature-outline-minior-mode-support-use-org-cycle-and-org-shifttab][Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)]]
-  - [[#screenshots-with-shrface-occur][Screenshots with =shrface-occur=]]
+  - [[#shrface-occur][=shrface-occur=]]
     - [[#version-21-new-feature-list-all-headlines-with-occur][Version 2.1: New feature, list all headlines with =occur=]]
+  - [[#shrface-links][=shrface-links=]]
+    - [[#version-22-new-shrface-analysis-feature-list-all-clickable-url-with-shrface-links][Version 2.2: New =shrface-analysis= feature: list all clickable URL with =shrface-links=]]
 - [[#prerequisites][Prerequisites]]
 - [[#installation][Installation]]
   - [[#ues-package][ues-package]]
@@ -30,8 +32,8 @@
     - [[#other-emacs][Other emacs]]
   - [[#features-anatomy][Features Anatomy]]
     - [[#shrface-basic-and-shrface-trail][shrface-basic and shrface-trail]]
-    - [[#shrface-occur][shrface-occur]]
     - [[#shrface-mode][shrface-mode]]
+    - [[#shrface-analysis][shrface-analysis]]
     - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
     - [[#item-bullet][Item bullet]]
     - [[#paragraph-indentation-and-fill-column][Paragraph indentation and fill column]]
@@ -42,6 +44,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-04-26][=2020-04-26=]]
   - [[#2020-04-23][=2020-04-23=]]
   - [[#2020-04-20][=2020-04-20=]]
   - [[#2020-04-19][=2020-04-19=]]
@@ -55,8 +58,8 @@
   - [[#2020-04-10][=2020-04-10=]]
 
 * Description
-It is a shr faces package that helps you apply your favourite org faces to =shr=,
-=dash-docs=, =eww=, =nov.el=, and =mu4e=.
+This package extends =shr= / =eww= with org features and analysis capability.
+It can be used in =dash-docs=, =eww=, =nov.el=, and =mu4e=.
 
 + Configurable org-like heading faces, headline bullets, item bullets,paragraph
   indentation, fill-column, item bullet, versatile hyper
@@ -66,10 +69,13 @@ It is a shr faces package that helps you apply your favourite org faces to =shr=
 + Read epub files with [[https://github.com/wasamasa/nov.el][nov.el]] , just like org mode.
 + Read html email with [[https://github.com/djcb/mu][mu/mu4e]] , the same reading experience just like org mode
   without formatting html to org file.
-+ Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu= or =occur=
++ Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
 + Togle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
   and =org-cycle/org-shifttab=
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
++ Analysis capability for Researchers:
+  - Headline analysis: List all headlines with clickable texts.
+  - URL analysis: List all classified URL with clickable texts.
 
 #+BEGIN_QUOTE
 The project target is to apply org features to =shr=, and all libraries that
@@ -81,40 +87,44 @@ As [[https://www.emacswiki.org/emacs/HtmlRendering][EmacsWiki]] says:
 originally a part of Gnus). It’s the basis of the web browser =eww=.
 #+END_QUOTE
 
-** Screenshots when using =eww=
+** =eww=
   #+html: <p align="center"><img src="img/eww-1.png" width="60%"/></p>
   #+html: <p align="center"><img src="img/eww-2.png" width="60%"/></p>
 
-** Screenshots when using =dash-docs=
+** =dash-docs=
   #+html: <p align="center"><img src="img/dash-doc-1.png" width="60%"/></p>
   #+html: <p align="center"><img src="img/dash-doc-2.png" width="60%"/></p>
 
 *** Version 1.3: New face =shrface-code=, unleash the full power of =dash-docs=
   #+html: <p align="center"><img src="img/dash-docs-code.png" width="60%"/></p>
 
-** Screenshots when using =nov.el=
+** =nov.el=
   #+html: <p align="center"><img src="img/epub-1.png" width="60%"/></p>
   #+html: <p align="center"><img src="img/epub-2.png" width="60%"/></p>
 
-** Screenshots when using =mu4e=
+** =mu4e=
   #+html: <p align="center"><img src="img/mu4e.png" width="60%"/></p>
 
-** Screenshots when using =imenu-list=, =helm-imenu=, =counsel-imenu=
+** =imenu-list=, =helm-imenu=, =counsel-imenu=
 *** Version 1.4: New feature, =imenu= support
   #+html: <p align="center"><img src="img/imenu-1.png" width="60%"/></p>
   #+html: <p align="center"><img src="img/imenu-2.png" width="60%"/></p>
   #+html: <p align="center"><img src="img/imenu-3.png" width="60%"/></p>
   #+html: <p align="center"><img src="img/imenu-4.png" width="60%"/></p>
 
-** Screenshots with =outline minior mode= and =org-indent-mode=
+** =outline minior mode= and =org-indent-mode=
 *** Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)
-  #+html: <p align="center"><img src="img/indent-1.png" width="50%"/></p>
-  #+html: <p align="center"><img src="img/indent-2.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/indent-1.png" width="60%"/></p>
+  #+html: <p align="center"><img src="img/indent-2.png" width="60%"/></p>
 
-** Screenshots with =shrface-occur=
+** =shrface-occur=
 *** Version 2.1: New feature, list all headlines with =occur=
-  #+html: <p align="center"><img src="img/occur.png" width="50%"/></p>
+  #+html: <p align="center"><img src="img/occur.png" width="60%"/></p>
 
+** =shrface-links=
+*** Version 2.2: New =shrface-analysis= feature: list all clickable URL with =shrface-links=
+  #+html: <p align="center"><img src="img/links.gif" width="60%"/></p>
+ 
 * Prerequisites
 This package uses =shr=, =org=, =imenu=, =outline=, =occur=
 
@@ -265,9 +275,6 @@ Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt
 *** shrface-basic and shrface-trail
 By calling =shrface-baisic= and =shrface-trail=, you will enable shrfaces globally.
 
-*** shrface-occur
-=M-x= =shrface-occur= to list all headlines, and you can easily jump between them.
-
 *** shrface-mode
 From version =1.8=, =shrface-mode= is adapted, for it is more flexible to
 enable/disable the following additional features:
@@ -291,6 +298,20 @@ Besides, you can enable/disable =shrface-mode= via =M-x=
 
 Follow the following guide to setup the keybindings.
 #+html: <a href="#keybinding-settings">Keybinding Settings</a>
+
+*** shrface-analysis
+=shrface-analysis= is new concept brought from version *2.2*.
+=shrface-analysis= will help you analyze the html buffer, and give you a robust
+result that you can interactive with.
+
+**** shrface-occur
+=M-x= =shrface-occur= to list all headlines, and you can easily jump between them by
+mouse click.
+
+**** shrface-links
+=M-x= =shrface-links= to list all URL and classify them. You can easily go to the
+occurrence (Left Click/Enter), copy the URL (Middle Click) or browse the URL
+(Right Click)
 
 *** Headline bullets (h1 to h6)
 You can configure your farourite bullets up to 6 levels of headings (cycled
@@ -554,6 +575,13 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 - [ ] =shrface-babel=
  
 * News/Logs
+
+** =2020-04-26=
+Version *2.2*:
+- New customization: =shrface-imenu-depth= The maximum level for Imenu access to
+  shrface headlines.
+- New Feature:  =shrface-links= The first =shrface-analysis= feature, to list all
+  possible URL in a new buffer.
 
 ** =2020-04-23=
 Version *2.1*:
