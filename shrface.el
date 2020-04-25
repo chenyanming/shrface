@@ -659,6 +659,7 @@ current buffer and display the clickable result in
     (when (buffer-live-p occur-buf)
       ;; (split-window-sensibly)
       (switch-to-buffer-other-window occur-buf)
+      (read-only-mode)
       (outline-minor-mode)
       (org-indent-mode)
       (goto-char (point-min)))))
@@ -726,7 +727,7 @@ Argument BUF-NAME the buffer the results reside"
                     (format " %s" string)
                     'face 'shrface-h3-face
                     'mouse-face 'mode-line-highlight
-                    'help-echo "mouse-1: go to this occurrence") "\n")
+                    'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url") "\n")
                   (insert (propertize "  " 'face 'shrface-h3-face))
                   (insert
                    (concat
@@ -734,13 +735,14 @@ Argument BUF-NAME the buffer the results reside"
                      (format "%s" url)
                      'face shrface-href-face
                      'mouse-face 'mode-line-highlight
-                     'help-echo "mouse-1: go to this occurrence") "\n"))
+                     'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url") "\n"))
                   ;; (insert "\n")
                   (setq final (point))
                   (let ((map (make-sparse-keymap)))
                     (define-key map [mouse-1] 'shrface-mouse-1)
+                    (define-key map [mouse-2] 'shrface-mouse-2)
+                    (define-key map [mouse-3] 'shrface-mouse-3)
                     (define-key map (kbd "<RET>") 'shrface-mouse-1)
-                    (define-key map [mouse-3] 'shrface-mouse-2)
                     (put-text-property start final 'keymap map))
                   (put-text-property start final 'shrface-buffer file)
                   (put-text-property start final 'shrface-url url)
@@ -775,6 +777,19 @@ Argument BUF-NAME the buffer the results reside"
         ))))
 
 (defun shrface-mouse-2 (event)
+  "Copy the url click on."
+  (interactive "e")
+  ;; (message "click mouse-2")
+  (let ((window (posn-window (event-end event)))
+        (pos (posn-point (event-end event))))
+    (if (not (windowp window))
+        (error "No URL chosen"))
+    (with-current-buffer (window-buffer window)
+      (let ((url (get-text-property (point) 'shrface-url)) )
+        (kill-new url)
+        (message (concat "URL copied: " url))))))
+
+(defun shrface-mouse-3 (event)
   "Browser the url click on."
   (interactive "e")
   ;; (message "click mouse-3")
