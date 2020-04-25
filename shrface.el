@@ -1,4 +1,4 @@
-;;; shrface.el --- Trun shr/eww to a super html reader with org features and web anaysis capability -*- lexical-binding: t; -*-
+;;; shrface.el --- Extend shr/eww with org features and anaysis capability -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020 Damon Chan
 
@@ -25,7 +25,7 @@
 ;;; Commentary:
 
 ;; It is a shr faces package that helps you apply your favourite org features to
-;; shr - Simple HTML Render. Besides, it provides you the web anaysis tools.
+;; shr/eww. Besides, it provides you the anaysis tools.
 
 ;;; Code:
 
