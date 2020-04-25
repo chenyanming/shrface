@@ -572,6 +572,15 @@ Argument DOM dom."
   (interactive)
   (occur shrface-outline-regexp))
 
+(defun shrface-occur-flash ()
+  "flash the occurance line"
+  (save-excursion
+    (beginning-of-visual-line)
+    (setq pos (point))
+    (end-of-visual-line)
+    (setq end-pos (1+ (point)))
+    (shrface-flash-show pos end-pos 'shrface-highlight 0.5)))
+
 ;;;###autoload
 (define-minor-mode shrface-mode
   "Toggle shr minor mode.
@@ -607,6 +616,9 @@ loading eww, nov.el, dash-docs, mu4e, after shr."
   ;; this setting is still needed to be setup by the user
   ;; (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
   ;; (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
+
+  ;; setup occur flash
+  (add-hook 'occur-mode-find-occurrence-hook 'shrface-occur-flash)
   )
 
 (defun shrface-resume ()
@@ -818,7 +830,6 @@ Argument BUF-NAME the buffer the results reside"
       (remove-overlays)
       (goto-char beg)
       (shrface-flash-show beg end 'shrface-highlight 0.5)
-      (overlay-put compilation-highlight-overlay 'window (selected-window))
       ;; (setq xx (make-overlay beg end))
       ;; (overlay-put xx 'face '(:background "gray" :foreground "black"))
       ;; (overlay-put xx 'face 'shrface-highlight)
