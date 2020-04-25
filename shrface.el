@@ -720,9 +720,12 @@ Argument BUF-NAME the buffer the results reside"
                 (with-current-buffer buf-name
                   (setq start (point))
                   (insert
-                   (if (fboundp 'all-the-icons-icon-for-url)
-                       (all-the-icons-icon-for-url url :height 1.1)
-                     ""))
+                   (propertize
+                    (if (fboundp 'all-the-icons-icon-for-url)
+                        (all-the-icons-icon-for-url url :height 1.1)
+                      "")
+                    'mouse-face 'mode-line-highlight
+                    'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url"))
                   (insert
                    (propertize
                     (format " %s" string)
