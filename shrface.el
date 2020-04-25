@@ -711,33 +711,42 @@ current buffer and display the clickable result in
                 (setq string (buffer-substring-no-properties beg end))
 
                   (with-current-buffer buf-name
-                      (setq start (point))
-                      (insert
-                       (concat
-                        (propertize
-                         (format "%s\n%s %s\n" string
-                                 (if (fboundp 'all-the-icons-icon-for-url)
-                                     (all-the-icons-icon-for-url url)
-                                     "")
-                                 url)
-                         ;; 'face list-matching-lines-current-line-face
-                         'mouse-face 'mode-line-highlight
-                         'help-echo "mouse-1: go to this occurrence") "\n"))
-                      (setq final (point))
-                      (let ((map (make-sparse-keymap)))
-                        (define-key map [mouse-1] 'shrface-mouse-1)
-                        (define-key map [mouse-2] 'shrface-mouse-2)
-                        (put-text-property start final 'keymap map))
-                      (put-text-property start final 'shrface-buffer file)
-                      (put-text-property start final 'shrface-url url)
-                      (put-text-property start final 'shrface-beg beg)
-                      (put-text-property start final 'shrface-end end)))))
+                    (setq start (point))
+                    (insert
+                     (if (fboundp 'all-the-icons-icon-for-url)
+                         (all-the-icons-icon-for-url url :height 1.2)
+                       ""))
+                    (insert
+                      (propertize
+                       (format " %s" string)
+                       'face 'shrface-h2-face
+                       'mouse-face 'mode-line-highlight
+                       'help-echo "mouse-1: go to this occurrence") "\n")
+                    (insert (propertize "  " 'face 'shrface-h2-face))
+                    (insert
+                     (concat
+                      (propertize
+                       (format "%s" url)
+                       'face shrface-href-face
+                       'mouse-face 'mode-line-highlight
+                       'help-echo "mouse-1: go to this occurrence") "\n"))
+                    ;; (insert "\n")
+                    (setq final (point))
+                    (let ((map (make-sparse-keymap)))
+                      (define-key map [mouse-1] 'shrface-mouse-1)
+                      (define-key map (kbd "<RET>") 'shrface-mouse-1)
+                      (define-key map [mouse-3] 'shrface-mouse-2)
+                      (put-text-property start final 'keymap map))
+                    (put-text-property start final 'shrface-buffer file)
+                    (put-text-property start final 'shrface-url url)
+                    (put-text-property start final 'shrface-beg beg)
+                    (put-text-property start final 'shrface-end end)))))
         (nreverse candidates)))))
 
 (defun shrface-mouse-1 (event)
   "visit the location click on."
   (interactive "e")
-  (message "click mouse-1")
+  ;; (message "click mouse-1")
   ;; (text-properties-at (point))
   ;; (message (get-text-property (point) 'shrface-url))
   (let ((window (posn-window (event-end event)))
@@ -751,17 +760,19 @@ current buffer and display the clickable result in
             (buffer (get-text-property (point) 'shrface-buffer)))
         (other-window 1)
         (switch-to-buffer buffer)
-        ;; (remove-overlays)
-        ;; (goto-char beg)
-        ;; (setq xx (make-overlay beg end))
+        (remove-overlays)
+        (goto-char beg)
+        (setq xx (make-overlay beg end))
         ;; (overlay-put xx 'face '(:background "gray" :foreground "black"))
-        (set-mark beg)
-        (goto-char end)))))
+        (overlay-put xx 'face 'shrface-highlight)
+        ;; (set-mark beg)
+        ;; (goto-char end)
+        ))))
 
 (defun shrface-mouse-2 (event)
   "Browser the url click on."
   (interactive "e")
-  (message "click mouse-2")
+  ;; (message "click mouse-3")
   (let ((window (posn-window (event-end event)))
         (pos (posn-point (event-end event))))
     (if (not (windowp window))
