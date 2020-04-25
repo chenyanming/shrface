@@ -35,10 +35,11 @@
 (require 'org-indent)
 
 (ignore-errors
-;; in case the users lazy load org-mode before require shrface
-;; require org-superstar and org-bullets
+  ;; in case the users lazy load org-mode before require shrface
+  ;; require org-superstar and org-bullets
   (require 'org-superstar)
-  (require 'org-bullets))
+  (require 'org-bullets)
+  (require 'all-the-icons))
 
 ;;; shrface
 
@@ -714,7 +715,11 @@ current buffer and display the clickable result in
                       (insert
                        (concat
                         (propertize
-                         (format "%s\n%s %s\n" string (all-the-icons-icon-for-url url) url)
+                         (format "%s\n%s %s\n" string
+                                 (if (fboundp 'all-the-icons-icon-for-url)
+                                     (all-the-icons-icon-for-url url)
+                                     "")
+                                 url)
                          ;; 'face list-matching-lines-current-line-face
                          'mouse-face 'mode-line-highlight
                          'help-echo "mouse-1: go to this occurrence") "\n"))
