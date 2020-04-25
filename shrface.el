@@ -649,6 +649,7 @@ current buffer and display the clickable result in
     ;; If we just renamed that buffer, we will make a new one here.
     (setq occur-buf (get-buffer-create buf-name))
     (with-current-buffer occur-buf
+      (read-only-mode -1)
       (shrface-regexp)
       (erase-buffer))
     (shrface-href-collect shrface-href-https-face "https" occur-buf)
@@ -742,7 +743,7 @@ Argument BUF-NAME the buffer the results reside"
                     (define-key map [mouse-1] 'shrface-mouse-1)
                     (define-key map [mouse-2] 'shrface-mouse-2)
                     (define-key map [mouse-3] 'shrface-mouse-3)
-                    (define-key map (kbd "<RET>") 'shrface-mouse-1)
+                    (define-key map (kbd "<RET>") 'shrface-ret)
                     (put-text-property start final 'keymap map))
                   (put-text-property start final 'shrface-buffer file)
                   (put-text-property start final 'shrface-url url)
@@ -769,11 +770,13 @@ Argument BUF-NAME the buffer the results reside"
         (switch-to-buffer buffer)
         (remove-overlays)
         (goto-char beg)
-        (setq xx (make-overlay beg end))
+        ;; (setq xx (make-overlay beg end))
         ;; (overlay-put xx 'face '(:background "gray" :foreground "black"))
-        (overlay-put xx 'face 'shrface-highlight)
+        ;; (overlay-put xx 'face 'shrface-highlight)
         ;; (set-mark beg)
         ;; (goto-char end)
+        (shrface-flash-show beg end 'shrface-highlight 0.5)
+        (overlay-put compilation-highlight-overlay 'window (selected-window))
         ))))
 
 (defun shrface-mouse-2 (event)
@@ -799,6 +802,51 @@ Argument BUF-NAME the buffer the results reside"
         (error "No URL chosen"))
     (with-current-buffer (window-buffer window)
       (browse-url (get-text-property (point) 'shrface-url)))))
+
+(defun shrface-ret ()
+  "Goto url under point"
+  (interactive)
+  (with-current-buffer (current-buffer)
+    (let ((beg (get-text-property (point) 'shrface-beg))
+          (end (get-text-property (point) 'shrface-end))
+          (buffer (get-text-property (point) 'shrface-buffer)))
+      (other-window 1)
+      (switch-to-buffer buffer)
+      (remove-overlays)
+      (goto-char beg)
+      (shrface-flash-show beg end 'shrface-highlight 0.5)
+      (overlay-put compilation-highlight-overlay 'window (selected-window))
+      ;; (setq xx (make-overlay beg end))
+      ;; (overlay-put xx 'face '(:background "gray" :foreground "black"))
+      ;; (overlay-put xx 'face 'shrface-highlight)
+      ;; (set-mark beg)
+      ;; (goto-char end)
+       )))
+
+(defun shrface-flash-show (pos end-pos face delay)
+  "Flash a temporary highlight to help the user find something.
+POS start position
+
+END-POS end postion, flash the characters between the two
+points
+
+FACE the flash face used
+
+DELAY the flash delay"
+  (when (and (numberp delay)
+             (> delay 0))
+    ;; else
+    (when (timerp next-error-highlight-timer)
+      (cancel-timer next-error-highlight-timer))
+    (setq compilation-highlight-overlay (or compilation-highlight-overlay
+                                            (make-overlay (point-min) (point-min))))
+    (overlay-put compilation-highlight-overlay 'face face)
+    (overlay-put compilation-highlight-overlay 'priority 10000)
+    (move-overlay compilation-highlight-overlay pos end-pos)
+    (add-hook 'pre-command-hook 'compilation-goto-locus-delete-o)
+    (setq next-error-highlight-timer
+          (run-at-time delay nil 'compilation-goto-locus-delete-o))))
+
 
 (provide 'shrface)
 ;;; shrface.el ends here
