@@ -79,13 +79,13 @@
   :type 'character)
 
 (defcustom shrface-mode-hook nil
-  "Hook run after enable shrface-mode buffers.
-This hook is evaluated when enable `shrface-mode'."
+  "Hook run after enable variable `shrface-mode' buffers.
+This hook is evaluated when enable variable `shrface-mode'."
   :group 'shrface
   :type 'hook)
 
 (defcustom shrface-href-versatile nil
-  "NON-nil to enable versatile href faces"
+  "NON-nil to enable versatile href faces."
   :group 'shrface
   :type 'boolean)
 
@@ -96,7 +96,7 @@ This also applied for speedbar access."
   :type 'integer)
 
 (defvar shrface-href-face 'shrface-href-face
-  "Face name to use for href if `shrface-href-versatile' is nil")
+  "Face name to use for href if `shrface-href-versatile' is nil.")
 
 (defvar shrface-href-http-face 'shrface-href-http-face
   "Face name to use for href http://.")
@@ -155,7 +155,7 @@ sure that we are at the beginning of the line.")
     (dt   . shrface-tag-dt)
     ;; (code   . shrface-tag-code)
     )
-  "Alist of shrface supported faces except experimental faces")
+  "Alist of shrface supported faces except experimental faces.")
 
 (defface shrface-href-face '((t :inherit org-link))
   "Default <href> face if `shrface-href-versatile' is nil"
@@ -573,7 +573,7 @@ Argument DOM dom."
   (occur shrface-outline-regexp))
 
 (defun shrface-occur-flash ()
-  "flash the occurance line"
+  "Flash the occurance line."
   (save-excursion
     (beginning-of-visual-line)
     (setq pos (point))
@@ -606,8 +606,8 @@ But the shrface-ioccur can still work"
     (org-indent-mode -1))))
 
 (defun shrface-basic()
-  "Enable the shrface faces. Need to be called once before
-loading eww, nov.el, dash-docs, mu4e, after shr."
+  "Enable the shrface faces.
+Need to be called once before loading eww, nov.el, dash-docs, mu4e, after shr."
   (interactive)
   (shrface-shr-item-bullet)
   (dolist (sub shrface-supported-faces-alist)
@@ -622,7 +622,8 @@ loading eww, nov.el, dash-docs, mu4e, after shr."
   )
 
 (defun shrface-resume ()
-  "Resume the original faces. You can use it to resume the
+  "Resume the original faces.
+You can use it to resume the
 original faces. All shrface faces will be disabled. Can be called
 at any time."
   (interactive)
@@ -632,8 +633,9 @@ at any time."
   (setq shr-bullet "* "))
 
 (defun shrface-trial ()
-  "Experimental features. Need to be called once before loading
-eww, nov, dash-docs, mu4e, after shr. shrface-tag-code is
+  "Experimental features.
+Need to be called once before loading
+eww, nov, dash-docs, mu4e, after shr. `shrface-tag-code' is
 experimental, sometimes eww will hangup."
   (interactive)
   (unless (member '(code . shrface-tag-code) shr-external-rendering-functions)
@@ -642,8 +644,8 @@ experimental, sometimes eww will hangup."
 ;;; shrface-analysis
 
 (defun shrface-links()
-  "`shrface-links' the links anaysis feature of
-`shrface-analysis'. Collect the positions of href links in the
+  "`shrface-links' the links anaysis feature of `shrface-analysis'.
+Collect the positions of href links in the
 current buffer and display the clickable result in
 *shrface-links* buffer"
   (interactive)
@@ -767,7 +769,8 @@ Argument BUF-NAME the buffer the results reside"
         (nreverse candidates)))))
 
 (defun shrface-mouse-1 (event)
-  "visit the location click on."
+  "Visit the location click on.
+Argument EVENT mouse event."
   (interactive "e")
   ;; (message "click mouse-1")
   ;; (text-properties-at (point))
@@ -795,7 +798,8 @@ Argument BUF-NAME the buffer the results reside"
         ))))
 
 (defun shrface-mouse-2 (event)
-  "Copy the url click on."
+  "Copy the url click on.
+Argument EVENT mouse event."
   (interactive "e")
   ;; (message "click mouse-2")
   (let ((window (posn-window (event-end event)))
@@ -808,7 +812,8 @@ Argument BUF-NAME the buffer the results reside"
         (message (concat "URL copied: " url))))))
 
 (defun shrface-mouse-3 (event)
-  "Browser the url click on."
+  "Browser the url click on.
+Argument EVENT mouse event."
   (interactive "e")
   ;; (message "click mouse-3")
   (let ((window (posn-window (event-end event)))
@@ -819,7 +824,7 @@ Argument BUF-NAME the buffer the results reside"
       (browse-url (get-text-property (point) 'shrface-url)))))
 
 (defun shrface-ret ()
-  "Goto url under point"
+  "Goto url under point."
   (interactive)
   (with-current-buffer (current-buffer)
     (let ((beg (get-text-property (point) 'shrface-beg))
