@@ -72,7 +72,7 @@
 
 (defgroup shrface-analysis-faces nil
   "Faces for shrface analysis realted buffers"
-  :group 'shrface-analysis
+  :group 'shrface
   :group 'faces)
 
 (defcustom shrface-bullets-bullet-list
@@ -259,15 +259,15 @@ NON-nil"
 
 (defface shrface-links-title-face '((t :inherit default))
   "Face used for *shrface-links* title"
-  :group 'shrface-analysis)
+  :group 'shrface-analysis-faces)
 
 (defface shrface-links-url-face '((t :inherit font-lock-comment-face))
   "Face used for *shrface-links* url"
-  :group 'shrface-analysis)
+  :group 'shrface-analysis-faces)
 
 (defface shrface-links-mouse-face '((t :inherit mode-line-highlight))
   "Face used for *shrface-links* mouse face"
-  :group 'shrface-analysis)
+  :group 'shrface-analysis-faces)
 
 ;;; Utility
 
