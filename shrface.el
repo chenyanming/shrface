@@ -330,12 +330,11 @@ Argument TYPE face attributes."
 Argument START start point.
 Argument END the url."
   (shr-add-font start (point) 'shr-link)
-  (if shrface-href-versatile
-    (let* ((extract (let ((string url)
+  (and shrface-href-versatile (stringp url)
+    (let* ((extract (let ((sub url)
                           (regexp "\\(https\\)\\|\\(http\\)\\|\\(ftp\\)\\|\\(file\\)\\|\\(mailto\\):"))
-                      (ignore-errors    ; in case of the url is not string
-                        (when (string-match regexp string)
-                          (match-string 0 string)))))
+                        (when (string-match regexp sub)
+                          (match-string 0 sub))))
            (match (cond
                   ((equal extract "http")  shrface-href-http-face)
                   ((equal extract "https") shrface-href-https-face)
