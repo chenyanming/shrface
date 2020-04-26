@@ -616,7 +616,8 @@ Argument DOM dom."
       (setq pos (point))
       (end-of-visual-line)
       (setq end-pos (1+ (point)))
-      (shrface-flash-show pos end-pos 'shrface-highlight 0.5))))
+      (shrface-flash-show pos end-pos 'shrface-highlight 0.5)
+      (overlay-put compilation-highlight-overlay 'window (selected-window)))))
 
 ;;;###autoload
 (define-minor-mode shrface-mode
