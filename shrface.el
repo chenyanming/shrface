@@ -52,6 +52,11 @@
   :group 'shrface
   :group 'faces)
 
+(defgroup shrface-analysis-faces nil
+  "Faces for shrface analysis realted buffers"
+  :group 'shrface-analysis
+  :group 'faces)
+
 (defcustom shrface-bullets-bullet-list
   (or (bound-and-true-p org-bullets-bullet-list)
       (bound-and-true-p org-superstar-headline-bullets-list)
@@ -216,7 +221,7 @@ NON-nil"
   "Face used for <h6> headlines."
   :group 'shrface-faces)
 
-(defface shrface-highlight '((t :inherit highlight))
+(defface shrface-highlight '((t :inherit mode-line-highlight))
   ";;TODO Face used for highlight."
   :group 'shrface-faces)
 
@@ -239,6 +244,21 @@ NON-nil"
 (defface shrface-description-list-term-face '((t :inherit org-list-dt))
   "Face used for description list terms <dt>"
   :group 'shrface-faces)
+
+
+;;; Faces for shrface-analysis realted buffers
+
+(defface shrface-links-title-face '((t :inherit default))
+  "Face used for *shrface-links* title"
+  :group 'shrface-analysis)
+
+(defface shrface-links-url-face '((t :inherit font-lock-comment-face))
+  "Face used for *shrface-links* url"
+  :group 'shrface-analysis)
+
+(defface shrface-links-mouse-face '((t :inherit mode-line-highlight))
+  "Face used for *shrface-links* mouse face"
+  :group 'shrface-analysis)
 
 ;;; Utility
 
@@ -736,21 +756,21 @@ Argument BUF-NAME the buffer the results reside"
                     (if (fboundp 'all-the-icons-icon-for-url)
                         (all-the-icons-icon-for-url url :height 1.1)
                       "")
-                    'mouse-face 'mode-line-highlight
+                    'mouse-face 'shrface-links-mouse-face
                     'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url"))
                   (insert
                    (propertize
                     (format " %s" string)
-                    'face 'shrface-h3-face
-                    'mouse-face 'mode-line-highlight
+                    'face 'shrface-links-title-face
+                    'mouse-face 'shrface-links-mouse-face
                     'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url") "\n")
                   (insert (propertize "  " 'face 'shrface-h3-face))
                   (insert
                    (concat
                     (propertize
                      (format "%s" url)
-                     'face shrface-href-face
-                     'mouse-face 'mode-line-highlight
+                     'face 'shrface-links-url-face
+                     'mouse-face 'shrface-links-mouse-face
                      'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url") "\n"))
                   ;; (insert "\n")
                   (setq final (point))
