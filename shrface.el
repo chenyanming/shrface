@@ -945,7 +945,8 @@ DELAY the flash delay"
                         (overlay-put xx 'face 'shrface-highlight)))
             :require-match t
             :unwind (lambda ()
-                      (remove-overlays))
+                      (remove-overlays)
+                      (kill-buffer "*shrface-links*"))
             :caller 'shrface-counsel))
 
 (provide 'shrface)
