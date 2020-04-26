@@ -702,7 +702,20 @@ Collect the positions of href links in the
 current buffer and display the clickable result in
 *shrface-links* buffer"
   (interactive)
-  (setq shrface-href-collected-list nil)
+  (shrface-href-collect-all)
+  (let ((buf-name "*shrface-links*") occur-buf)
+    (setq occur-buf (get-buffer-create buf-name))
+    (when (buffer-live-p occur-buf)
+      (switch-to-buffer-other-window occur-buf)
+      (read-only-mode)
+      (outline-minor-mode)
+      (org-indent-mode)
+      (goto-char (point-min)))))
+
+(defun shrface-href-collect-all ()
+  "Collect all positions of URLs in the current buffer.
+The value of the `shrface-href-collected-list' is returned."
+  (setq shrface-href-collected-list nil) ; TODO use local list instead
   (let ((buf-name "*shrface-links*") occur-buf)
     (setq occur-buf (get-buffer-create buf-name))
     (with-current-buffer occur-buf
@@ -716,14 +729,8 @@ current buffer and display the clickable result in
     (shrface-href-collect shrface-href-property shrface-href-http-face "http" occur-buf) ; collect http links
     (shrface-href-collect shrface-href-property shrface-href-file-face "file" occur-buf) ; collect file links
     (shrface-href-collect shrface-href-property shrface-href-mailto-face "mailto" occur-buf) ; collect mailto links
-    (shrface-href-collect shrface-href-property shrface-href-other-face "other" occur-buf) ; collect other links
-    (when (buffer-live-p occur-buf)
-      ;; (split-window-sensibly)
-      (switch-to-buffer-other-window occur-buf)
-      (read-only-mode)
-      (outline-minor-mode)
-      (org-indent-mode)
-      (goto-char (point-min)))))
+    (shrface-href-collect shrface-href-property shrface-href-other-face "other" occur-buf)) ; collect other links
+  shrface-href-collected-list)
 
 (defun shrface-href-collect (property href-face title buf-name)
   "Collect the positions of URLs in the current buffer.
@@ -790,7 +797,7 @@ Argument BUF-NAME the buffer the results reside"
                 ;; When link at the end of buffer, end will be set to nil.
                 (if (not end)
                     (setq end (point-max)))
-               
+
                 (setq string (buffer-substring-no-properties beg end)) ; save the url title
 
                 (with-current-buffer buf-name
@@ -830,7 +837,8 @@ Argument BUF-NAME the buffer the results reside"
                   (put-text-property start final 'shrface-url url)
                   (put-text-property start final 'shrface-beg beg)
                   (put-text-property start final 'shrface-end end))
-                (push (list beg end url string) shrface-href-collected-list))))))))
+                (push (list string url beg end) shrface-href-collected-list)))))))
+  shrface-href-collected-list)
 
 (defun shrface-mouse-1 (event)
   "Visit the location click on.
@@ -924,6 +932,21 @@ DELAY the flash delay"
     (setq next-error-highlight-timer
           (run-at-time delay nil #'compilation-goto-locus-delete-o))))
 
+(defun shrface-links-counsel ()
+  "Use counsel to present all urls."
+  (interactive)
+  (ivy-read "shrface-links: " (mapcar 'cdr (shrface-href-collect-all))
+            :action (lambda (x)
+                      (remove-overlays)
+                      (let ((beg (nth 1 x))
+                            (end (nth 2 x)))
+                        (goto-char beg)
+                        (setq xx (make-overlay beg end))
+                        (overlay-put xx 'face 'shrface-highlight)))
+            :require-match t
+            :unwind (lambda ()
+                      (remove-overlays))
+            :caller 'shrface-counsel))
 
 (provide 'shrface)
 ;;; shrface.el ends here
