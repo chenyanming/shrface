@@ -75,7 +75,8 @@ It can be used in =dash-docs=, =eww=, =nov.el=, and =mu4e=.
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
 + Analysis capability for Researchers:
   - Headline analysis: List all headlines with clickable texts.
-  - URL analysis: List all classified URL with clickable texts.
+  - URL analysis: List all classified URL with clickable texts in a buffer, or jump around with
+   [[https://github.com/abo-abo/swiper][ivy]].
 
 #+BEGIN_QUOTE
 The project target is to apply org features to =shr=, and all libraries that
@@ -304,14 +305,17 @@ Follow the following guide to setup the keybindings.
 =shrface-analysis= will help you analyze the html buffer, and give you a robust
 result that you can interactive with.
 
-**** shrface-occur
+**** =shrface-occur=
 =M-x= =shrface-occur= to list all headlines, and you can easily jump between them by
 mouse click.
 
-**** shrface-links
-=M-x= =shrface-links= to list all URL and classify them. You can easily go to the
+**** =shrface-links= and =shrface-links-counsel=
+=M-x= =shrface-links= to list all URLs and classify them. You can easily go to the
 occurrence (Left Click/Enter), copy the URL (Middle Click) or browse the URL
 (Right Click)
+
+=M-x= =shrface-links-counsel= to list all URLs. You can jump around all URLs with
+ivy(counsel).
 
 *** Headline bullets (h1 to h6)
 You can configure your farourite bullets up to 6 levels of headings (cycled
@@ -580,7 +584,7 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 Version *2.2*:
 - New customization: =shrface-imenu-depth= The maximum level for Imenu access to
   shrface headlines.
-- New Feature:  =shrface-links= The first =shrface-analysis= feature, to list all
+- New Feature:  =shrface-links= and =shrface-links-counsel= The first =shrface-analysis= feature, to list all
   possible URL in a new buffer.
 
 ** =2020-04-23=
