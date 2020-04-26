@@ -92,39 +92,39 @@ originally a part of Gnus). It’s the basis of the web browser =eww=.
 [[img/eww-2.png]]
 
 ** =dash-docs=
-  #+html: <p align="center"><img src="img/dash-doc-1.png" width="60%"/></p>
-  #+html: <p align="center"><img src="img/dash-doc-2.png" width="60%"/></p>
+[[img/dash-doc-1.png]]
+[[img/dash-doc-2.png]]
 
 *** Version 1.3: New face =shrface-code=, unleash the full power of =dash-docs=
-  #+html: <p align="center"><img src="img/dash-docs-code.png" width="60%"/></p>
+[[img/dash-docs-code.png]]
 
 ** =nov.el=
-  #+html: <p align="center"><img src="img/epub-1.png" width="60%"/></p>
-  #+html: <p align="center"><img src="img/epub-2.png" width="60%"/></p>
+[[img/epub-1.png]]
+[[img/epub-2.png]]
 
 ** =mu4e=
-  #+html: <p align="center"><img src="img/mu4e.png" width="60%"/></p>
+[[img/mu4e.png]]
 
 ** =imenu-list=, =helm-imenu=, =counsel-imenu=
 *** Version 1.4: New feature, =imenu= support
-  #+html: <p align="center"><img src="img/imenu-1.png" width="60%"/></p>
-  #+html: <p align="center"><img src="img/imenu-2.png" width="60%"/></p>
-  #+html: <p align="center"><img src="img/imenu-3.png" width="60%"/></p>
-  #+html: <p align="center"><img src="img/imenu-4.png" width="60%"/></p>
+[[img/imenu-1.png]]
+[[img/imenu-2.png]]
+[[img/imenu-3.png]]
+[[img/imenu-4.png]]
 
 ** =outline minior mode= and =org-indent-mode=
 *** Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)
-  #+html: <p align="center"><img src="img/indent-1.png" width="60%"/></p>
-  #+html: <p align="center"><img src="img/indent-2.png" width="60%"/></p>
+[[img/indent-1.png]]
+[[img/indent-2.png]]
 
 ** =shrface-occur=
 *** Version 2.1: New feature, list all headlines with =occur=
-  #+html: <p align="center"><img src="img/occur.png" width="60%"/></p>
+[[img/occur.png]]
 
 ** =shrface-links=
 *** Version 2.2: New =shrface-analysis= feature: list all clickable URL with =shrface-links=
-  #+html: <p align="center"><img src="img/links.gif" width="60%"/></p>
- 
+[[img/links.gif]]
+
 * Prerequisites
 This package uses =shr=, =org=, =imenu=, =outline=, =occur=
 
