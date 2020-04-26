@@ -940,7 +940,7 @@ DELAY the flash delay"
               :action (lambda (x)
                         (remove-overlays)
                         (let ((beg (nth 1 x))
-                              (end (nth 2 x)))
+                              (end (nth 2 x)) xx)
                           (goto-char beg)
                           (setq xx (make-overlay beg end))
                           (overlay-put xx 'face 'shrface-highlight)))
