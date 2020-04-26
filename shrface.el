@@ -50,7 +50,7 @@
 (require 'outline)
 (require 'org-indent)
 (require 'compile)
-;; (require 'pcre2el)
+(require 'pcre2el)
 
 (ignore-errors
   ;; in case the users lazy load org-mode before require shrface
