@@ -117,6 +117,15 @@ This hook is evaluated when enable variable `shrface-mode'."
   :group 'shrface
   :type 'integer)
 
+(defvar shrface-href-property 'shr-url
+  "Property name to use for href.")
+
+(defvar shrface-eww-image-property 'image-url
+  "Property name to use for internet image.")
+
+;; (defvar shrface-nov-image-original-property 'display
+;;   "Property name to use for external image.")
+
 (defvar shrface-href-face 'shrface-href-face
   "Face name to use for href if `shrface-href-versatile' is nil.")
 
@@ -695,11 +704,14 @@ current buffer and display the clickable result in
       (read-only-mode -1)
       (shrface-regexp)
       (erase-buffer))
-    (shrface-href-collect shrface-href-https-face "https" occur-buf)
-    (shrface-href-collect shrface-href-http-face "http" occur-buf)
-    (shrface-href-collect shrface-href-file-face "file" occur-buf)
-    (shrface-href-collect shrface-href-mailto-face "mailto" occur-buf)
-    (shrface-href-collect shrface-href-other-face "other" occur-buf)
+    ;; (plist-get (cdr '(image :type imagemagick :file "/var/folders/st/mkq0gxld3rv39t6y6zv45j540000gn/T/nov-cKFscX.epub/EPUB/media/file6" :scale 1 :ascent 100 :max-width 1382 :max-height 820)) :file)
+    ;; (shrface-href-collect shrface-nov-image-original-property shrface-nov-image-original-property "images" occur-buf) ; TODO: collect nov.el images links
+    (shrface-href-collect shrface-eww-image-property shrface-eww-image-property "images" occur-buf) ; collect internet images links
+    (shrface-href-collect shrface-href-property shrface-href-https-face "https" occur-buf) ; collect https links
+    (shrface-href-collect shrface-href-property shrface-href-http-face "http" occur-buf) ; collect http links
+    (shrface-href-collect shrface-href-property shrface-href-file-face "file" occur-buf) ; collect file links
+    (shrface-href-collect shrface-href-property shrface-href-mailto-face "mailto" occur-buf) ; collect mailto links
+    (shrface-href-collect shrface-href-property shrface-href-other-face "other" occur-buf) ; collect other links
     (when (buffer-live-p occur-buf)
       ;; (split-window-sensibly)
       (switch-to-buffer-other-window occur-buf)
@@ -708,12 +720,12 @@ current buffer and display the clickable result in
       (org-indent-mode)
       (goto-char (point-min)))))
 
-(defun shrface-href-collect (href-face title buf-name)
+(defun shrface-href-collect (property href-face title buf-name)
   "Collect the positions of URLs in the current buffer.
-Argument HREF-FACE the face to be collected.
+Argument PROPERTY the property to be searched.
+Argument HREF-FACE the face property to be collected.
 Argument TITLE the section title
 Argument BUF-NAME the buffer the results reside"
-  (interactive)
 
   ;; check whether `href-face' exist in the whole buffer or not
   (if (text-property-not-all (point-min) (point-max) `,href-face nil)
@@ -744,13 +756,29 @@ Argument BUF-NAME the buffer the results reside"
         (while (setq beg (text-property-not-all
                           end (point-max) `,href-face nil))
           (goto-char beg)
-          (setq url (get-text-property beg 'shr-url))
+          (setq url (get-text-property beg `,property))
+
+          ;; TODO collect nov.el images links
+          ;; (equal (car (get-text-property (point) 'display)) 'image)
+          ;; (if (equal `,property 'display)
+          ;;     (if (equal (car (get-text-property beg `,property)) 'image)
+          ;;         (setq url (plist-get (cdr (get-text-property beg `,property)) :file))
+          ;;       (setq href-face nil)    ; just set `href-face' nil to skip the following checking
+          ;;       )
+          ;;   (setq url (get-text-property beg `,property)))
+
+          ;; TODO Disable, because it will make eww loop and hang
           ;; Skip leading newlines in the next link text.  They make things very
           ;; ugly when running `shrface-analysis' since the characters to jump to
           ;; each link will be displayed on the line before its visible text.
-          ;; (skip-chars-forward "\n") ; TODO Disable, because it will make eww loop and hang
-          (setq beg (point))
+          ;; (skip-chars-forward "\n")
           ;; Handle the case where a link is all newlines by skipping them.
+
+          ;; save the begining location to `beg'
+          (setq beg (point))
+
+          ;; Extract the current point text properties if it matched by giving
+          ;; property `href-face', and insert it to `buf-name'
           (if (get-text-property (point) `,href-face)
               (progn
                 (setq end (next-single-property-change (point) `,href-face nil (point-max)))
