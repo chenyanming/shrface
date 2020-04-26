@@ -596,8 +596,11 @@ Argument DOM dom."
 (defun shrface-occur-flash ()
   "Flash the occurrence line."
   (save-excursion
-    (let* ((pos (progn (beginning-of-visual-line) (point)))
-           (end-pos (progn (end-of-visual-line) (1+ (point)))))
+    (let (pos end-pos)
+      (beginning-of-visual-line)
+      (setq pos (point))
+      (end-of-visual-line)
+      (setq end-pos (1+ (point)))
       (shrface-flash-show pos end-pos 'shrface-highlight 0.5))))
 
 ;;;###autoload
