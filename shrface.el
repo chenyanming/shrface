@@ -748,7 +748,7 @@ Argument BUF-NAME the buffer the results reside"
           ;; Skip leading newlines in the next link text.  They make things very
           ;; ugly when running `shrface-analysis' since the characters to jump to
           ;; each link will be displayed on the line before its visible text.
-          (skip-chars-forward "\n")
+          ;; (skip-chars-forward "\n") ; TODO Disable, because it will make eww loop and hang
           (setq beg (point))
           ;; Handle the case where a link is all newlines by skipping them.
           (if (get-text-property (point) `,href-face)
