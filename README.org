@@ -88,8 +88,8 @@ originally a part of Gnus). It’s the basis of the web browser =eww=.
 #+END_QUOTE
 
 ** =eww=
-  #+html: <p align="center"><img src="img/eww-1.png" width="60%"/></p>
-  #+html: <p align="center"><img src="img/eww-2.png" width="60%"/></p>
+[[img/eww-1.png]]
+[[img/eww-2.png]]
 
 ** =dash-docs=
   #+html: <p align="center"><img src="img/dash-doc-1.png" width="60%"/></p>
