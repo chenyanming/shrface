@@ -166,6 +166,10 @@ This hook is evaluated when enable variable `shrface-mode'."
     )
   "Alist of shrface supported faces except experimental faces.")
 
+(defvar shrface-href-collected-list nil
+  "Global list to save the collected href items when we run `shrface-links'.
+Used for later analysis, sorting, exporting etc.")
+
 (defface shrface-href-face '((t :inherit org-link))
   "Default <href> face if `shrface-href-versatile' is nil"
   :group 'shrface-faces)
@@ -698,6 +702,7 @@ Collect the positions of href links in the
 current buffer and display the clickable result in
 *shrface-links* buffer"
   (interactive)
+  (setq shrface-href-collected-list nil)
   (let ((buf-name "*shrface-links*") occur-buf)
     (setq occur-buf (get-buffer-create buf-name))
     (with-current-buffer occur-buf
@@ -745,7 +750,7 @@ Argument BUF-NAME the buffer the results reside"
        (point-min)
        (point-max))
       (goto-char (point-min))
-      (let (beg end candidates buf string url start final)
+      (let (beg end buf string url start final)
         (setq buf (current-buffer))
         (setq end
               (if (get-text-property (point) `,href-face)
@@ -785,9 +790,8 @@ Argument BUF-NAME the buffer the results reside"
                 ;; When link at the end of buffer, end will be set to nil.
                 (if (not end)
                     (setq end (point-max)))
-                (push (cons (buffer-substring-no-properties beg end) beg)
-                      candidates)
-                (setq string (buffer-substring-no-properties beg end))
+               
+                (setq string (buffer-substring-no-properties beg end)) ; save the url title
 
                 (with-current-buffer buf-name
                   (setq start (point)) ; save the start location before insertion
@@ -825,8 +829,8 @@ Argument BUF-NAME the buffer the results reside"
                   (put-text-property start final 'shrface-buffer buf)
                   (put-text-property start final 'shrface-url url)
                   (put-text-property start final 'shrface-beg beg)
-                  (put-text-property start final 'shrface-end end)))))
-        (nreverse candidates)))))
+                  (put-text-property start final 'shrface-end end))
+                (push (list beg end url string) shrface-href-collected-list))))))))
 
 (defun shrface-mouse-1 (event)
   "Visit the location click on.
