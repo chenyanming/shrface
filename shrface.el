@@ -33,6 +33,8 @@
 (require 'org-faces)
 (require 'outline)
 (require 'org-indent)
+(require 'compile)
+;; (require 'pcre2el)
 
 (ignore-errors
   ;; in case the users lazy load org-mode before require shrface
@@ -594,11 +596,9 @@ Argument DOM dom."
 (defun shrface-occur-flash ()
   "Flash the occurrence line."
   (save-excursion
-    (beginning-of-visual-line)
-    (setq pos (point))
-    (end-of-visual-line)
-    (setq end-pos (1+ (point)))
-    (shrface-flash-show pos end-pos 'shrface-highlight 0.5)))
+    (let* ((pos (progn (beginning-of-visual-line) (point)))
+           (end-pos (progn (end-of-visual-line) (1+ (point)))))
+      (shrface-flash-show pos end-pos 'shrface-highlight 0.5))))
 
 ;;;###autoload
 (define-minor-mode shrface-mode
@@ -637,7 +637,7 @@ Need to be called once before loading eww, nov.el, dash-docs, mu4e, after shr."
   ;; (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
 
   ;; setup occur flash
-  (add-hook 'occur-mode-find-occurrence-hook 'shrface-occur-flash))
+  (add-hook 'occur-mode-find-occurrence-hook #'shrface-occur-flash))
 
 (defun shrface-resume ()
   "Resume the original faces.
@@ -667,18 +667,7 @@ Collect the positions of href links in the
 current buffer and display the clickable result in
 *shrface-links* buffer"
   (interactive)
-  (setq buf-name "*shrface-links*")
-  (let (occur-buf
-        (active-bufs (delq nil (mapcar #'(lambda (buf)
-                                           (when (buffer-live-p buf) buf))
-                                       (list (current-buffer))))))
-    ;; Handle the case where one of the buffers we're searching is the
-    ;; output buffer.  Just rename it.
-    (when (member buf-name (mapcar 'buffer-name active-bufs))
-      (with-current-buffer (get-buffer buf-name)
-        (rename-uniquely)))
-    ;; Now find or create the output buffer.
-    ;; If we just renamed that buffer, we will make a new one here.
+  (let ((buf-name "*shrface-links*") occur-buf)
     (setq occur-buf (get-buffer-create buf-name))
     (with-current-buffer occur-buf
       (read-only-mode -1)
@@ -707,13 +696,14 @@ Argument BUF-NAME the buffer the results reside"
   ;; check whether `href-face' exist in the whole buffer or not
   (if (text-property-not-all (point-min) (point-max) `,href-face nil)
       (with-current-buffer buf-name
-        (setq beg (point))
-        (insert (propertize (concat (shrface-bullets-level-string 1) " " title "\n") 'face 'shrface-h1-face))
-        (setq end (point))
-        (let ((map (make-sparse-keymap)))
-          (define-key map (kbd "<tab>") 'org-cycle)
-          (define-key map (kbd "S-<tab>") 'org-shifttab)
-          (put-text-property beg end 'keymap map))))
+        (let (beg end)
+          (setq beg (point))
+          (insert (propertize (concat (shrface-bullets-level-string 1) " " title "\n") 'face 'shrface-h1-face))
+          (setq end (point))
+          (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "<tab>") 'org-cycle)
+            (define-key map (kbd "S-<tab>") 'org-shifttab)
+            (put-text-property beg end 'keymap map)))))
 
   (save-excursion
     (save-restriction
@@ -721,8 +711,8 @@ Argument BUF-NAME the buffer the results reside"
        (point-min)
        (point-max))
       (goto-char (point-min))
-      (let (beg end candidates file)
-        (setq file (current-buffer))
+      (let (beg end candidates buf string url start final)
+        (setq buf (current-buffer))
         (setq end
               (if (get-text-property (point) `,href-face)
                   (point)
@@ -743,14 +733,14 @@ Argument BUF-NAME the buffer the results reside"
               (progn
                 (setq end (next-single-property-change (point) `,href-face nil (point-max)))
                 ;; When link at the end of buffer, end will be set to nil.
-                (if (eq end nil)
+                (if (not end)
                     (setq end (point-max)))
                 (push (cons (buffer-substring-no-properties beg end) beg)
                       candidates)
                 (setq string (buffer-substring-no-properties beg end))
 
                 (with-current-buffer buf-name
-                  (setq start (point))
+                  (setq start (point)) ; save the start location before insertion
                   (insert
                    (propertize
                     (if (fboundp 'all-the-icons-icon-for-url)
@@ -763,8 +753,8 @@ Argument BUF-NAME the buffer the results reside"
                     (format " %s" string)
                     'face 'shrface-links-title-face
                     'mouse-face 'shrface-links-mouse-face
-                    'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url") "\n")
-                  (insert (propertize "  " 'face 'shrface-h3-face))
+                    'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url") "\n  ")
+                  ;; (insert (propertize "  " 'face 'shrface-h3-face))
                   (insert
                    (concat
                     (propertize
@@ -773,14 +763,16 @@ Argument BUF-NAME the buffer the results reside"
                      'mouse-face 'shrface-links-mouse-face
                      'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url") "\n"))
                   ;; (insert "\n")
-                  (setq final (point))
+                  (setq final (point)) ; save the final location before insertion
+
+                  ;; Put keymap and text properties to the texts between `start' to `final'
                   (let ((map (make-sparse-keymap)))
                     (define-key map [mouse-1] 'shrface-mouse-1)
                     (define-key map [mouse-2] 'shrface-mouse-2)
                     (define-key map [mouse-3] 'shrface-mouse-3)
                     (define-key map (kbd "<RET>") 'shrface-ret)
                     (put-text-property start final 'keymap map))
-                  (put-text-property start final 'shrface-buffer file)
+                  (put-text-property start final 'shrface-buffer buf)
                   (put-text-property start final 'shrface-url url)
                   (put-text-property start final 'shrface-beg beg)
                   (put-text-property start final 'shrface-end end)))))
@@ -793,9 +785,7 @@ Argument EVENT mouse event."
   ;; (message "click mouse-1")
   ;; (text-properties-at (point))
   ;; (message (get-text-property (point) 'shrface-url))
-  (let ((window (posn-window (event-end event)))
-        (pos (posn-point (event-end event)))
-        file)
+  (let ((window (posn-window (event-end event))))
     (if (not (windowp window))
         (error "No URL chosen"))
     (with-current-buffer (window-buffer window)
@@ -819,8 +809,7 @@ Argument EVENT mouse event."
 Argument EVENT mouse event."
   (interactive "e")
   ;; (message "click mouse-2")
-  (let ((window (posn-window (event-end event)))
-        (pos (posn-point (event-end event))))
+  (let ((window (posn-window (event-end event))))
     (if (not (windowp window))
         (error "No URL chosen"))
     (with-current-buffer (window-buffer window)
@@ -833,8 +822,7 @@ Argument EVENT mouse event."
 Argument EVENT mouse event."
   (interactive "e")
   ;; (message "click mouse-3")
-  (let ((window (posn-window (event-end event)))
-        (pos (posn-point (event-end event))))
+  (let ((window (posn-window (event-end event))))
     (if (not (windowp window))
         (error "No URL chosen"))
     (with-current-buffer (window-buffer window)
@@ -880,9 +868,9 @@ DELAY the flash delay"
     (overlay-put compilation-highlight-overlay 'face face)
     (overlay-put compilation-highlight-overlay 'priority 10000)
     (move-overlay compilation-highlight-overlay pos end-pos)
-    (add-hook 'pre-command-hook 'compilation-goto-locus-delete-o)
+    (add-hook 'pre-command-hook #'compilation-goto-locus-delete-o)
     (setq next-error-highlight-timer
-          (run-at-time delay nil 'compilation-goto-locus-delete-o))))
+          (run-at-time delay nil #'compilation-goto-locus-delete-o))))
 
 
 (provide 'shrface)
