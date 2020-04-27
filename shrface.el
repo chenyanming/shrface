@@ -56,7 +56,8 @@
   ;; require org-superstar and org-bullets
   (require 'org-superstar)
   (require 'org-bullets)
-  (require 'all-the-icons))
+  (require 'all-the-icons)
+  (require 'ivy))
 
 ;;; shrface
 
@@ -941,20 +942,22 @@ DELAY the flash delay"
   "Use counsel to present all urls."
   (interactive)
   (let ((start (point)))
-    (ivy-read "shrface-links: " (mapcar 'cdr (shrface-href-collect-all))
-              :action (lambda (x)
-                        (remove-overlays)
-                        (let ((beg (nth 1 x))
-                              (end (nth 2 x)) xx)
-                          (goto-char beg)
-                          (setq xx (make-overlay beg end))
-                          (overlay-put xx 'face 'shrface-highlight)))
-              :require-match t
-              :unwind (lambda ()
-                        (remove-overlays)
-                        (kill-buffer "*shrface-links*")
-                        (goto-char start))
-              :caller 'shrface-counsel)))
+    (if (fboundp 'ivy-read)
+        (ivy-read "shrface-links: " (mapcar 'cdr (shrface-href-collect-all))
+                  :action (lambda (x)
+                            (remove-overlays)
+                            (let ((beg (nth 1 x))
+                                  (end (nth 2 x)) xx)
+                              (goto-char beg)
+                              (setq xx (make-overlay beg end))
+                              (overlay-put xx 'face 'shrface-highlight)))
+                  :require-match t
+                  :unwind (lambda ()
+                            (remove-overlays)
+                            (kill-buffer "*shrface-links*")
+                            (goto-char start))
+                  :caller 'shrface-counsel)
+      (message "Please install 'counsel' before using 'shrface-links-counsel'"))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
