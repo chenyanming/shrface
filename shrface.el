@@ -231,7 +231,7 @@ NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-highlight '((t :inherit mode-line-highlight))
-  ";;TODO Face used for highlight."
+  ";;Face used for highlight."
   :group 'shrface-faces)
 
 (defface shrface-verbatim '((t :inherit org-verbatim))
