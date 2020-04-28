@@ -1,7 +1,8 @@
 #+TITLE:   SHRFACE
-#+DATE:    April 26, 2020
+#+DATE:    April 28, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
+[[https://melpa.org/#/shrface][file:https://melpa.org/packages/shrface-badge.svg]]  [[melpazoid][https://github.com/chenyanming/shrface/workflows/melpazoid/badge.svg]]
 
 * Table of Contents :TOC_3:noexport:
 - [[#description][Description]]
@@ -18,17 +19,13 @@
     - [[#version-21-new-feature-list-all-headlines-with-occur][Version 2.1: New feature, list all headlines with =occur=]]
   - [[#shrface-links][=shrface-links=]]
     - [[#version-22-new-shrface-analysis-feature-list-all-clickable-url-with-shrface-links][Version 2.2: New =shrface-analysis= feature: list all clickable URL with =shrface-links=]]
-- [[#prerequisites][Prerequisites]]
 - [[#installation][Installation]]
-  - [[#ues-package][ues-package]]
-  - [[#doom-emacs][Doom Emacs]]
-  - [[#spacemacs-or-other-emacs-distributions][Spacemacs or other emacs distributions]]
 - [[#configuration][Configuration]]
   - [[#quick-start][Quick Start]]
     - [[#notes-about-setting-for-novel][Notes about setting for =nov.el=]]
   - [[#keybinding-settings][Keybinding Settings]]
     - [[#spacemacs][Spacemacs]]
-    - [[#doom-emacs-1][Doom emacs]]
+    - [[#doom-emacs][Doom emacs]]
     - [[#other-emacs][Other emacs]]
   - [[#features-anatomy][Features Anatomy]]
     - [[#shrface-basic-and-shrface-trail][shrface-basic and shrface-trail]]
@@ -126,39 +123,12 @@ originally a part of Gnus). It’s the basis of the web browser =eww=.
 *** Version 2.2: New =shrface-analysis= feature: list all clickable URL with =shrface-links=
 [[img/links.gif]]
 
-* Prerequisites
-This package uses =shr=, =org=, =imenu=, =outline=, =occur=
-
 * Installation
-Choose one of the following installation methods based on your needs:
 
-** ues-package
-
-#+BEGIN_SRC emacs-lisp
-(use-package shrface
-  :after shr
-  :quelpa
-  (shrface :repo "chenyanming/shrface" :fetcher github))
-#+END_SRC
-
-** Doom Emacs
-Add the following line to =package.el=
-#+BEGIN_SRC emacs-lisp
-(package! shrface :recipe (:host github :repo "chenyanming/shrface"))
-#+END_SRC
-
-Run =./.emacs.d/bin/doom sync=
-
-** Spacemacs or other emacs distributions
-Put =shrface.el= to your load-path. Here is example of ~spacemacs~
-
-#+BEGIN_SRC sh
-git clone git@github.com:chenyanming/shrface.git ~/.emacs.d/private/shrface
-#+END_SRC
+It's available on [[https://melpa.org/][Melpa]] :
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/private/shrface"))
-(require 'shrface)
+M-x package-install shrface
 #+END_SRC
 
 * Configuration
