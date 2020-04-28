@@ -1,5 +1,5 @@
 #+TITLE:   SHRFACE
-#+DATE:    April 28, 2020
+#+DATE:    April 29, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
 [[https://melpa.org/#/shrface][file:https://melpa.org/packages/shrface-badge.svg]]
@@ -41,6 +41,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-04-29][=2020-04-29=]]
   - [[#2020-04-26][=2020-04-26=]]
   - [[#2020-04-23][=2020-04-23=]]
   - [[#2020-04-20][=2020-04-20=]]
@@ -300,6 +301,25 @@ You can set it with:
 PS: The bullets setting can be derived from =org-bullets-bullet-list= or
 =org-superstar-headline-bullets-list=, if [[https://github.com/sabof/org-bullets][org-bullets]] or [[https://github.com/integral-dw/org-superstar-mode][org-superstar]] is
 available.
+
+**** Toggle headline bullets
+
+The quick way to toggle(disable/enable) headline bullets:
+#+BEGIN_SRC emacs-lisp
+M-x shrface-toggle-bullets
+#+END_SRC
+
+
+**** Disable headline bullets globally
+If you do not like headline bullets, disable them globally by:
+
+#+BEGIN_SRC emacs-lisp
+(setq shrface-toggle-bullets t)
+#+END_SRC
+
+Please notice, the following features are also disabled:
+1. function =shrface-occur=
+2. variable =shrface-mode=
 
 *** Item bullet
 You can configure your favorite item bullet for shrface
@@ -570,6 +590,10 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 - [ ] =shrface-babel=
  
 * News/Logs
+
+** =2020-04-29=
+Version *2.3*:
+- New customization: =shrface-toggle-bullets= Quick way to toggle the headline bullets.
 
 ** =2020-04-26=
 Version *2.2*:

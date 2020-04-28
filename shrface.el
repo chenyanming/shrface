@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.2
+;; Version: 2.3
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -116,6 +116,14 @@ This hook is evaluated when enable variable `shrface-mode'."
   "The maximum level for Imenu access to shrface headlines."
   :group 'shrface
   :type 'integer)
+
+(defcustom shrface-toggle-bullets nil
+  "Non-nil to disable headline bullets globally.
+The following features are also disabled:
+1. function `shrface-occur'
+2. variable `shrface-mode'"
+  :group 'shrface
+  :type 'boolean)
 
 (defvar shrface-href-property 'shr-url
   "Property name to use for href.")
@@ -437,8 +445,8 @@ Argument DOM dom."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face))
-  ;; (insert (propertize  "* " 'face 'shrface-h1-face))
+  (unless shrface-toggle-bullets
+   (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face)))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
@@ -447,7 +455,8 @@ Optional argument TYPES face attributes."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face))
+  (unless shrface-toggle-bullets
+      (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face)))
   ;; (insert (propertize  "** " 'face 'shrface-h2-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -457,7 +466,8 @@ Optional argument TYPES face attributes."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face))
+  (unless shrface-toggle-bullets
+   (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face)))
   ;; (insert (propertize  "*** " 'face 'shrface-h3-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -467,7 +477,8 @@ Optional argument TYPES face attributes."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face))
+  (unless shrface-toggle-bullets
+    (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face)))
   ;; (insert (propertize  "**** " 'face 'shrface-h4-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -477,7 +488,8 @@ Optional argument TYPES face attributes."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face))
+  (unless shrface-toggle-bullets
+    (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face)) )
   ;; (insert (propertize  "***** " 'face 'shrface-h5-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -487,7 +499,8 @@ Optional argument TYPES face attributes."
 Argument DOM .
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face))
+  (unless shrface-toggle-bullets
+    (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face)) )
   ;; (insert (propertize  "****** " 'face 'shrface-h6-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -620,9 +633,12 @@ Argument DOM dom."
 
 ;;;###autoload
 (defun shrface-occur ()
-  "Use `occur' to find all `shrface-tag-h1' to `shrface-tag-h6'."
+  "Use `occur' to find all `shrface-tag-h1' to `shrface-tag-h6'.
+`shrface-occur' will disable if variable `shrface-toggle-bullets' is Non-nil."
   (interactive)
-  (occur (shrface-outline-regexp)))
+  (if (not shrface-toggle-bullets)
+      (occur (shrface-outline-regexp)))
+  (message "Please set `shrface-toggle-bullets' nil to use `shrface-occur'"))
 
 (defun shrface-occur-flash ()
   "Flash the occurrence line."
@@ -638,13 +654,13 @@ Argument DOM dom."
 ;;;###autoload
 (define-minor-mode shrface-mode
   "Toggle shr minor mode.
+`shrface-mode' will disable if `shrface-toggle-bullets' is Non-nil.
 1. imenu
 2. outline-minor-mode
-3. org-indent-mode
-But the shrface-ioccur can still work"
+3. org-indent-mode"
   :group 'shrface
   (cond
-   (shrface-mode
+   ((and shrface-mode (not shrface-toggle-bullets))
     ;; (shrface-basic)
     ;; (shrface-trial)
     (shrface-regexp)
@@ -693,6 +709,17 @@ experimental, sometimes eww will hangup."
   (interactive)
   (unless (member '(code . shrface-tag-code) shr-external-rendering-functions)
     (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))))
+
+(defun shrface-toggle-bullets ()
+  "Toggle shrface headline bullets globally.
+Non-nil to disable headline bullets.
+The following features are also disabled:
+  1. function `shrface-occur'
+  2. variable `shrface-mode'"
+  (interactive)
+  (if (setq shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
+      (message "shrface bullets disabled. Please Reload the buffer.")
+    (message "shrface bullets enabled. Please Reload the buffer.")))
 
 ;;; shrface-analysis
 
