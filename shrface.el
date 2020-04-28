@@ -954,7 +954,8 @@ DELAY the flash delay"
                   :require-match t
                   :unwind (lambda ()
                             (remove-overlays)
-                            (kill-buffer "*shrface-links*")
+                            (if (get-buffer "*shrface-links*")
+                              (kill-buffer "*shrface-links*"))
                             (goto-char start))
                   :caller 'shrface-counsel)
       (message "Please install 'counsel' before using 'shrface-links-counsel'"))))
