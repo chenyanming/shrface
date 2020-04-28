@@ -25,5 +25,5 @@ jobs:
         # RECIPE is your recipe as written for MELPA:
         RECIPE: (shrface :fetcher github :repo "chenyanming/shrface")
         # set this to false (or remove it) if the package isn't on MELPA:
-        EXIST_OK: false
+        EXIST_OK: true
       run: echo $EXIST_OK && make -C ~/melpazoid
