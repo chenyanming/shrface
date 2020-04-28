@@ -943,7 +943,7 @@ DELAY the flash delay"
   (interactive)
   (let ((start (point)))
     (if (fboundp 'ivy-read)
-        (ivy-read "shrface-links: " (mapcar 'cdr (shrface-href-collect-all))
+        (ivy-read "shrface-links: " (mapcar #'cdr (shrface-href-collect-all))
                   :action (lambda (x)
                             (remove-overlays)
                             (let ((beg (nth 1 x))
