@@ -170,6 +170,7 @@ The following features are also disabled:
     (p   . shrface-tag-p)
     (li   . shrface-tag-li)
     (dt   . shrface-tag-dt)
+    (figure . shrface-tag-figure)
     ;; (code   . shrface-tag-code)
     )
   "Alist of shrface supported faces except experimental faces.")
@@ -248,6 +249,10 @@ NON-nil"
 
 (defface shrface-code '((t :inherit org-code))
   "TODO Face used for inline <code>"
+  :group 'shrface-faces)
+
+(defface shrface-figure '((t :inherit org-table))
+  "Face used for figure <figure>, e.g. figure captions."
   :group 'shrface-faces)
 
 (defface shrface-item-bullet-face '((t :inherit org-list-dt))
@@ -509,6 +514,13 @@ Optional argument TYPES face attributes."
   "Fontize tag code.
 Argument DOM dom."
   (shrface-shr-fontize-dom dom '(comment t face shrface-code)))
+
+(defun shrface-tag-figure (dom)
+  "Fontize tag figure.
+Argument DOM dom."
+  (shr-ensure-newline)
+  (shrface-shr-fontize-dom dom '(comment t face shrface-figure))
+  (shr-ensure-newline))
 
 (defun shrface-tag-p (dom)
   "Fontize tag p.
