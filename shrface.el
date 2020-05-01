@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.4
+;; Version: 2.5
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -125,6 +125,15 @@ The following features are also disabled:
   :group 'shrface
   :type 'boolean)
 
+(defvar shrface-headline-property 'shrface-headline
+  "Property name to use for href.")
+
+(defvar shrface-headline-number-property 'shrface-number
+  "Property name to use for headline number.")
+
+(defvar shrface-headline-number 0
+  "Counter to count The nth Headline in the buffer.")
+
 (defvar shrface-href-property 'shr-url
   "Property name to use for href.")
 
@@ -179,7 +188,11 @@ The following features are also disabled:
   "Alist of shrface supported faces except experimental faces.")
 
 (defvar shrface-href-collected-list nil
-  "Global list to save the collected href items when we run `shrface-links'.
+  "Global list to save the collected href items when we run `shrface-links' or `shrface-links-counsel'.
+Used for later analysis, sorting, exporting etc.")
+
+(defvar shrface-headline-collected-list nil
+  "Global list to save the collected href items when we run `shrface-headline-counsel'.
 Used for later analysis, sorting, exporting etc.")
 
 (defface shrface-href-face '((t :inherit org-link))
@@ -414,35 +427,47 @@ sure that we are at the beginning of the line."
            shrface-bullets-bullet-list
            t) "\\( .*\\)$"))
 
+(defun shrface-clear (DOM)
+  "Clear the `shrface-headline-number'.
+Argument DOM The DOM."
+  (listp DOM) ; just make the compile do not complain
+  (setq shrface-headline-number 0))
+
 (defun shrface-tag-h1 (dom)
   "Fontize tag h1.
 Argument DOM dom."
-  (shrface-shr-h1 dom '(comment t face shrface-h1-face)))
+  (setq-local shrface-headline-number (1+ shrface-headline-number))
+  (shrface-shr-h1 dom `(shrface-headline "shrface-h1" ,shrface-headline-number-property ,shrface-headline-number face shrface-h1-face)))
 
 (defun shrface-tag-h2 (dom)
   "Fontize tag h2.
 Argument DOM dom."
-  (shrface-shr-h2 dom '(comment t face shrface-h2-face)))
+  (setq-local shrface-headline-number (1+ shrface-headline-number))
+  (shrface-shr-h2 dom `(shrface-headline "shrface-h2" ,shrface-headline-number-property ,shrface-headline-number face shrface-h2-face)))
 
 (defun shrface-tag-h3 (dom)
   "Fontize tag h3.
 Argument DOM dom."
-  (shrface-shr-h3 dom '(comment t face shrface-h3-face)))
+  (setq-local shrface-headline-number (1+ shrface-headline-number))
+  (shrface-shr-h3 dom `(shrface-headline "shrface-h3" ,shrface-headline-number-property ,shrface-headline-number face shrface-h3-face)))
 
 (defun shrface-tag-h4 (dom)
   "Fontize tag h4.
 Argument DOM dom."
-  (shrface-shr-h4 dom '(comment t face shrface-h4-face)))
+  (setq-local shrface-headline-number (1+ shrface-headline-number))
+  (shrface-shr-h4 dom `(shrface-headline "shrface-h4" ,shrface-headline-number-property ,shrface-headline-number face shrface-h4-face)))
 
 (defun shrface-tag-h5 (dom)
   "Fontize tag h5.
 Argument DOM dom."
-  (shrface-shr-h5 dom '(comment t face shrface-h5-face)))
+  (setq-local shrface-headline-number (1+ shrface-headline-number))
+  (shrface-shr-h5 dom `(shrface-headline "shrface-h5" ,shrface-headline-number-property ,shrface-headline-number face shrface-h5-face)))
 
 (defun shrface-tag-h6 (dom)
   "Fontize tag h6.
 Argument DOM dom."
-  (shrface-shr-h6 dom '(comment t face shrface-h6-face)))
+  (setq-local shrface-headline-number (1+ shrface-headline-number))
+  (shrface-shr-h6 dom `(shrface-headline "shrface-h6" ,shrface-headline-number-property ,shrface-headline-number face shrface-h6-face)))
 
 (defun shrface-shr-item-bullet ()
   "Build a `shr-bullet' based on `shrface-item-bullet'."
@@ -454,7 +479,7 @@ Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (unless shrface-toggle-bullets
-   (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face)))
+   (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face 'shrface-bullet "shrface-h1-bullet")))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
 
@@ -464,7 +489,7 @@ Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (unless shrface-toggle-bullets
-      (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face)))
+    (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face 'shrface-bullet "shrface-h2-bullet")))
   ;; (insert (propertize  "** " 'face 'shrface-h2-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -475,7 +500,7 @@ Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (unless shrface-toggle-bullets
-   (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face)))
+    (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face 'shrface-bullet "shrface-h3-bullet")))
   ;; (insert (propertize  "*** " 'face 'shrface-h3-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -486,7 +511,7 @@ Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (unless shrface-toggle-bullets
-    (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face)))
+    (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face 'shrface-bullet "shrface-h4-bullet")))
   ;; (insert (propertize  "**** " 'face 'shrface-h4-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -497,7 +522,7 @@ Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (unless shrface-toggle-bullets
-    (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face)) )
+    (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face 'shrface-bullet "shrface-h5-bullet")) )
   ;; (insert (propertize  "***** " 'face 'shrface-h5-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -508,7 +533,7 @@ Argument DOM .
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
   (unless shrface-toggle-bullets
-    (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face)) )
+    (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face 'shrface-bullet "shrface-h6-bullet")) )
   ;; (insert (propertize  "****** " 'face 'shrface-h6-face))
   (apply #'shrface-shr-fontize-dom dom types)
   (shr-ensure-paragraph))
@@ -706,7 +731,10 @@ Need to be called once before loading eww, nov.el, dash-docs, mu4e, after shr."
   (add-hook 'occur-mode-find-occurrence-hook #'shrface-occur-flash)
 
   ;; setup `shrface-links-counsel' ivy actions
-  (shrface-links-counsel-set-actions))
+  (shrface-links-counsel-set-actions)
+
+  ;; add a simple advice to clear the counter every time reload the shr buffer.
+  (advice-add 'shr-insert-document :after #'shrface-clear))
 
 (defun shrface-resume ()
   "Resume the original faces.
@@ -740,6 +768,7 @@ The following features are also disabled:
     (message "shrface bullets enabled. Please Reload the buffer.")))
 
 ;;; shrface-analysis
+;; `shrface-links'
 
 (defun shrface-links()
   "`shrface-links' the links anaysis feature of `shrface-analysis'.
@@ -769,13 +798,12 @@ The value of the `shrface-href-collected-list' is returned."
       (erase-buffer))
     ;; (plist-get (cdr '(image :type imagemagick :file "/var/folders/st/mkq0gxld3rv39t6y6zv45j540000gn/T/nov-cKFscX.epub/EPUB/media/file6" :scale 1 :ascent 100 :max-width 1382 :max-height 820)) :file)
     ;; (shrface-href-collect shrface-nov-image-original-property shrface-nov-image-original-property "images" occur-buf) ; TODO: collect nov.el images links
-    (shrface-href-collect shrface-eww-image-property shrface-eww-image-property "images" occur-buf) ; collect internet images links
-    (shrface-href-collect shrface-href-property shrface-href-https-face "https" occur-buf) ; collect https links
-    (shrface-href-collect shrface-href-property shrface-href-http-face "http" occur-buf) ; collect http links
-    (shrface-href-collect shrface-href-property shrface-href-file-face "file" occur-buf) ; collect file links
-    (shrface-href-collect shrface-href-property shrface-href-mailto-face "mailto" occur-buf) ; collect mailto links
-    (shrface-href-collect shrface-href-property shrface-href-other-face "other" occur-buf)) ; collect other links
-  shrface-href-collected-list)
+    (shrface-collect shrface-eww-image-property shrface-eww-image-property "images" occur-buf shrface-href-collected-list) ; collect internet images links
+    (shrface-collect shrface-href-property shrface-href-https-face "https" occur-buf shrface-href-collected-list) ; collect https links
+    (shrface-collect shrface-href-property shrface-href-http-face "http" occur-buf shrface-href-collected-list) ; collect http links
+    (shrface-collect shrface-href-property shrface-href-file-face "file" occur-buf shrface-href-collected-list) ; collect file links
+    (shrface-collect shrface-href-property shrface-href-mailto-face "mailto" occur-buf shrface-href-collected-list) ; collect mailto links
+    (shrface-collect shrface-href-property shrface-href-other-face "other" occur-buf shrface-href-collected-list))) ; collect other links
 
 (defun shrface-href-collect-all-ordered ()
   "Collect all positions of URLs in the current buffer in order.
@@ -787,18 +815,18 @@ The value of the `shrface-href-collected-list' is returned."
       (read-only-mode -1)
       (shrface-regexp)
       (erase-buffer))
-    (shrface-href-collect shrface-href-property shrface-href-follow-link-property "All" occur-buf))
-  shrface-href-collected-list)
+    (shrface-collect shrface-href-property shrface-href-follow-link-property "All" occur-buf shrface-href-collected-list)))
 
-(defun shrface-href-collect (property href-face title buf-name)
+(defun shrface-collect (property face title buf-name collected-list)
   "Collect the positions of URLs in the current buffer.
 Argument PROPERTY the property to be searched.
-Argument HREF-FACE the face property to be collected.
-Argument TITLE the section title
-Argument BUF-NAME the buffer the results reside"
+Argument FACE the property to be collected.
+Argument TITLE the section title.
+Argument BUF-NAME the buffer the results reside.
+Argument COLLECTED-LIST the list to be returned of collected items ."
 
-  ;; check whether `href-face' exist in the whole buffer or not
-  (if (text-property-not-all (point-min) (point-max) `,href-face nil)
+  ;; check whether `face' exist in the whole buffer or not
+  (if (text-property-not-all (point-min) (point-max) `,face nil)
       (with-current-buffer buf-name
         (let (beg end)
           (setq beg (point))
@@ -818,13 +846,13 @@ Argument BUF-NAME the buffer the results reside"
       (let (beg end buf string url start final)
         (setq buf (current-buffer))
         (setq end
-              (if (get-text-property (point) `,href-face)
+              (if (get-text-property (point) `,face)
                   (point)
                 (text-property-any
-                 (point) (point-max) `,href-face nil)))
+                 (point) (point-max) `,face nil)))
 
         (while (setq beg (text-property-not-all
-                          end (point-max) `,href-face nil))
+                          end (point-max) `,face nil))
           (goto-char beg)
           (setq url (get-text-property beg `,property))
 
@@ -833,7 +861,7 @@ Argument BUF-NAME the buffer the results reside"
           ;; (if (equal `,property 'display)
           ;;     (if (equal (car (get-text-property beg `,property)) 'image)
           ;;         (setq url (plist-get (cdr (get-text-property beg `,property)) :file))
-          ;;       (setq href-face nil)    ; just set `href-face' nil to skip the following checking
+          ;;       (setq face nil)    ; just set `face' nil to skip the following checking
           ;;       )
           ;;   (setq url (get-text-property beg `,property)))
 
@@ -848,10 +876,10 @@ Argument BUF-NAME the buffer the results reside"
           (setq beg (point))
 
           ;; Extract the current point text properties if it matched by giving
-          ;; property `href-face', and insert it to `buf-name'
-          (if (get-text-property (point) `,href-face)
+          ;; property `face', and insert it to `buf-name'
+          (if (get-text-property (point) `,face)
               (progn
-                (setq end (next-single-property-change (point) `,href-face nil (point-max)))
+                (setq end (next-single-property-change (point) `,face nil (point-max)))
                 ;; When link at the end of buffer, end will be set to nil.
                 (if (not end)
                     (setq end (point-max)))
@@ -860,13 +888,14 @@ Argument BUF-NAME the buffer the results reside"
 
                 (with-current-buffer buf-name
                   (setq start (point)) ; save the start location before insertion
-                  (insert
-                   (propertize
-                    (if (fboundp 'all-the-icons-icon-for-url)
-                        (all-the-icons-icon-for-url url :height 1.1)
-                      "")
-                    'mouse-face 'shrface-links-mouse-face
-                    'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url"))
+                  (if (stringp url)
+                      (insert
+                       (propertize
+                        (if (fboundp 'all-the-icons-icon-for-url)
+                            (all-the-icons-icon-for-url url :height 1.1)
+                          "")
+                        'mouse-face 'shrface-links-mouse-face
+                        'help-echo "mouse-1: go to this occurrence; mouse-2: copy link; mouse-3: browse url")))
                   (insert
                    (propertize
                     (format " %s" string)
@@ -895,8 +924,8 @@ Argument BUF-NAME the buffer the results reside"
                   (put-text-property start final 'shrface-url url)
                   (put-text-property start final 'shrface-beg beg)
                   (put-text-property start final 'shrface-end end))
-                (push (list string url beg end) shrface-href-collected-list)))))))
-  shrface-href-collected-list)
+                (push (list string url beg end) collected-list)))))))
+  collected-list)
 
 (defun shrface-mouse-1 (event)
   "Visit the location click on.
@@ -997,7 +1026,8 @@ DELAY the flash delay"
           (run-at-time delay nil #'compilation-goto-locus-delete-o))))
 
 (defun shrface-links-selectable-list ()
-  "Return a fontified selecable url list in order."
+  "Return a fontified selecable url list in order.
+It will be used in ivy counsel."
   (nreverse (mapcar #'(lambda (x)
                         (let* ((item x)
                                (title (car item))
@@ -1057,6 +1087,92 @@ jump around the list."
        '(("v"
           (lambda (res)
             (eww-browse-url (nth 0 res)))  "eww browse url")))))
+
+;;; shrface-analysis
+;; `shrface-headline'
+
+(defun shrface-headline-collect-all-ordered ()
+  "Collect all positions of headlines in the current buffer in order.
+The value of the `shrface-headline-collected-list' is returned."
+  (setq shrface-headline-collected-list nil) ; TODO use local list instead
+  (let ((buf-name "*shrface-headline*") occur-buf)
+    (setq occur-buf (get-buffer-create buf-name))
+    (with-current-buffer occur-buf
+      (read-only-mode -1)
+      (shrface-regexp)
+      (erase-buffer))
+    (shrface-collect shrface-headline-property shrface-headline-property "Headline" occur-buf shrface-headline-collected-list)))
+
+(defun shrface-headline-selectable-list ()
+  "Return a fontified selecable headline list in order.
+It will be used in ivy counsel."
+  (nreverse (mapcar #'(lambda (x)
+                        (let* ((item x)
+                               (title (car item))
+                               (url (nth 1 item))
+                               (beg (nth 2 item))
+                               (end (nth 3 item)))
+                          (list (format
+                                 "%s"
+                                 ;; insert icons will slow the list to be shown
+                                 ;; (propertize
+                                 ;;  (if (fboundp 'all-the-icons-icon-for-url)
+                                 ;;      (all-the-icons-icon-for-url url :height 1.1)
+                                 ;;    ""))
+                                 ;; (propertize title 'face 'shrface-links-title-face)
+                                 (cond
+                                  ((equal "shrface-h1" url) (propertize title 'face 'shrface-h1-face))
+                                  ((equal "shrface-h2" url) (propertize (concat " " title) 'face 'shrface-h2-face))
+                                  ((equal "shrface-h3" url) (propertize (concat "  " title) 'face 'shrface-h3-face))
+                                  ((equal "shrface-h4" url) (propertize (concat "   " title) 'face 'shrface-h4-face))
+                                  ((equal "shrface-h5" url) (propertize (concat "     " title) 'face 'shrface-h5-face))
+                                  ((equal "shrface-h6" url) (propertize (concat "      " title) 'face 'shrface-h6-face)))) beg end)))
+                    (shrface-headline-collect-all-ordered))))
+
+(defun shrface-headline-counsel ()
+  "Use counsel to show all headlines in order founded in the buffer.
+Current headline will be the one of the candidates to initially select,
+so that you would not lost if you call \\[ivy-call],
+\\[ivy-next-line-and-call] or \\[ivy-previous-line-and-call] to
+jump around the list."
+  (interactive)
+  (let ((current (point-min)) (start (1+ (point))) point number)
+    ;; Scan from point-min to (1+ (point)) to find the current headline.
+    ;; (1+ (point)) to include under current point headline into the scan range.
+    (unless (> start (point-max))
+        (while (setq point (text-property-not-all
+                            current start shrface-headline-number-property nil))
+          (setq current (1+ point))))
+
+    (cond ((equal (point) 1) (setq number 0))
+          ((equal (point) 2) (setq number 0))
+          ((equal (point) (point-max)) (setq number 0))
+          (t
+           (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
+
+    ;; Start the ivy-read
+    (setq start (point)) ; save the starting point
+    (if (fboundp 'ivy-read)
+        (ivy-read "shrface-headline: " (shrface-headline-selectable-list)
+                  :action (lambda (x)
+                            (remove-overlays)
+                            (let ((beg (nth 1 x))
+                                  (end (nth 2 x)) xx)
+                              (goto-char beg)
+                              (recenter nil)
+                              (setq xx (make-overlay beg end))
+                              (overlay-put xx 'face 'shrface-highlight)))
+                  :preselect number
+                  :require-match t
+                  :unwind (lambda ()
+                            (remove-overlays)
+                            (if (get-buffer "*shrface-headline*")
+                                (kill-buffer "*shrface-headline*"))
+                            (goto-char start))
+                  :sort nil
+                  :caller 'shrface-headline-counsel)
+      (message "Please install 'counsel' before using 'shrface-headline-counsel'"))))
+
 
 (provide 'shrface)
 ;;; shrface.el ends here
