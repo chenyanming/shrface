@@ -293,7 +293,7 @@ will be shown.
   position. In this case, you can use =C-M-m (ivy-call)=, =C-M-n
   (ivy-next-line-and-call)=, and =C-M-p (ivy-previous-line-and-call)= to jump
   around all URLs without losing your position.
-- =C-o (ivy-occur)= to fire the action menu on the selected candidate.
+- =C-o= to fire the action menu on the selected candidate.
 
 *** Headline bullets (h1 to h6)
 You can configure your farourite bullets up to 6 levels of headings (cycled
