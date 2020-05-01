@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.3
+;; Version: 2.4
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -130,6 +130,9 @@ The following features are also disabled:
 
 (defvar shrface-eww-image-property 'image-url
   "Property name to use for internet image.")
+
+(defvar shrface-href-follow-link-property 'follow-link
+  "Property name to use for follow link.")
 
 ;; (defvar shrface-nov-image-original-property 'display
 ;;   "Property name to use for external image.")
@@ -700,7 +703,10 @@ Need to be called once before loading eww, nov.el, dash-docs, mu4e, after shr."
   ;; (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
 
   ;; setup occur flash
-  (add-hook 'occur-mode-find-occurrence-hook #'shrface-occur-flash))
+  (add-hook 'occur-mode-find-occurrence-hook #'shrface-occur-flash)
+
+  ;; setup `shrface-links-counsel' ivy actions
+  (shrface-links-counsel-set-actions))
 
 (defun shrface-resume ()
   "Resume the original faces.
@@ -752,7 +758,7 @@ current buffer and display the clickable result in
       (goto-char (point-min)))))
 
 (defun shrface-href-collect-all ()
-  "Collect all positions of URLs in the current buffer.
+  "OBSELETE Collect all positions of URLs in the current buffer.
 The value of the `shrface-href-collected-list' is returned."
   (setq shrface-href-collected-list nil) ; TODO use local list instead
   (let ((buf-name "*shrface-links*") occur-buf)
@@ -769,6 +775,19 @@ The value of the `shrface-href-collected-list' is returned."
     (shrface-href-collect shrface-href-property shrface-href-file-face "file" occur-buf) ; collect file links
     (shrface-href-collect shrface-href-property shrface-href-mailto-face "mailto" occur-buf) ; collect mailto links
     (shrface-href-collect shrface-href-property shrface-href-other-face "other" occur-buf)) ; collect other links
+  shrface-href-collected-list)
+
+(defun shrface-href-collect-all-ordered ()
+  "Collect all positions of URLs in the current buffer in order.
+The value of the `shrface-href-collected-list' is returned."
+  (setq shrface-href-collected-list nil) ; TODO use local list instead
+  (let ((buf-name "*shrface-links*") occur-buf)
+    (setq occur-buf (get-buffer-create buf-name))
+    (with-current-buffer occur-buf
+      (read-only-mode -1)
+      (shrface-regexp)
+      (erase-buffer))
+    (shrface-href-collect shrface-href-property shrface-href-follow-link-property "All" occur-buf))
   shrface-href-collected-list)
 
 (defun shrface-href-collect (property href-face title buf-name)
@@ -977,12 +996,41 @@ DELAY the flash delay"
     (setq next-error-highlight-timer
           (run-at-time delay nil #'compilation-goto-locus-delete-o))))
 
+(defun shrface-links-selectable-list ()
+  "Return a fontified selecable url list in order."
+  (nreverse (mapcar #'(lambda (x)
+                        (let* ((item x)
+                               (title (car item))
+                               (url (nth 1 item))
+                               (beg (nth 2 item))
+                               (end (nth 3 item)))
+                          (list (format
+                                 "%s\t%s"
+                                 ;; insert icons will slow the list to be shown
+                                 ;; (propertize
+                                 ;;  (if (fboundp 'all-the-icons-icon-for-url)
+                                 ;;      (all-the-icons-icon-for-url url :height 1.1)
+                                 ;;    ""))
+                                 (propertize title 'face 'shrface-links-title-face)
+                                 (propertize url 'face 'shrface-links-url-face)) beg end)))
+                    (shrface-href-collect-all-ordered))))
+
 (defun shrface-links-counsel ()
-  "Use counsel to present all urls."
+  "Use counsel to present all urls in order founded in the buffer.
+Next url will be the one of the candidates to initially select,
+so that you would not lost if you call \\[ivy-call],
+\\[ivy-next-line-and-call] or \\[ivy-previous-line-and-call] to
+jump around the list."
   (interactive)
-  (let ((start (point)))
+  (let ((start (point)) next url)
+    ;; get the next nearest url
+    (setq next (text-property-not-all
+                (point) (point-max) shrface-href-follow-link-property nil))
+    ;; only if the next url exists
+    (if next
+      (setq url (get-text-property next shrface-href-property)))
     (if (fboundp 'ivy-read)
-        (ivy-read "shrface-links: " (mapcar #'cdr (shrface-href-collect-all))
+        (ivy-read "shrface-links: " (shrface-links-selectable-list)
                   :action (lambda (x)
                             (remove-overlays)
                             (let ((beg (nth 1 x))
@@ -990,14 +1038,24 @@ DELAY the flash delay"
                               (goto-char beg)
                               (setq xx (make-overlay beg end))
                               (overlay-put xx 'face 'shrface-highlight)))
+                  :preselect url
                   :require-match t
                   :unwind (lambda ()
                             (remove-overlays)
                             (if (get-buffer "*shrface-links*")
-                              (kill-buffer "*shrface-links*"))
+                                (kill-buffer "*shrface-links*"))
                             (goto-char start))
-                  :caller 'shrface-counsel)
+                  :sort nil
+                  :caller 'shrface-links-counsel)
       (message "Please install 'counsel' before using 'shrface-links-counsel'"))))
+
+(defun shrface-links-counsel-set-actions ()
+  "Set actions for function `shrface-links-counsel' when call \\[ivy-occur]."
+  (ivy-set-actions
+   'shrface-links-counsel
+   '(("v"
+      (lambda (res)
+        (eww-browse-url (nth 0 res)))  "eww browse url"))))
 
 (provide 'shrface)
 ;;; shrface.el ends here

@@ -41,6 +41,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-05-01][=2020-05-01=]]
   - [[#2020-04-29][=2020-04-29=]]
   - [[#2020-04-26][=2020-04-26=]]
   - [[#2020-04-23][=2020-04-23=]]
@@ -286,8 +287,13 @@ occurrence (Left Click/Enter), copy the URL (Middle Click) or browse the URL
 (Right Click). Besides, if [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] is available, web icon for each link
 will be shown.
 
-=M-x= =shrface-links-counsel= to list all URLs. You can jump around all URLs with
-ivy(counsel).
+=M-x= =shrface-links-counsel= to list all URLs.
+- The URLs are listed in order based the position on the buffer.
+- The first candidate to select is the *next url* counting from the current cursor
+  position. In this case, you can use =C-M-m (ivy-call)=, =C-M-n
+  (ivy-next-line-and-call)=, and =C-M-p (ivy-previous-line-and-call)= to jump
+  around all URLs without losing your position.
+- =C-o (ivy-occur)= to fire the action menu on the selected candidate.
 
 *** Headline bullets (h1 to h6)
 You can configure your farourite bullets up to 6 levels of headings (cycled
@@ -455,6 +461,10 @@ NON-nil"
   "Face used for description list terms <dt>"
   :group 'shrface-faces)
 
+(defface shrface-figure '((t :inherit org-table))
+  "Face used for figure <figure>, e.g. figure captions."
+  :group 'shrface-faces)
+
 ;;; Faces for `shrface-analysis' realted buffers
 
 (defface shrface-links-title-face '((t :inherit default))
@@ -590,6 +600,10 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 - [ ] =shrface-babel=
  
 * News/Logs
+** =2020-05-01=
+Version *2.4*:
+- Improved: Improve the user experience for =shrface-links-counsel=
+- New face: =shrface-figure=
 
 ** =2020-04-29=
 Version *2.3*:
