@@ -1051,11 +1051,12 @@ jump around the list."
 
 (defun shrface-links-counsel-set-actions ()
   "Set actions for function `shrface-links-counsel' when call \\[ivy-occur]."
-  (ivy-set-actions
-   'shrface-links-counsel
-   '(("v"
-      (lambda (res)
-        (eww-browse-url (nth 0 res)))  "eww browse url"))))
+  (if (fboundp 'ivy-set-actions)
+      (ivy-set-actions
+       'shrface-links-counsel
+       '(("v"
+          (lambda (res)
+            (eww-browse-url (nth 0 res)))  "eww browse url")))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
