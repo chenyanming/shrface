@@ -1190,7 +1190,10 @@ jump around the list."
     ;; check the current point headline number first
     (if (numberp location)
         (progn
-          (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1- location))))
+          (setq previous (text-property-any (point-min) (point-max) shrface-headline-number-property (1- location)))
+          (if (numberp previous)
+              (goto-char previous)
+            (message "Beginning of headlines")))
       (let ((current (point-min)) (start (1+ (point))) point number)
         ;; Scan from point-min to (1+ (point)) to find the current headline.
         ;; (1+ (point)) to include under current point headline into the scan range.
@@ -1198,7 +1201,6 @@ jump around the list."
           (while (setq point (text-property-not-all
                               current start shrface-headline-number-property nil))
             (setq current (1+ point))))
-
         (cond ((equal (point) 1) (setq number 0))
               ((equal (point) 2) (setq number 0))
               ((equal (point) (point-max)) (setq number 0))
@@ -1213,9 +1215,10 @@ jump around the list."
     ;; check the current point headline number first
     (if (numberp location)
         (progn
-          (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ location)))
-          ;; (recenter nil)
-          )
+          (setq next (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ location)))
+          (if (numberp next)
+              (goto-char next)
+            (message "End of headlines")))
       (let ((current (point-min)) (start (1+ (point))) point number)
         ;; Scan from point-min to (1+ (point)) to find the current headline.
         ;; (1+ (point)) to include under current point headline into the scan range.
@@ -1223,7 +1226,6 @@ jump around the list."
           (while (setq point (text-property-not-all
                               current start shrface-headline-number-property nil))
             (setq current (1+ point))))
-
         (cond ((equal (point) 1) (setq number 0))
               ((equal (point) 2) (setq number 0))
               ((equal (point) (point-max)) (setq number 0))
