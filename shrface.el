@@ -1203,7 +1203,7 @@ jump around the list."
             (setq current (1+ point))))
         (cond ((equal (point) 1) (setq number 0))
               ((equal (point) 2) (setq number 0))
-              ((equal (point) (point-max)) (setq number 0))
+              ((equal (point) (point-max)) (setq number 0) (message "Back to the first headline"))
               (t
                (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
         (ignore-errors (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ number))))))))
@@ -1228,7 +1228,7 @@ jump around the list."
             (setq current (1+ point))))
         (cond ((equal (point) 1) (setq number 0))
               ((equal (point) 2) (setq number 0))
-              ((equal (point) (point-max)) (setq number 0))
+              ((equal (point) (point-max)) (setq number -1) (message "Back to the first headline"))
               (t
                (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
         (ignore-errors (goto-char (text-property-any  (point-min) (point-max) shrface-headline-number-property (+ 2 number))))))))
