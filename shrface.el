@@ -1186,40 +1186,52 @@ jump around the list."
 (defun shrface-previous-headline ()
   "Jump to previous headline and recenter."
   (interactive)
-  (let ((current (point-min)) (start (1+ (point))) point number)
-    ;; Scan from point-min to (1+ (point)) to find the current headline.
-    ;; (1+ (point)) to include under current point headline into the scan range.
-    (unless (> start (point-max))
-      (while (setq point (text-property-not-all
-                          current start shrface-headline-number-property nil))
-        (setq current (1+ point))))
+  (let ((location (get-text-property (point) shrface-headline-number-property)))
+    ;; check the current point headline number first
+    (if (numberp location)
+        (progn
+          (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1- location)))
+          (recenter nil))
+      (let ((current (point-min)) (start (1+ (point))) point number)
+        ;; Scan from point-min to (1+ (point)) to find the current headline.
+        ;; (1+ (point)) to include under current point headline into the scan range.
+        (unless (> start (point-max))
+          (while (setq point (text-property-not-all
+                              current start shrface-headline-number-property nil))
+            (setq current (1+ point))))
 
-    (cond ((equal (point) 1) (setq number 0))
-          ((equal (point) 2) (setq number 0))
-          ((equal (point) (point-max)) (setq number 0))
-          (t
-           (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
-    (ignore-errors (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property number)) )
-    (recenter nil)))
+        (cond ((equal (point) 1) (setq number 0))
+              ((equal (point) 2) (setq number 0))
+              ((equal (point) (point-max)) (setq number 0))
+              (t
+               (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
+        (ignore-errors (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ number))))
+        (recenter nil)))))
 
 (defun shrface-next-headline ()
   "Jump to next headline and recenter."
   (interactive)
-  (let ((current (point-min)) (start (1+ (point))) point number)
-    ;; Scan from point-min to (1+ (point)) to find the current headline.
-    ;; (1+ (point)) to include under current point headline into the scan range.
-    (unless (> start (point-max))
-      (while (setq point (text-property-not-all
-                          current start shrface-headline-number-property nil))
-        (setq current (1+ point))))
+  (let ((location (get-text-property (point) shrface-headline-number-property)))
+    ;; check the current point headline number first
+    (if (numberp location)
+        (progn
+          (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ location)))
+          (recenter nil))
+      (let ((current (point-min)) (start (1+ (point))) point number)
+        ;; Scan from point-min to (1+ (point)) to find the current headline.
+        ;; (1+ (point)) to include under current point headline into the scan range.
+        (unless (> start (point-max))
+          (while (setq point (text-property-not-all
+                              current start shrface-headline-number-property nil))
+            (setq current (1+ point))))
 
-    (cond ((equal (point) 1) (setq number 0))
-          ((equal (point) 2) (setq number 0))
-          ((equal (point) (point-max)) (setq number 0))
-          (t
-           (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
-    (ignore-errors (goto-char (text-property-any  (point-min) (point-max) shrface-headline-number-property (+ 2 number))) )
-    (recenter nil)))
+        (cond ((equal (point) 1) (setq number 0))
+              ((equal (point) 2) (setq number 0))
+              ((equal (point) (point-max)) (setq number 0))
+              (t
+               (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
+        (ignore-errors (goto-char (text-property-any  (point-min) (point-max) shrface-headline-number-property (+ 2 number))) )
+        (recenter nil)))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
