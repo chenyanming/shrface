@@ -1197,13 +1197,15 @@ jump around the list."
       (let ((current (point-min)) (start (1+ (point))) point number)
         ;; Scan from point-min to (1+ (point)) to find the current headline.
         ;; (1+ (point)) to include under current point headline into the scan range.
-        (unless (> start (point-max))
+        (if (<= start (point-max))
+            (while (setq point (text-property-not-all
+                                current start shrface-headline-number-property nil))
+              (setq current (1+ point))) ; not at (point-max)
           (while (setq point (text-property-not-all
-                              current start shrface-headline-number-property nil))
-            (setq current (1+ point))))
+                              current (point-max) shrface-headline-number-property nil))
+            (setq current (1+ point)))) ; at the (point-max)
         (cond ((equal (point) 1) (setq number 0))
               ((equal (point) 2) (setq number 0))
-              ((equal (point) (point-max)) (setq number 0) (message "Back to the first headline"))
               (t
                (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
         (ignore-errors (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ number))))))))
