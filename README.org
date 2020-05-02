@@ -196,16 +196,16 @@ Here is the keybinding example:
 (with-eval-after-load 'nov
   (define-key nov-mode-map (kbd "<tab>") 'org-cycle)
   (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab)
-  (define-key nov-mode-map (kbd "C-j") 'outline-next-visible-heading)
-  (define-key nov-mode-map (kbd "C-k") 'outline-previous-visible-heading)
+  (define-key nov-mode-map (kbd "C-j") 'shrface-next-headline)
+  (define-key nov-mode-map (kbd "C-k") 'shrface-previous-headline)
   (define-key nov-mode-map (kbd "C-i") 'shrface-links-counsel)
   (define-key nov-mode-map (kbd "C-o") 'shrface-headline-counsel))
 
 (with-eval-after-load 'eww
   (define-key eww-mode-map (kbd "<tab>") 'org-cycle)
   (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab)
-  (define-key eww-mode-map (kbd "C-j") 'outline-next-visible-heading)
-  (define-key eww-mode-map (kbd "C-k") 'outline-previous-visible-heading)
+  (define-key eww-mode-map (kbd "C-j") 'shrface-next-headline)
+  (define-key eww-mode-map (kbd "C-k") 'shrface-previous-headline)
   (define-key nov-mode-map (kbd "C-i") 'shrface-links-counsel)
   (define-key nov-mode-map (kbd "C-o") 'shrface-headline-counsel))
 #+END_SRC
@@ -276,6 +276,12 @@ will be shown.
 - =C-o= to fire the action menu on the selected candidate.
 - =C-c C-o= to fire the =ivy-occur=
 
+**** =shrface-next-headline= and =shrface-previous-headline=
+These two headline functions are designed to replace =outline-next-headline= and
+=outline-previous-headline=. They scan the headline number text properties and
+jump to the headlines which means it can work under no bullets circumstance if
+=(setq shrface-toggle-bullets t)=.
+
 *** Headline bullets (h1 to h6)
 You can configure your farourite bullets up to 6 levels of headings (cycled
 through if less than 6 bullets in setting).
@@ -312,6 +318,8 @@ However, the following features are still be able to use:
 1. function =shrface-links=
 2. function =shrface-links-counsel=
 3. function =shrface-headlines-counsel=
+4. function =shrface-previous-headline=
+5. function =shrface-next-headline=
 
 *** Item bullet
 You can configure your favorite item bullet for shrface
@@ -588,7 +596,12 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 * News/Logs
 ** =2020-05-02=
 Version *2.5*:
-- New Function: =shrface-headline-counsel=: better solution than =imenu= to list all headlines
+- New Function: =shrface-headline-counsel=: better solution than =imenu= to list all
+  headlines
+- New Function: =shrface-next-headline=: better solution than
+  =outline-next-headline=, it can work without headline bullets
+- New Function: =shrface-previous-headline=: better solution than
+  =outline-previous-headline=, it can work without headline bullets
 
 ** =2020-05-01=
 Version *2.4*:
@@ -597,14 +610,15 @@ Version *2.4*:
 
 ** =2020-04-29=
 Version *2.3*:
-- New customization: =shrface-toggle-bullets= Quick way to toggle the headline bullets.
+- New customization: =shrface-toggle-bullets= Quick way to toggle the headline
+  bullets.
 
 ** =2020-04-26=
 Version *2.2*:
 - New customization: =shrface-imenu-depth= The maximum level for Imenu access to
   shrface headlines.
-- New Feature:  =shrface-links= and =shrface-links-counsel= The first =shrface-analysis= feature, to list all
-  possible URL in a new buffer.
+- New Feature: =shrface-links= and =shrface-links-counsel= The first
+  =shrface-analysis= feature, to list all possible URL in a new buffer.
 
 ** =2020-04-23=
 Version *2.1*:
