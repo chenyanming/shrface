@@ -188,11 +188,13 @@ The following features are also disabled:
   "Alist of shrface supported faces except experimental faces.")
 
 (defvar shrface-href-collected-list nil
-  "Global list to save the collected href items when we run `shrface-links' or `shrface-links-counsel'.
+  "Global list to save the collected href items.
+Used when we run `shrface-links' or `shrface-links-counsel'.
 Used for later analysis, sorting, exporting etc.")
 
 (defvar shrface-headline-collected-list nil
-  "Global list to save the collected href items when we run `shrface-headline-counsel'.
+  "Global list to save the collected href items.
+Used when we run `shrface-headline-counsel'.
 Used for later analysis, sorting, exporting etc.")
 
 (defface shrface-href-face '((t :inherit org-link))
@@ -818,7 +820,7 @@ The value of the `shrface-href-collected-list' is returned."
     (shrface-collect shrface-href-property shrface-href-follow-link-property "All" occur-buf shrface-href-collected-list)))
 
 (defun shrface-collect (property face title buf-name collected-list)
-  "Collect the positions of URLs in the current buffer.
+  "Collect the matched text elements in the current buffer.
 Argument PROPERTY the property to be searched.
 Argument FACE the property to be collected.
 Argument TITLE the section title.
@@ -1067,7 +1069,11 @@ jump around the list."
                                   (end (nth 2 x)) xx)
                               (goto-char beg)
                               (setq xx (make-overlay beg end))
-                              (overlay-put xx 'face 'shrface-highlight)))
+                              (overlay-put xx 'face 'shrface-highlight)
+                              (cond ((memq this-command '(ivy-done
+                                                          ivy-alt-done
+                                                          ivy-immediate-done))
+                                     (remove-overlays)))))
                   :preselect url
                   :require-match t
                   :unwind (lambda ()
@@ -1161,7 +1167,11 @@ jump around the list."
                               (goto-char beg)
                               (recenter nil)
                               (setq xx (make-overlay beg end))
-                              (overlay-put xx 'face 'shrface-highlight)))
+                              (overlay-put xx 'face 'shrface-highlight)
+                              (cond ((memq this-command '(ivy-done
+                                                          ivy-alt-done
+                                                          ivy-immediate-done))
+                                     (remove-overlays)))))
                   :preselect number
                   :require-match t
                   :unwind (lambda ()

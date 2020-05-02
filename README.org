@@ -1,5 +1,5 @@
 #+TITLE:   SHRFACE
-#+DATE:    April 29, 2020
+#+DATE:    May 02, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
 [[https://melpa.org/#/shrface][file:https://melpa.org/packages/shrface-badge.svg]]
@@ -24,9 +24,6 @@
   - [[#quick-start][Quick Start]]
     - [[#notes-about-setting-for-novel][Notes about setting for =nov.el=]]
   - [[#keybinding-settings][Keybinding Settings]]
-    - [[#spacemacs][Spacemacs]]
-    - [[#doom-emacs][Doom emacs]]
-    - [[#other-emacs][Other emacs]]
   - [[#features-anatomy][Features Anatomy]]
     - [[#shrface-basic-and-shrface-trail][shrface-basic and shrface-trail]]
     - [[#shrface-mode][shrface-mode]]
@@ -41,6 +38,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-05-02][=2020-05-02=]]
   - [[#2020-05-01][=2020-05-01=]]
   - [[#2020-04-29][=2020-04-29=]]
   - [[#2020-04-26][=2020-04-26=]]
@@ -73,7 +71,7 @@ It can be used in =dash-docs=, =eww=, =nov.el=, and =mu4e=.
   and =org-cycle/org-shifttab=
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
 + Analysis capability for Researchers:
-  - Headline analysis: List all headlines with clickable texts.
+  - Headline analysis: List all headlines with clickable texts, or jump around with [[https://github.com/abo-abo/swiper][ivy]].
   - URL analysis: List all classified URL with clickable texts in a buffer, or jump around with
    [[https://github.com/abo-abo/swiper][ivy]].
 
@@ -151,6 +149,8 @@ the following settings mentioned in this document into =(with-eval-after-load
                                   ; (http/https/ftp/file/mailto/other), if
                                   ; `shrface-href-versatile' is nil, default
                                   ; face `shrface-href-face' would be used.
+  (setq shrface-toggle-bullets nil) ; Set Non-nil if you do not like headline bullets
+
   ;; eww support
   (with-eval-after-load 'eww
     (add-hook 'eww-after-render-hook 'shrface-mode))
@@ -191,62 +191,32 @@ You can set the keybinding directly with the original org outline related
 functions, like =org-cycle=, =org-shifttab=, =org-content=, =org-overview=, etc, and
 most of =outline= minior mode functions (prefix with =outline-=) after testing.
 
-Please notice, =org-show-children= are not 100% supported, since the =regexp-fmt= is
- hard coded and override it is inappropriate (It is better to update =org.el=
- directly). Besides, you can use [[https://github.com/tj64/outline-magic][outline-magic]] as alternative.
-
-*** Spacemacs
-#+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'nov
-    (evil-define-key '(evilified normal) nov-mode-map
-      (kbd "<tab>") 'org-cycle
-      (kbd "<S-tab>") 'org-shifttab
-      (kbd "C-j") 'outline-next-visible-heading
-      (kbd "C-k") 'outline-previous-visible-heading))
-
-  (with-eval-after-load 'eww
-    (evil-define-key '(evilified normal) eww-mode-map
-      (kbd "<tab>") 'org-cycle
-      (kbd "<S-tab>") 'org-shifttab
-      (kbd "C-j") 'outline-next-visible-heading
-      (kbd "C-k") 'outline-previous-visible-heading))
-#+END_SRC
-
-*** Doom emacs
-#+BEGIN_SRC emacs-lisp
-  (map! :map nov-mode-map
-        :after nov
-        :n "<tab>" 'org-cycle
-        :n "S-<tab>" 'org-shifttab
-        :n "C-j" 'outline-next-visible-heading
-        :n "C-k" 'outline-previous-visible-heading)
-
-  (map! :map eww-mode-map
-        :after eww
-        :n "<tab>" 'org-cycle
-        :n "S-<tab>" 'org-shifttab
-        :n "C-j" 'outline-next-visible-heading
-        :n "C-k" 'outline-previous-visible-heading)
-#+END_SRC
-
-*** Other emacs
+Here is the keybinding example:
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'nov
   (define-key nov-mode-map (kbd "<tab>") 'org-cycle)
   (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab)
   (define-key nov-mode-map (kbd "C-j") 'outline-next-visible-heading)
-  (define-key nov-mode-map (kbd "C-k") 'outline-previous-visible-heading))
+  (define-key nov-mode-map (kbd "C-k") 'outline-previous-visible-heading)
+  (define-key nov-mode-map (kbd "C-i") 'shrface-links-counsel)
+  (define-key nov-mode-map (kbd "C-o") 'shrface-headline-counsel))
 
 (with-eval-after-load 'eww
   (define-key eww-mode-map (kbd "<tab>") 'org-cycle)
   (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab)
   (define-key eww-mode-map (kbd "C-j") 'outline-next-visible-heading)
-  (define-key eww-mode-map (kbd "C-k") 'outline-previous-visible-heading))
+  (define-key eww-mode-map (kbd "C-k") 'outline-previous-visible-heading)
+  (define-key nov-mode-map (kbd "C-i") 'shrface-links-counsel)
+  (define-key nov-mode-map (kbd "C-o") 'shrface-headline-counsel))
 #+END_SRC
+
+PS: =org-show-children= are not 100% supported, since the =regexp-fmt= is
+ hard coded and override it is inappropriate (It is better to update =org.el=
+ directly). Besides, you can use [[https://github.com/tj64/outline-magic][outline-magic]] as alternative.
 
 ** Features Anatomy
 *** shrface-basic and shrface-trail
-By calling =shrface-baisic= and =shrface-trail=, you will enable shrfaces globally.
+By calling =shrface-baisic= and =shrface-trail=, it will do some configurations to enable shrface.
 
 *** shrface-mode
 From version =1.8=, =shrface-mode= is adapted, for it is more flexible to
@@ -268,9 +238,6 @@ For example, to enable =shrface-mode= to =eww=, =nov= or =mu4e=
 #+END_SRC
 
 Besides, you can enable/disable =shrface-mode= via =M-x=
-
-Follow the following guide to setup the keybindings.
-#+html: <a href="#keybinding-settings">Keybinding Settings</a>
 
 *** shrface-analysis
 =shrface-analysis= is new concept brought from version *2.2*.
@@ -294,6 +261,20 @@ will be shown.
   (ivy-next-line-and-call)=, and =C-M-p (ivy-previous-line-and-call)= to jump
   around all URLs without losing your position.
 - =C-o= to fire the action menu on the selected candidate.
+- =C-c C-o= to fire the =ivy-occur=
+
+**** =shrface-headline-counsel=
+
+=M-x= =shrface-links-counsel= to list all headlines.
+- It is a better solution than =imenu= and =shrface-occur.=
+- It can work without the headline bullets. You can disable the bullets via
+  =(setq shrface-toggle-bullets t)= and still be able to jump around the headlines.
+- The first candidate to select is the *current context headline* of the current
+  cursor position. In this case, you can use =C-M-m (ivy-call)=, =C-M-n
+  (ivy-next-line-and-call)=, and =C-M-p (ivy-previous-line-and-call)= to jump
+  around all headlines without losing your position.
+- =C-o= to fire the action menu on the selected candidate.
+- =C-c C-o= to fire the =ivy-occur=
 
 *** Headline bullets (h1 to h6)
 You can configure your farourite bullets up to 6 levels of headings (cycled
@@ -326,6 +307,11 @@ If you do not like headline bullets, disable them globally by:
 Please notice, the following features are also disabled:
 1. function =shrface-occur=
 2. variable =shrface-mode=
+
+However, the following features are still be able to use:
+1. function =shrface-links=
+2. function =shrface-links-counsel=
+3. function =shrface-headlines-counsel=
 
 *** Item bullet
 You can configure your favorite item bullet for shrface
@@ -600,6 +586,10 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 - [ ] =shrface-babel=
  
 * News/Logs
+** =2020-05-02=
+Version *2.5*:
+- New Function: =shrface-headline-counsel=: better solution than =imenu= to list all headlines
+
 ** =2020-05-01=
 Version *2.4*:
 - Improved: Improve the user experience for =shrface-links-counsel=
