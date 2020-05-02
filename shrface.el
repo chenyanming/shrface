@@ -1184,14 +1184,13 @@ jump around the list."
       (message "Please install 'counsel' before using 'shrface-headline-counsel'"))))
 
 (defun shrface-previous-headline ()
-  "Jump to previous headline and recenter."
+  "Jump to previous headline."
   (interactive)
   (let ((location (get-text-property (point) shrface-headline-number-property)))
     ;; check the current point headline number first
     (if (numberp location)
         (progn
-          (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1- location)))
-          (recenter nil))
+          (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1- location))))
       (let ((current (point-min)) (start (1+ (point))) point number)
         ;; Scan from point-min to (1+ (point)) to find the current headline.
         ;; (1+ (point)) to include under current point headline into the scan range.
@@ -1205,18 +1204,18 @@ jump around the list."
               ((equal (point) (point-max)) (setq number 0))
               (t
                (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
-        (ignore-errors (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ number))))
-        (recenter nil)))))
+        (ignore-errors (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ number))))))))
 
 (defun shrface-next-headline ()
-  "Jump to next headline and recenter."
+  "Jump to next headline."
   (interactive)
   (let ((location (get-text-property (point) shrface-headline-number-property)))
     ;; check the current point headline number first
     (if (numberp location)
         (progn
           (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ location)))
-          (recenter nil))
+          ;; (recenter nil)
+          )
       (let ((current (point-min)) (start (1+ (point))) point number)
         ;; Scan from point-min to (1+ (point)) to find the current headline.
         ;; (1+ (point)) to include under current point headline into the scan range.
@@ -1230,8 +1229,7 @@ jump around the list."
               ((equal (point) (point-max)) (setq number 0))
               (t
                (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
-        (ignore-errors (goto-char (text-property-any  (point-min) (point-max) shrface-headline-number-property (+ 2 number))) )
-        (recenter nil)))))
+        (ignore-errors (goto-char (text-property-any  (point-min) (point-max) shrface-headline-number-property (+ 2 number))))))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
