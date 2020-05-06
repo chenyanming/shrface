@@ -206,8 +206,8 @@ Here is the keybinding example:
   (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab)
   (define-key eww-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key eww-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key nov-mode-map (kbd "C-i") 'shrface-links-counsel)
-  (define-key nov-mode-map (kbd "C-o") 'shrface-headline-counsel))
+  (define-key eww-mode-map (kbd "C-i") 'shrface-links-counsel)
+  (define-key eww-mode-map (kbd "C-o") 'shrface-headline-counsel))
 #+END_SRC
 
 PS: =org-show-children= are not 100% supported, since the =regexp-fmt= is
