@@ -761,15 +761,24 @@ experimental, sometimes eww will hangup."
     (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))))
 
 (defun shrface-toggle-bullets ()
-  "Toggle shrface headline bullets globally.
-Non-nil to disable headline bullets.
-The following features are also disabled:
+  "Toggle shrface headline bullets globally and reload the current buffer.
+Set Non-nil to disable headline bullets, besides, following
+features are also disabled:
   1. function `shrface-occur'
   2. variable `shrface-mode'"
   (interactive)
   (if (setq shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
-      (message "shrface bullets disabled. Please Reload the buffer.")
-    (message "shrface bullets enabled. Please Reload the buffer.")))
+      (message "shrface bullets disabled.")
+    (message "shrface bullets enabled."))
+  (cond ((equal major-mode 'eww-mode)
+         (when (fboundp 'eww-reload)
+           (eww-reload)))
+        ((equal major-mode 'nov-mode)
+         (when (fboundp 'nov-render-document)
+           (nov-render-document)
+           (when (boundp 'nov-mode-hook)
+             (if (memq 'shrface-mode nov-mode-hook)
+                 (shrface-mode)))))))
 
 ;;; shrface-analysis
 ;; `shrface-links'
@@ -1098,7 +1107,8 @@ jump around the list."
                       :persistent-action
                       (lambda (candidate)
                         (goto-char (nth 0 candidate))
-                        (helm-highlight-current-line))))
+                        (if (fboundp 'helm-highlight-current-line)
+                            (helm-highlight-current-line)))))
           (goto-char (nth 0 result)))
       (message "Please enable 'helm-mode' before using 'shrface-headline-helm'"))))
 
@@ -1203,23 +1213,24 @@ jump around the list."
 (defun shrface-headline-helm ()
   "Use helm to show all headlines in order founded in the buffer."
   (interactive)
-  (let (list)
+  (let (result)
     (if (fboundp 'helm-comp-read)
         (progn
-          (setq list (helm-comp-read
+          (setq result (helm-comp-read
                       "shrface-headline: " (shrface-headline-selectable-list)
                       :persistent-action
                       (lambda (candidate)
                         (goto-char (car candidate))
-                        (helm-highlight-current-line))))
-          (goto-char (car list))
+                        (if (fboundp 'helm-highlight-current-line)
+                            (helm-highlight-current-line)))))
+          (goto-char (car result))
           (recenter nil))
       (message "Please enable 'helm-mode' before using 'shrface-headline-helm'"))))
 
 (defun shrface-previous-headline ()
   "Jump to previous headline."
   (interactive)
-  (let ((location (get-text-property (point) shrface-headline-number-property)))
+  (let ((location (get-text-property (point) shrface-headline-number-property)) previous)
     ;; check the current point headline number first
     (if (numberp location)
         (progn
@@ -1246,8 +1257,10 @@ jump around the list."
 (defun shrface-next-headline ()
   "Jump to next headline."
   (interactive)
-  (let ((location (get-text-property (point) shrface-headline-number-property)))
-    ;; check the current point headline number first
+  (let* ((header-in-line (text-property-not-all (line-beginning-position) (line-end-position) shrface-headline-number-property nil))
+         (location (get-text-property (or header-in-line (point)) shrface-headline-number-property))
+         next)
+    ;; check the current line headline number first, since if use org-cycle, cursor will go to the begining of line
     (cond ((numberp location)
            (progn
              (setq next (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ location)))
