@@ -761,13 +761,13 @@ experimental, sometimes eww will hangup."
     (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))))
 
 (defun shrface-toggle-bullets ()
-  "Toggle shrface headline bullets globally and reload the current buffer.
+  "Toggle shrface headline bullets locally/temporary and reload the current buffer.
 Set Non-nil to disable headline bullets, besides, following
 features are also disabled:
   1. function `shrface-occur'
   2. variable `shrface-mode'"
   (interactive)
-  (if (setq shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
+  (if (setq-local shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
       (message "shrface bullets disabled.")
     (message "shrface bullets enabled."))
   (cond ((equal major-mode 'eww-mode)

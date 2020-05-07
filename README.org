@@ -150,7 +150,7 @@ the following settings mentioned in this document into =(with-eval-after-load
                                   ; (http/https/ftp/file/mailto/other), if
                                   ; `shrface-href-versatile' is nil, default
                                   ; face `shrface-href-face' would be used.
-  (setq shrface-toggle-bullets nil) ; Set Non-nil if you do not like headline bullets
+  (setq shrface-toggle-bullets nil) ; Set t if you do not like headline bullets
 
   ;; eww support
   (with-eval-after-load 'eww
@@ -197,18 +197,20 @@ Here is the keybinding example:
 (with-eval-after-load 'nov
   (define-key nov-mode-map (kbd "<tab>") 'org-cycle)
   (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key nov-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key nov-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key nov-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key nov-mode-map (kbd "C-i") 'shrface-links-counsel)
-  (define-key nov-mode-map (kbd "C-o") 'shrface-headline-counsel))
+  (define-key nov-mode-map (kbd "C-i") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key nov-mode-map (kbd "C-o") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
 
 (with-eval-after-load 'eww
   (define-key eww-mode-map (kbd "<tab>") 'org-cycle)
   (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key eww-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key eww-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key eww-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key eww-mode-map (kbd "C-i") 'shrface-links-counsel)
-  (define-key eww-mode-map (kbd "C-o") 'shrface-headline-counsel))
+  (define-key eww-mode-map (kbd "C-i") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key eww-mode-map (kbd "C-o") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
 #+END_SRC
 
 PS: =org-show-children= are not 100% supported, since the =regexp-fmt= is
@@ -308,9 +310,9 @@ PS: The bullets setting can be derived from =org-bullets-bullet-list= or
 =org-superstar-headline-bullets-list=, if [[https://github.com/sabof/org-bullets][org-bullets]] or [[https://github.com/integral-dw/org-superstar-mode][org-superstar]] is
 available.
 
-**** Toggle headline bullets
+**** Toggle headline bullets locally/temporary
 
-The quick way to toggle(disable/enable) headline bullets:
+The quick way to toggle(disable/enable) headline bullets locally/temporary:
 #+BEGIN_SRC emacs-lisp
 M-x shrface-toggle-bullets
 #+END_SRC
