@@ -25,7 +25,7 @@
     - [[#notes-about-setting-for-novel][Notes about setting for =nov.el=]]
   - [[#keybinding-settings][Keybinding Settings]]
   - [[#features-anatomy][Features Anatomy]]
-    - [[#shrface-basic-and-shrface-trail][shrface-basic and shrface-trail]]
+    - [[#shrface-basic-shrface-trail][shrface-basic, shrface-trail]]
     - [[#shrface-mode][shrface-mode]]
     - [[#shrface-analysis][shrface-analysis]]
     - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
@@ -216,7 +216,7 @@ PS: =org-show-children= are not 100% supported, since the =regexp-fmt= is
  directly). Besides, you can use [[https://github.com/tj64/outline-magic][outline-magic]] as alternative.
 
 ** Features Anatomy
-*** shrface-basic and shrface-trail
+*** shrface-basic, shrface-trail
 By calling =shrface-baisic= and =shrface-trail=, it will do some configurations to enable shrface.
 
 *** shrface-mode
@@ -241,22 +241,22 @@ For example, to enable =shrface-mode= to =eww=, =nov= or =mu4e=
 Besides, you can enable/disable =shrface-mode= via =M-x=
 
 *** shrface-analysis
-=shrface-analysis= is new concept brought from version *2.2*.
-=shrface-analysis= will help you analyze the html buffer, and give you a robust
+*shrface-analysis* is new concept brought from version *2.2*.
+*shrface-analysis* will help you analyze the html buffer, and give you a robust
 result that you can interactive with.
 
-**** =shrface-occur=
+**** shrface-occur
 List all headlines, and you can easily jump between them by
 mouse click.
 
-**** =shrface-links= 
+**** shrface-links
 List all URLs and classify them. 
 You can easily go to the
 occurrence (Left Click/Enter), copy the URL (Middle Click) or browse the URL
 (Right Click). Besides, if [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] is available, web icon for each link
 will be shown.
 
-**** =shrface-links-counsel= 
+**** shrface-links-counsel
 List all URLs with =counsel=.
 - The URLs are listed in order based the position on the buffer.
 - The first candidate to select is the *next url* counting from the current cursor
@@ -266,12 +266,7 @@ List all URLs with =counsel=.
 - =C-o= to fire the action menu on the selected candidate.
 - =C-c C-o= to fire the =ivy-occur=
 
-**** =shrface-links-helm=
-List all URLs with =helm=.
-- =TAB= to preview the link
-- =RET= to goto the link
-
-**** =shrface-headline-counsel= 
+**** shrface-headline-counsel
 List all headlines with =counsel=.
 - It is a better solution than =imenu= and =shrface-occur.=
 - It can work without the headline bullets. You can disable the bullets via
@@ -283,24 +278,30 @@ List all headlines with =counsel=.
 - =C-o= to fire the action menu on the selected candidate.
 - =C-c C-o= to fire the =ivy-occur=
 
-**** =shrface-headline-helm=
+**** shrface-links-helm
+List all URLs with =helm=.
+- =TAB= to preview the link
+- =RET= to goto the link
+ 
+**** shrface-headline-helm
 List all headlines with =helm=.
 - =TAB= to preview the headline
 - =RET= to goto the headlin
 
-**** =shrface-next-headline= and =shrface-previous-headline=
+**** shrface-next-headline, shrface-previous-headline
 These two headline functions are designed to replace =outline-next-headline= and
 =outline-previous-headline=. They scan the headline number text properties and
 jump to the headlines which means it can work under no bullets circumstance if
 =(setq shrface-toggle-bullets t)=.
 
 *** Headline bullets (h1 to h6)
+**** Customize the headline bullets
 You can configure your farourite bullets up to 6 levels of headings (cycled
 through if less than 6 bullets in setting).
 
 You can set it with:
 #+BEGIN_SRC emacs-lisp
-(setq shrface-bullets-bullet-list '("◉" "○" "✸" "✿"))
+(setq shrface-bullets-bullet-list ("◉" "○" "✸" "✿"))
 #+END_SRC
 
 PS: The bullets setting can be derived from =org-bullets-bullet-list= or
@@ -332,6 +333,8 @@ However, the following features are still be able to use:
 3. function =shrface-headlines-counsel=
 4. function =shrface-previous-headline=
 5. function =shrface-next-headline=
+6. function =shrface-links-helm=
+7. function =shrface-headline-helm=
 
 *** Item bullet
 You can configure your favorite item bullet for shrface
@@ -378,7 +381,7 @@ The following types of URL can be customized.
 Here are the faces supported:
 #+BEGIN_SRC emacs-lisp
 
-;;; Faces for `shrface-basic'
+;;; Faces for `shrface-basic
 
 (defcustom shrface-bullets-bullet-list
   (or (bound-and-true-p org-bullets-bullet-list)
