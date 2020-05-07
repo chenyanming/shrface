@@ -1,5 +1,5 @@
 #+TITLE:   SHRFACE
-#+DATE:    May 02, 2020
+#+DATE:    May 07, 2020
 #+SINCE:   {replace with next tagged release version}
 #+STARTUP: inlineimages nofold
 [[https://melpa.org/#/shrface][file:https://melpa.org/packages/shrface-badge.svg]]
@@ -38,6 +38,7 @@
     - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
+  - [[#2020-05-07][=2020-05-07=]]
   - [[#2020-05-02][=2020-05-02=]]
   - [[#2020-05-01][=2020-05-01=]]
   - [[#2020-04-29][=2020-04-29=]]
@@ -248,13 +249,13 @@ result that you can interactive with.
 =M-x= =shrface-occur= to list all headlines, and you can easily jump between them by
 mouse click.
 
-**** =shrface-links= and =shrface-links-counsel=
-=M-x= =shrface-links= to list all URLs and classify them. You can easily go to the
+**** =shrface-links=, =shrface-links-counsel= and =shrface-links-helm=
+***** =M-x= =shrface-links= to list all URLs and classify them. You can easily go to the
 occurrence (Left Click/Enter), copy the URL (Middle Click) or browse the URL
 (Right Click). Besides, if [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] is available, web icon for each link
 will be shown.
 
-=M-x= =shrface-links-counsel= to list all URLs.
+***** =M-x= =shrface-links-counsel= to list all URLs with =counsel=.
 - The URLs are listed in order based the position on the buffer.
 - The first candidate to select is the *next url* counting from the current cursor
   position. In this case, you can use =C-M-m (ivy-call)=, =C-M-n
@@ -263,9 +264,13 @@ will be shown.
 - =C-o= to fire the action menu on the selected candidate.
 - =C-c C-o= to fire the =ivy-occur=
 
-**** =shrface-headline-counsel=
+***** =M-x= =shrface-links-helm= to list all URLs with =helm=.
+- =TAB= to preview the link
+- =RET= to goto the link
 
-=M-x= =shrface-links-counsel= to list all headlines.
+**** =shrface-headline-counsel= and =shrface-headline-helm=
+
+***** =M-x= =shrface-headline-counsel= to list all headlines with =counsel=.
 - It is a better solution than =imenu= and =shrface-occur.=
 - It can work without the headline bullets. You can disable the bullets via
   =(setq shrface-toggle-bullets t)= and still be able to jump around the headlines.
@@ -275,6 +280,10 @@ will be shown.
   around all headlines without losing your position.
 - =C-o= to fire the action menu on the selected candidate.
 - =C-c C-o= to fire the =ivy-occur=
+
+***** =M-x= =shrface-headline-helm= to list all headlines with =helm=.
+- =TAB= to preview the headline
+- =RET= to goto the headlin
 
 **** =shrface-next-headline= and =shrface-previous-headline=
 These two headline functions are designed to replace =outline-next-headline= and
@@ -594,6 +603,10 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 - [ ] =shrface-babel=
  
 * News/Logs
+** =2020-05-07=
+Version *2.6*:
+- New Function: =shrface-headline-helm= and =shrface-links-helm=
+ 
 ** =2020-05-02=
 Version *2.5*:
 - New Function: =shrface-headline-counsel=: better solution than =imenu= to list all
