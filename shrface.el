@@ -1231,13 +1231,18 @@ jump around the list."
   "Jump to previous headline."
   (interactive)
   (let ((location (get-text-property (point) shrface-headline-number-property)) previous)
-    ;; check the current point headline number first
-    (if (numberp location)
-        (progn
-          (setq previous (text-property-any (point-min) (point-max) shrface-headline-number-property (1- location)))
-          (if (numberp previous)
-              (goto-char previous)
-            (message "Beginning of headlines")))
+    (cond
+     ;; check the current point headline number first
+     ((numberp location)
+      (setq previous (text-property-any (point-min) (point-max) shrface-headline-number-property (1- location)))
+      (if (numberp previous)
+          (goto-char previous)
+        (goto-char (point-min))))
+     ;; check the current point if less than the first header
+     ((> (text-property-any (point-min) (point-max) shrface-headline-number-property 1) (point))
+      (message "Beginning of buffer")
+      (goto-char (point-min)))
+     (t
       (let ((current (point-min)) (start (1+ (point))) point number)
         ;; Scan from point-min to (1+ (point)) to find the current headline.
         ;; (1+ (point)) to include under current point headline into the scan range.
@@ -1248,11 +1253,8 @@ jump around the list."
           (while (setq point (text-property-not-all
                               current (point-max) shrface-headline-number-property nil))
             (setq current (1+ point)))) ; at the (point-max)
-        (cond ((equal (point) 1) (setq number 0))
-              ((equal (point) 2) (setq number 0))
-              (t
-               (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
-        (ignore-errors (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ number))))))))
+        (setq number (1- (get-text-property (1- current) shrface-headline-number-property)))
+        (goto-char (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ number))))))))
 
 (defun shrface-next-headline ()
   "Jump to next headline."
@@ -1260,29 +1262,29 @@ jump around the list."
   (let* ((header-in-line (text-property-not-all (line-beginning-position) (line-end-position) shrface-headline-number-property nil))
          (location (get-text-property (or header-in-line (point)) shrface-headline-number-property))
          next)
-    ;; check the current line headline number first, since if use org-cycle, cursor will go to the begining of line
-    (cond ((numberp location)
-           (progn
-             (setq next (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ location)))
-             (if (numberp next)
-                 (goto-char next)
-               (message "End of headlines"))))
-          ;; check the current point if less than the first header
-          ((> (setq next (text-property-any (point-min) (point-max) shrface-headline-number-property 1) ) (point)) (goto-char next))
-          (t
-           (let ((current (point-min)) (start (1+ (point))) point number)
-             ;; Scan from point-min to (1+ (point)) to find the current headline.
-             ;; (1+ (point)) to include under current point headline into the scan range.
-             (unless (> start (point-max))
-               (while (setq point (text-property-not-all
-                                   current start shrface-headline-number-property nil))
-                 (setq current (1+ point))))
-             (cond ((equal (point) 1) (setq number 0))
-                   ((equal (point) 2) (setq number 0))
-                   ((equal (point) (point-max)) (setq number -1) (message "Back to the first headline"))
-                   (t
-                    (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
-             (ignore-errors (goto-char (text-property-any  (point-min) (point-max) shrface-headline-number-property (+ 2 number))))) ))))
+    (cond
+     ;; check the current line headline number first, since if use org-cycle, cursor will go to the begining of line
+     ((numberp location)
+      (setq next (text-property-any (point-min) (point-max) shrface-headline-number-property (1+ location)))
+      (if (numberp next)
+          (goto-char next)
+        (goto-char (point-max))))
+     ;; check the current point if less than the first header
+     ((> (setq next (text-property-any (point-min) (point-max) shrface-headline-number-property 1)) (point)) (goto-char next))
+     (t
+      (let ((current (point-min)) (start (1+ (point))) point number)
+        ;; Scan from point-min to (1+ (point)) to find the current headline.
+        ;; (1+ (point)) to include under current point headline into the scan range.
+        (unless (> start (point-max))
+          (while (setq point (text-property-not-all
+                              current start shrface-headline-number-property nil))
+            (setq current (1+ point))))
+        (cond ((equal (point) 1) (setq number 0))
+              ((equal (point) 2) (setq number 0))
+              ((equal (point) (point-max)) (setq number (point-max)) (message "End of buffer"))
+              (t
+               (setq number (1- (get-text-property (1- current) shrface-headline-number-property)))))
+        (goto-char (or (text-property-any (point-min) (point-max) shrface-headline-number-property (+ 2 number)) (point-max))))))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
