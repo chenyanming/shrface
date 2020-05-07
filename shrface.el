@@ -761,24 +761,34 @@ experimental, sometimes eww will hangup."
     (add-to-list 'shr-external-rendering-functions '(code   . shrface-tag-code))))
 
 (defun shrface-toggle-bullets ()
-  "Toggle shrface headline bullets locally/temporary and reload the current buffer.
+  "Toggle shrface headline bullets locally and reload the current buffer.
 Set Non-nil to disable headline bullets, besides, following
 features are also disabled:
   1. function `shrface-occur'
-  2. variable `shrface-mode'"
+  2. variable `shrface-mode'
+FIXME: If variable `mu4e-view-mode' is t, bullets will disable/enable globally."
   (interactive)
-  (if (setq-local shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
-      (message "shrface bullets disabled.")
-    (message "shrface bullets enabled."))
   (cond ((equal major-mode 'eww-mode)
+         (if (setq-local shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
+             (message "shrface bullets disabled.")
+           (message "shrface bullets enabled."))
          (when (fboundp 'eww-reload)
            (eww-reload)))
         ((equal major-mode 'nov-mode)
+         (if (setq-local shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
+             (message "shrface bullets disabled.")
+           (message "shrface bullets enabled."))
          (when (fboundp 'nov-render-document)
            (nov-render-document)
            (when (boundp 'nov-mode-hook)
              (if (memq 'shrface-mode nov-mode-hook)
-                 (shrface-mode)))))))
+                 (shrface-mode)))))
+        ((equal major-mode 'mu4e-view-mode)
+         (if (setq shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
+             (message "shrface bullets disabled globally.")
+           (message "shrface bullets enabled globally."))
+         (when (fboundp 'mu4e-view-refresh)
+           (mu4e-view-refresh)))))
 
 ;;; shrface-analysis
 ;; `shrface-links'

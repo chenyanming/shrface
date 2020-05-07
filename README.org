@@ -211,6 +211,15 @@ Here is the keybinding example:
   (define-key eww-mode-map (kbd "C-k") 'shrface-previous-headline)
   (define-key eww-mode-map (kbd "C-i") 'shrface-links-counsel) ; or 'shrface-links-helm
   (define-key eww-mode-map (kbd "C-o") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+
+(with-eval-after-load 'mu4e
+  (define-key mu4e-view-mode-map (kbd "<tab>") 'org-cycle)
+  (define-key mu4e-view-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key mu4e-view-mode-map (kbd "C-t") 'shrface-toggle-bullets)
+  (define-key mu4e-view-mode-map (kbd "C-j") 'shrface-next-headline)
+  (define-key mu4e-view-mode-map (kbd "C-k") 'shrface-previous-headline)
+  (define-key mu4e-view-mode-map (kbd "C-i") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key mu4e-view-mode-map (kbd "C-o") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
 #+END_SRC
 
 PS: =org-show-children= are not 100% supported, since the =regexp-fmt= is
@@ -317,6 +326,8 @@ The quick way to toggle(disable/enable) headline bullets locally/temporary:
 M-x shrface-toggle-bullets
 #+END_SRC
 
+Please notice: In =mu4e-view-mode=, using =shrface-toggle-bullets= will toggle
+bullets globally. It can not be fixed right now.
 
 **** Disable headline bullets globally
 If you do not like headline bullets, disable them globally by:
