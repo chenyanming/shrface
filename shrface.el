@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.5
+;; Version: 2.6
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -57,7 +57,9 @@
   (require 'org-superstar)
   (require 'org-bullets)
   (require 'all-the-icons)
-  (require 'ivy))
+  (require 'ivy)
+  (require 'helm)
+  (require 'helm-utils))
 
 ;;; shrface
 
@@ -1085,6 +1087,21 @@ jump around the list."
                   :caller 'shrface-links-counsel)
       (message "Please install 'counsel' before using 'shrface-links-counsel'"))))
 
+(defun shrface-links-helm ()
+  "Use helm to present all urls in order founded in the buffer."
+  (interactive)
+  (let (result)
+    (if (fboundp 'helm-comp-read)
+        (progn
+          (setq result (helm-comp-read
+                      "shrface-headline: " (shrface-links-selectable-list)
+                      :persistent-action
+                      (lambda (candidate)
+                        (goto-char (nth 0 candidate))
+                        (helm-highlight-current-line))))
+          (goto-char (nth 0 result)))
+      (message "Please enable 'helm-mode' before using 'shrface-headline-helm'"))))
+
 (defun shrface-links-counsel-set-actions ()
   "Set actions for function `shrface-links-counsel' when call \\[ivy-occur]."
   (if (fboundp 'ivy-set-actions)
@@ -1182,6 +1199,22 @@ jump around the list."
                   :sort nil
                   :caller 'shrface-headline-counsel)
       (message "Please install 'counsel' before using 'shrface-headline-counsel'"))))
+
+(defun shrface-headline-helm ()
+  "Use helm to show all headlines in order founded in the buffer."
+  (interactive)
+  (let (list)
+    (if (fboundp 'helm-comp-read)
+        (progn
+          (setq list (helm-comp-read
+                      "shrface-headline: " (shrface-headline-selectable-list)
+                      :persistent-action
+                      (lambda (candidate)
+                        (goto-char (car candidate))
+                        (helm-highlight-current-line))))
+          (goto-char (car list))
+          (recenter nil))
+      (message "Please enable 'helm-mode' before using 'shrface-headline-helm'"))))
 
 (defun shrface-previous-headline ()
   "Jump to previous headline."
