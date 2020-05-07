@@ -1238,8 +1238,8 @@ jump around the list."
       (if (numberp previous)
           (goto-char previous)
         (goto-char (point-min))))
-     ;; check the current point if less than the first header
-     ((> (text-property-any (point-min) (point-max) shrface-headline-number-property 1) (point))
+     ;; check the current point if >= the first header (no matter level), keep (point) if no headlines
+     ((>= (or (text-property-not-all (point-min) (point-max) shrface-headline-number-property nil) (point)) (point))
       (message "Beginning of buffer")
       (goto-char (point-min)))
      (t
@@ -1269,8 +1269,13 @@ jump around the list."
       (if (numberp next)
           (goto-char next)
         (goto-char (point-max))))
-     ;; check the current point if less than the first header
-     ((> (setq next (text-property-any (point-min) (point-max) shrface-headline-number-property 1)) (point)) (goto-char next))
+     ;; check the current point if >= the first header (no matter level), keep (point) if no headlines
+     ((>= (setq next (or (text-property-not-all (point-min) (point-max) shrface-headline-number-property nil) (point))) (point))
+      (if (equal next (point))
+          (progn
+            (message "End of buffer")
+            (goto-char (point-max)) )
+        (goto-char next)))
      (t
       (let ((current (point-min)) (start (1+ (point))) point number)
         ;; Scan from point-min to (1+ (point)) to find the current headline.
