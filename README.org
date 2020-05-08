@@ -25,7 +25,7 @@
     - [[#notes-about-setting-for-novel][Notes about setting for =nov.el=]]
   - [[#keybinding-settings][Keybinding Settings]]
   - [[#features-anatomy][Features Anatomy]]
-    - [[#shrface-basic-shrface-trail][shrface-basic, shrface-trail]]
+    - [[#shrface-basic-shrface-trail-shrface-resume][shrface-basic, shrface-trail, shrface-resume]]
     - [[#shrface-mode][shrface-mode]]
     - [[#shrface-analysis][shrface-analysis]]
     - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
@@ -227,8 +227,18 @@ PS: =org-show-children= are not 100% supported, since the =regexp-fmt= is
  directly). Besides, you can use [[https://github.com/tj64/outline-magic][outline-magic]] as alternative.
 
 ** Features Anatomy
-*** shrface-basic, shrface-trail
-By calling =shrface-baisic= and =shrface-trail=, it will do some configurations to enable shrface.
+*** shrface-basic, shrface-trail, shrface-resume
+By calling =shrface-baisic= and =shrface-trail=, it will do some configurations to enable *shrface*.
+
+By calling =shrface-resume=, you can disable *shrface* and resume to original setting.
+
+To resume nov original setting, you should also run this:
+#+BEGIN_SRC emacs-lisp
+(setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
+#+END_SRC
+
+Please notice: The above features may be handled by =shrface-mode= directly in
+future versions.
 
 *** shrface-mode
 From version =1.8=, =shrface-mode= is adapted, for it is more flexible to

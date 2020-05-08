@@ -556,7 +556,7 @@ Argument DOM dom."
 
 (defun shrface-tag-p (dom)
     "Fontize tag p.
-  Argument DOM dom."
+Argument DOM dom."
   (setq shr-indentation shrface-paragraph-indentation)
   (setq-local fill-column shrface-paragraph-fill-column)
   (shr-ensure-paragraph)
@@ -682,14 +682,8 @@ Argument DOM dom."
 
 (defun shrface-occur-flash ()
   "Flash the occurrence line."
-  (save-excursion
-    (let (pos end-pos)
-      (beginning-of-visual-line)
-      (setq pos (point))
-      (end-of-visual-line)
-      (setq end-pos (1+ (point)))
-      (shrface-flash-show pos end-pos 'shrface-highlight 0.5)
-      (overlay-put compilation-highlight-overlay 'window (selected-window)))))
+  (shrface-flash-show (line-beginning-position) (line-end-position) 'shrface-highlight 0.5)
+  (overlay-put compilation-highlight-overlay 'window (selected-window)))
 
 ;;;###autoload
 (define-minor-mode shrface-mode
@@ -738,14 +732,17 @@ Need to be called once before loading eww, nov.el, dash-docs, mu4e, after shr."
 
 (defun shrface-resume ()
   "Resume the original faces.
-You can use it to resume the
-original faces. All shrface faces will be disabled. Can be called
-at any time."
+You can use it to resume the original faces. All shrface
+faces/features will be disabled. Can be called at any time."
   (interactive)
   (setq shr-external-rendering-functions nil)
   ;; this setting is still needed to be setup by the user
   ;; (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
-  (setq shr-bullet "* "))
+  (setq shr-bullet "* ")
+  ;; remove occur hook
+  (remove-hook 'occur-mode-find-occurrence-hook #'shrface-occur-flash)
+  ;; remove shr advice
+  (advice-remove 'shr-insert-document #'shrface-clear))
 
 (defun shrface-trial ()
   "Experimental features.
