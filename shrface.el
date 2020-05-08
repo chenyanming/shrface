@@ -555,21 +555,17 @@ Argument DOM dom."
   (shr-ensure-newline))
 
 (defun shrface-tag-p (dom)
-  "Fontize tag p.
-Argument DOM dom."
-  (let* ((code (with-temp-buffer
-                 (shr-ensure-paragraph)
-                 (shr-generic dom)
-                 (shr-ensure-paragraph)
-                 ;; indent and fill text node
-                 ;; Temporary solution, not the best
-                 (unless (equal "" (dom-text dom))
-                   (setq-local fill-column shrface-paragraph-fill-column)
-                   (fill-region (point-min) (point-max) nil nil nil)
-                   (if (not (equal 0 shrface-paragraph-indentation))
-                       (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
-                 (buffer-string))))
-    (insert code)))
+    "Fontize tag p.
+  Argument DOM dom."
+  (setq shr-indentation shrface-paragraph-indentation)
+  (setq-local fill-column shrface-paragraph-fill-column)
+  (shr-ensure-paragraph)
+  (let (start end)
+    (setq start (point))
+    (shr-generic dom)
+    (setq end (point))
+    (fill-region start end nil nil nil)
+    (shr-ensure-paragraph)))
 
 (defun shrface-tag-em (dom)
   "Fontize tag em.
