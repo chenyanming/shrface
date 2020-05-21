@@ -87,8 +87,8 @@ originally a part of Gnus). It’s the basis of the web browser =eww=.
 #+END_QUOTE
 
 ** =eww=
-[[img/eww-1.png]]
-[[img/eww-2.png]]
+[[file:img/eww-1.png]]
+[[file:img/eww-2.png]]
 
 ** =dash-docs=
 [[img/dash-doc-1.png]]
