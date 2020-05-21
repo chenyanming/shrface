@@ -87,42 +87,56 @@ originally a part of Gnus). It’s the basis of the web browser =eww=.
 #+END_QUOTE
 
 ** =eww=
+#+attr_org: :width 600px
 [[file:img/eww-1.png]]
+#+attr_org: :width 600px
 [[file:img/eww-2.png]]
 
 ** =dash-docs=
-[[img/dash-doc-1.png]]
-[[img/dash-doc-2.png]]
+#+attr_org: :width 600px
+[[file:img/dash-doc-1.png]]
+[[file:img/dash-doc-2.png]]
 
 *** Version 1.3: New face =shrface-code=, unleash the full power of =dash-docs=
-[[img/dash-docs-code.png]]
+#+attr_org: :width 600px
+[[file:img/dash-docs-code.png]]
 
 ** =nov.el=
-[[img/epub-1.png]]
-[[img/epub-2.png]]
+#+attr_org: :width 600px
+[[file:img/epub-1.png]]
+#+attr_org: :width 600px
+[[file:img/epub-2.png]]
 
 ** =mu4e=
-[[img/mu4e.png]]
+#+attr_org: :width 600px
+[[file:img/mu4e.png]]
 
 ** =imenu-list=, =helm-imenu=, =counsel-imenu=
 *** Version 1.4: New feature, =imenu= support
-[[img/imenu-1.png]]
-[[img/imenu-2.png]]
-[[img/imenu-3.png]]
-[[img/imenu-4.png]]
+#+attr_org: :width 600px
+[[file:img/imenu-1.png]]
+#+attr_org: :width 600px
+[[file:img/imenu-2.png]]
+#+attr_org: :width 600px
+[[file:img/imenu-3.png]]
+[[file:img/imenu-4.png]]
 
 ** =outline minior mode= and =org-indent-mode=
 *** Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)
-[[img/indent-1.png]]
-[[img/indent-2.png]]
+#+attr_org: :width 600px
+[[file:img/indent-1.png]]
+#+attr_org: :width 600px
+[[file:img/indent-2.png]]
 
 ** =shrface-occur=
 *** Version 2.1: New feature, list all headlines with =occur=
-[[img/occur.png]]
+#+attr_org: :width 600px
+[[file:img/occur.png]]
 
 ** =shrface-links=
 *** Version 2.2: New =shrface-analysis= feature: list all clickable URL with =shrface-links=
-[[img/links.gif]]
+#+attr_org: :width 600px
+[[file:img/links.gif]]
 
 * Installation
 
@@ -624,7 +638,8 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 #+END_SRC
 
 **** Screenshots when both enable =shrface= and the code highlights
-#+html: <p align="center"><img src="img/code-highlight.png" width="80%"/></p>
+#+attr_org: :width 600px
+[[file:img/code-highlight.png]]
 
 * TODO TODO
 - [ ] =shrface-highlight=
