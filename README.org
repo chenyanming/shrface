@@ -4,60 +4,19 @@
 #+STARTUP: inlineimages nofold
 [[https://melpa.org/#/shrface][file:https://melpa.org/packages/shrface-badge.svg]]
 
-* Table of Contents :TOC_3:noexport:
+* Table of Contents :TOC_1:noexport:
 - [[#description][Description]]
-  - [[#eww][=eww=]]
-  - [[#dash-docs][=dash-docs=]]
-    - [[#version-13-new-face-shrface-code-unleash-the-full-power-of-dash-docs][Version 1.3: New face =shrface-code=, unleash the full power of =dash-docs=]]
-  - [[#novel][=nov.el=]]
-  - [[#mu4e][=mu4e=]]
-  - [[#imenu-list-helm-imenu-counsel-imenu][=imenu-list=, =helm-imenu=, =counsel-imenu=]]
-    - [[#version-14-new-feature-imenu-support][Version 1.4: New feature, =imenu= support]]
-  - [[#outline-minior-mode-and-org-indent-mode][=outline minior mode= and =org-indent-mode=]]
-    - [[#version-15-new-feature-outline-minior-mode-support-use-org-cycle-and-org-shifttab][Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)]]
-  - [[#shrface-occur][=shrface-occur=]]
-    - [[#version-21-new-feature-list-all-headlines-with-occur][Version 2.1: New feature, list all headlines with =occur=]]
-  - [[#shrface-links][=shrface-links=]]
-    - [[#version-22-new-shrface-analysis-feature-list-all-clickable-url-with-shrface-links][Version 2.2: New =shrface-analysis= feature: list all clickable URL with =shrface-links=]]
 - [[#installation][Installation]]
 - [[#configuration][Configuration]]
-  - [[#quick-start][Quick Start]]
-    - [[#notes-about-setting-for-novel][Notes about setting for =nov.el=]]
-  - [[#keybinding-settings][Keybinding Settings]]
-  - [[#features-anatomy][Features Anatomy]]
-    - [[#shrface-basic-shrface-trail-shrface-resume][shrface-basic, shrface-trail, shrface-resume]]
-    - [[#shrface-mode][shrface-mode]]
-    - [[#shrface-analysis][shrface-analysis]]
-    - [[#headline-bullets-h1-to-h6][Headline bullets (h1 to h6)]]
-    - [[#item-bullet][Item bullet]]
-    - [[#paragraph-indentation-and-fill-column][Paragraph indentation and fill column]]
-    - [[#versatile-url][Versatile URL]]
-    - [[#supported-faces][Supported faces]]
-    - [[#experimental-faces][Experimental face(s)]]
-  - [[#optional-enable-source-codes-highlight][(Optional) Enable source codes highlight]]
-    - [[#hacking-the-shr-tag-pre-highlightel][Hacking the =shr-tag-pre-highlight.el=]]
 - [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
-  - [[#2020-05-07][=2020-05-07=]]
-  - [[#2020-05-02][=2020-05-02=]]
-  - [[#2020-05-01][=2020-05-01=]]
-  - [[#2020-04-29][=2020-04-29=]]
-  - [[#2020-04-26][=2020-04-26=]]
-  - [[#2020-04-23][=2020-04-23=]]
-  - [[#2020-04-20][=2020-04-20=]]
-  - [[#2020-04-19][=2020-04-19=]]
-  - [[#2020-04-18][=2020-04-18=]]
-  - [[#2020-04-17][=2020-04-17=]]
-  - [[#2020-04-16][=2020-04-16=]]
-  - [[#2020-04-15][=2020-04-15=]]
-  - [[#2020-04-13][=2020-04-13=]]
-  - [[#2020-04-12][=2020-04-12=]]
-  - [[#2020-04-11][=2020-04-11=]]
-  - [[#2020-04-10][=2020-04-10=]]
 
 * Description
 This package extends =shr= / =eww= with org features and analysis capability.
 It can be used in =dash-docs=, =eww=, =nov.el=, and =mu4e=.
+
+#+attr_org: :width 600px
+[[file:img/eww.png]]
 
 + Configurable org-like heading faces, headline bullets, item bullets,paragraph
   indentation, fill-column, item bullet, versatile hyper
@@ -86,57 +45,6 @@ As [[https://www.emacswiki.org/emacs/HtmlRendering][EmacsWiki]] says:
 originally a part of Gnus). It’s the basis of the web browser =eww=.
 #+END_QUOTE
 
-** =eww=
-#+attr_org: :width 600px
-[[file:img/eww-1.png]]
-#+attr_org: :width 600px
-[[file:img/eww-2.png]]
-
-** =dash-docs=
-#+attr_org: :width 600px
-[[file:img/dash-doc-1.png]]
-[[file:img/dash-doc-2.png]]
-
-*** Version 1.3: New face =shrface-code=, unleash the full power of =dash-docs=
-#+attr_org: :width 600px
-[[file:img/dash-docs-code.png]]
-
-** =nov.el=
-#+attr_org: :width 600px
-[[file:img/epub-1.png]]
-#+attr_org: :width 600px
-[[file:img/epub-2.png]]
-
-** =mu4e=
-#+attr_org: :width 600px
-[[file:img/mu4e.png]]
-
-** =imenu-list=, =helm-imenu=, =counsel-imenu=
-*** Version 1.4: New feature, =imenu= support
-#+attr_org: :width 600px
-[[file:img/imenu-1.png]]
-#+attr_org: :width 600px
-[[file:img/imenu-2.png]]
-#+attr_org: :width 600px
-[[file:img/imenu-3.png]]
-[[file:img/imenu-4.png]]
-
-** =outline minior mode= and =org-indent-mode=
-*** Version 1.5: New feature, =outline minior mode= support (use =org-cycle= and =org-shifttab=)
-#+attr_org: :width 600px
-[[file:img/indent-1.png]]
-#+attr_org: :width 600px
-[[file:img/indent-2.png]]
-
-** =shrface-occur=
-*** Version 2.1: New feature, list all headlines with =occur=
-#+attr_org: :width 600px
-[[file:img/occur.png]]
-
-** =shrface-links=
-*** Version 2.2: New =shrface-analysis= feature: list all clickable URL with =shrface-links=
-#+attr_org: :width 600px
-[[file:img/links.gif]]
 
 * Installation
 
