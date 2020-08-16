@@ -404,13 +404,17 @@ Argument END the url."
 Argument LEVEL the headline level."
   (nth (mod (1- level)
              (length shrface-bullets-bullet-list))
-        shrface-bullets-bullet-list))
+       (if (characterp (car shrface-bullets-bullet-list))
+           (mapcar 'char-to-string shrface-bullets-bullet-list)
+         shrface-bullets-bullet-list)))
 
 (defun shrface-outline-regexp ()
   "TODO: Regexp to match shrface headlines."
   (concat " ?+"
           (regexp-opt
-           shrface-bullets-bullet-list
+           (if (characterp (car shrface-bullets-bullet-list))
+               (mapcar 'char-to-string shrface-bullets-bullet-list)
+             shrface-bullets-bullet-list)
            t) " +"))
 
 (defun shrface-outline-regexp-bol ()
@@ -419,7 +423,9 @@ This is similar to `shrface-outline-regexp' but additionally makes
 sure that we are at the beginning of the line."
   (concat " ?+"
           (regexp-opt
-           shrface-bullets-bullet-list
+           (if (characterp (car shrface-bullets-bullet-list))
+               (mapcar 'char-to-string shrface-bullets-bullet-list)
+             shrface-bullets-bullet-list)
            t) "\\( +\\)"))
 
 (defun shrface-imenu-regexp-bol ()
@@ -428,7 +434,9 @@ This is similar to `shrface-outline-regexp' but additionally makes
 sure that we are at the beginning of the line."
   (concat "^\\(?: ?+\\)"
           (regexp-opt
-           shrface-bullets-bullet-list
+           (if (characterp (car shrface-bullets-bullet-list))
+               (mapcar 'char-to-string shrface-bullets-bullet-list)
+             shrface-bullets-bullet-list)
            t) "\\( .*\\)$"))
 
 (defun shrface-clear (DOM)
@@ -660,7 +668,9 @@ Argument DOM dom."
 
 (defun shrface-level ()
   "Function of no args to compute a header's nesting level in an outline."
-  (1+ (cl-position (match-string 1) shrface-bullets-bullet-list :test 'equal)))
+  (1+ (cl-position (match-string 1) (if (characterp (car shrface-bullets-bullet-list))
+                                        (mapcar 'char-to-string shrface-bullets-bullet-list)
+                                      shrface-bullets-bullet-list) :test 'equal)))
 
 (defun shrface-regexp ()
   "Set regexp for outline minior mode."
