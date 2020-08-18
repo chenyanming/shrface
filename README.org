@@ -109,6 +109,12 @@ following setting is not included into the package at this moment.
 (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
 #+END_SRC
 
+*** Font setup
+The default font is ~variable-pitch~.
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'variable-pitch nil :font (format "%s:pixelsize=%d" "iA Writer Quattro S" 15))
+#+END_SRC
+
 ** Keybinding Settings
 You can set the keybinding directly with the original org outline related
 functions, like =org-cycle=, =org-shifttab=, =org-content=, =org-overview=, etc, and
