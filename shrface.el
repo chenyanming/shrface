@@ -35,7 +35,7 @@
 ;; - Read html email with `mu4e' , the same reading experience just like org mode
 ;;   without formatting html to org file.
 ;; - Switch/jump the headlines just like org-mode in `eww' and `nov.el' with `imenu'
-;; - Togle/cycle the headlines just like org-mode in `eww' and `nov.el' with `outline-minor-mode'
+;; - Toggle/cycle the headlines just like org-mode in `eww' and `nov.el' with `outline-minor-mode'
 ;;   and `org-cycle'/`org-shifttab'
 ;; - Enable indentation just like org-mode in `eww' and `nov.el' with `org-indent-mode'
 ;; - Analysis capability for Researchers:
@@ -673,7 +673,7 @@ Argument DOM dom."
                                       shrface-bullets-bullet-list) :test 'equal)))
 
 (defun shrface-regexp ()
-  "Set regexp for outline minior mode."
+  "Set regexp for outline minor mode."
   (setq-local outline-regexp (shrface-outline-regexp))
   (setq-local org-outline-regexp-bol outline-regexp) ; for org-cycle, org-shifttab
   (setq-local org-outline-regexp outline-regexp) ; for org-cycle, org-shifttab
@@ -797,7 +797,7 @@ FIXME: If variable `mu4e-view-mode' is t, bullets will disable/enable globally."
 ;; `shrface-links'
 
 (defun shrface-links()
-  "`shrface-links' the links anaysis feature of `shrface-analysis'.
+  "`shrface-links' the links analysis feature of `shrface-analysis'.
 Collect the positions of href links in the
 current buffer and display the clickable result in
 *shrface-links* buffer"
@@ -813,7 +813,7 @@ current buffer and display the clickable result in
       (goto-char (point-min)))))
 
 (defun shrface-href-collect-all ()
-  "OBSELETE Collect all positions of URLs in the current buffer.
+  "OBSOLETE Collect all positions of URLs in the current buffer.
 The value of the `shrface-href-collected-list' is returned."
   (setq shrface-href-collected-list nil) ; TODO use local list instead
   (let ((buf-name "*shrface-links*") occur-buf)
@@ -1031,7 +1031,7 @@ Argument EVENT mouse event."
   "Flash a temporary highlight to help the user find something.
 POS start position
 
-END-POS end postion, flash the characters between the two
+END-POS end position, flash the characters between the two
 points
 
 FACE the flash face used
