@@ -8,12 +8,11 @@
 - [[#description][Description]]
 - [[#installation][Installation]]
 - [[#configuration][Configuration]]
-- [[#todo][TODO]]
 - [[#newslogs][News/Logs]]
 
 * Description
 This package extends =shr= / =eww= with org features and analysis capability.
-It can be used in =dash-docs=, =eww=, =nov.el=, and =mu4e=.
+It can be used in =dash-docs=, =eww=, =nov.el=, =mu4e=, and [[https://github.com/chenyanming/anki.el][anki.el]].
 
 #+attr_org: :width 600px
 [[file:img/eww.png]]
@@ -57,12 +56,54 @@ M-x package-install shrface
 * Configuration
 
 ** Quick Start
+*** use-package
+I recommend configure with ~use-package~, it is more elegant:
+#+BEGIN_SRC emacs-lisp
 
-From version =1.9=, users have to enable the =shrface= by themselves, by calling
-=(shrface-basic)= or =(shrface-trail)= after =(require 'shrface)=. Be sure to wrap all
-the following settings mentioned in this document into =(with-eval-after-load
-'shr)=, it can save you a lot of boot up time.
+(use-package shrface
+  :defer t
+  :config
+  (shrface-basic)
+  (shrface-trial)
+  (setq shrface-href-versatile t))
 
+(use-package eww
+  :defer t
+  :init
+  (add-hook 'eww-after-render-hook #'shrface-mode)
+  :config
+  (require 'shrface))
+
+(use-package nov
+  :defer t
+  :init
+  (add-hook 'nov-mode-hook #'shrface-mode)
+  :config
+  (require 'shrface)
+  (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
+  (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions)))
+
+(use-package anki
+  :defer t
+  :load-path "~/.emacs.d/lisp/anki/"
+  :init
+  (add-hook 'anki-mode-hook #'shrface-mode)
+  (autoload 'anki "anki")
+  (autoload 'anki-browser "anki")
+  (autoload 'anki-list-decks "anki")
+  :config
+  (require 'shrface)
+  (setq anki-shr-rendering-functions (append anki-shr-rendering-functions shr-external-rendering-functions))
+  (setq sql-sqlite-program "/usr/bin/sqlite3")
+  (cond ((string= (getenv "PC_NAME") "macbook")
+         (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1"))
+        ((string= (getenv "PC_NAME") "imac")
+         (setq anki-collection-dir "/Users/damonchan/Library/Application Support/Anki2/Android & Mac"))
+        (t "")))
+#+END_SRC
+
+*** with-eval-after-load
+If you don't use ~use-package~, configure with the following snippet:
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'shr ; lazy load is very important, it can save you a lot of boot up time
   (require 'shrface)
@@ -100,14 +141,6 @@ the following settings mentioned in this document into =(with-eval-after-load
   buffers, and it is no dependency/relationships with =shrface=, check here
     https://github.com/chenyanming/inherit-org
 
-*** Notes about setting for =nov.el=
-Since =nov-shr-rendering-functions= is not a customizable variable. Therefore,
-following setting is not included into the package at this moment.
-
-#+BEGIN_SRC emacs-lisp
-(setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))) ; reset nov-shr-rendering-functions, in case of the list get bigger and bigger
-(setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-#+END_SRC
 
 *** Font setup
 The default font is ~variable-pitch~.
@@ -555,11 +588,7 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 #+attr_org: :width 600px
 [[file:img/code-highlight.png]]
 
-* TODO TODO
-- [ ] =shrface-highlight=
-- [ ] =shrface-todo=
-- [ ] =shrface-babel=
- 
+
 * News/Logs
 ** =2020-05-07=
 Version *2.6*:
