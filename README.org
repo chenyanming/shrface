@@ -26,7 +26,7 @@ It can be used in =dash-docs=, =eww=, =nov.el=, =mu4e=, and [[https://github.com
 + Read html email with [[https://github.com/djcb/mu][mu/mu4e]] , the same reading experience just like org mode
   without formatting html to org file.
 + Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
-+ Togle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
++ Toggle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
   and =org-cycle/org-shifttab=
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
 + Analysis capability for Researchers:
@@ -189,7 +189,7 @@ PS: =org-show-children= are not 100% supported, since the =regexp-fmt= is
 
 ** Features Anatomy
 *** shrface-basic, shrface-trail, shrface-resume
-By calling =shrface-baisic= and =shrface-trail=, it will do some configurations to enable *shrface*.
+By calling =shrface-basic= and =shrface-trail=, it will do some configurations to enable *shrface*.
 
 By calling =shrface-resume=, you can disable *shrface* and resume to original setting.
 
@@ -268,7 +268,7 @@ List all URLs with =helm=.
 **** shrface-headline-helm
 List all headlines with =helm=.
 - =TAB= to preview the headline
-- =RET= to goto the headlin
+- =RET= to goto the headline
 
 **** shrface-next-headline, shrface-previous-headline
 These two headline functions are designed to replace =outline-next-headline= and
@@ -278,7 +278,7 @@ jump to the headlines which means it can work under no bullets circumstance if
 
 *** Headline bullets (h1 to h6)
 **** Customize the headline bullets
-You can configure your farourite bullets up to 6 levels of headings (cycled
+You can configure your favorite bullets up to 6 levels of headings (cycled
 through if less than 6 bullets in setting).
 
 You can set it with:
