@@ -95,11 +95,7 @@ I recommend configure with ~use-package~, it is more elegant:
   (require 'shrface)
   (setq anki-shr-rendering-functions (append anki-shr-rendering-functions shr-external-rendering-functions))
   (setq sql-sqlite-program "/usr/bin/sqlite3")
-  (cond ((string= (getenv "PC_NAME") "macbook")
-         (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1"))
-        ((string= (getenv "PC_NAME") "imac")
-         (setq anki-collection-dir "/Users/damonchan/Library/Application Support/Anki2/Android & Mac"))
-        (t "")))
+  (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1"))
 #+END_SRC
 
 *** with-eval-after-load
