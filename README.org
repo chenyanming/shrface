@@ -27,7 +27,7 @@ It can be used in =dash-docs=, =eww=, =nov.el=, =mu4e=, and [[https://github.com
   without formatting html to org file.
 + Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
 + Toggle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
-  and =org-cycle/org-shifttab=
+  , =org-cycle/org-shifttab=, or =shrface-outline-cycle= / =shrface-outline-cycle-buffer=.
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
 + Analysis capability for Researchers:
   - Headline analysis: List all headlines with clickable texts, or jump around with [[https://github.com/abo-abo/swiper][ivy]].
@@ -145,43 +145,46 @@ The default font is ~variable-pitch~.
 #+END_SRC
 
 ** Keybinding Settings
-You can set the keybinding directly with the original org outline related
-functions, like =org-cycle=, =org-shifttab=, =org-content=, =org-overview=, etc, and
-most of =outline= minior mode functions (prefix with =outline-=) after testing.
+You can set the keybinding directly with the original org outline related functions, like =org-cycle=,
+=org-shifttab=, =org-content=, =org-overview=, etc, and most of =outline= minior mode functions (prefix with
+=outline-=) after testing.
+
+You can use =shrface-outline-cycle= / =shrface-outline-cycle-buffer= to archive the same purpose as =org-cycle= / =org-shifttab=.
+
+PS: =org-cycle= (If you use =org-cycle= rather than =shrface-outline-cycle=) is not 100% supported, since
+ the =regexp-fmt= is hard coded and override it is inappropriate (It is better to update =org.el=
+ directly).
 
 Here is the keybinding example:
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'nov
-  (define-key nov-mode-map (kbd "<tab>") 'org-cycle)
-  (define-key nov-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key nov-mode-map (kbd "<tab>") 'shrface-outline-cycle)
+  (define-key nov-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
   (define-key nov-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key nov-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key nov-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key nov-mode-map (kbd "C-i") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key nov-mode-map (kbd "C-o") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+  (define-key nov-mode-map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key nov-mode-map (kbd "C-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
 
 (with-eval-after-load 'eww
-  (define-key eww-mode-map (kbd "<tab>") 'org-cycle)
-  (define-key eww-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key eww-mode-map (kbd "<tab>") 'shrface-outline-cycle)
+  (define-key eww-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
   (define-key eww-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key eww-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key eww-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key eww-mode-map (kbd "C-i") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key eww-mode-map (kbd "C-o") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+  (define-key eww-mode-map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key eww-mode-map (kbd "C-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
 
 (with-eval-after-load 'mu4e
-  (define-key mu4e-view-mode-map (kbd "<tab>") 'org-cycle)
-  (define-key mu4e-view-mode-map (kbd "S-<tab>") 'org-shifttab)
+  (define-key mu4e-view-mode-map (kbd "<tab>") 'shrface-outline-cycle)
+  (define-key mu4e-view-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
   (define-key mu4e-view-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key mu4e-view-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key mu4e-view-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key mu4e-view-mode-map (kbd "C-i") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key mu4e-view-mode-map (kbd "C-o") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+  (define-key mu4e-view-mode-map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key mu4e-view-mode-map (kbd "C-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
 #+END_SRC
 
-PS: =org-show-children= are not 100% supported, since the =regexp-fmt= is
- hard coded and override it is inappropriate (It is better to update =org.el=
- directly). Besides, you can use [[https://github.com/tj64/outline-magic][outline-magic]] as alternative.
 
 ** Features Anatomy
 *** shrface-basic, shrface-trail, shrface-resume
@@ -228,7 +231,7 @@ List all headlines, and you can easily jump between them by
 mouse click.
 
 **** shrface-links
-List all URLs and classify them. 
+List all URLs and classify them.
 You can easily go to the
 occurrence (Left Click/Enter), copy the URL (Middle Click) or browse the URL
 (Right Click). Besides, if [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] is available, web icon for each link
@@ -260,7 +263,7 @@ List all headlines with =counsel=.
 List all URLs with =helm=.
 - =TAB= to preview the link
 - =RET= to goto the link
- 
+
 **** shrface-headline-helm
 List all headlines with =helm=.
 - =TAB= to preview the headline
@@ -586,10 +589,16 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 
 
 * News/Logs
+
+** =2020-11-08=
+Version *2.6.1*:
+- Add: shrface-outline-cycle
+- Add: shrface-outline-cycle-buffer
+
 ** =2020-05-07=
 Version *2.6*:
 - New Function: =shrface-headline-helm= and =shrface-links-helm=
- 
+
 ** =2020-05-02=
 Version *2.5*:
 - New Function: =shrface-headline-counsel=: better solution than =imenu= to list all

@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.6
+;; Version: 2.6.1
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -50,6 +50,8 @@
 (require 'outline)
 (require 'org-indent)
 (require 'compile)
+(require 'pcase)
+(require 'cl-lib)
 
 (ignore-errors
   ;; in case the users lazy load org-mode before require shrface
@@ -301,6 +303,9 @@ NON-nil"
 (defface shrface-links-mouse-face '((t :inherit mode-line-highlight))
   "Face used for *shrface-links* mouse face"
   :group 'shrface-analysis-faces)
+
+(defvar-local shrface-outline--cycle-buffer-state 'show-all
+  "Interval variable used for tracking buffer cycle state.")
 
 ;;; Utility
 
@@ -1303,6 +1308,75 @@ jump around the list."
               (t
                (setq number (1- (get-text-property (1- current) shrface-headline-number-property)))))
         (goto-char (or (text-property-any (point-min) (point-max) shrface-headline-number-property (+ 2 number)) (point-max))))))))
+
+;;; outline cycle
+;; Reference from https://github.com/casouri/lunarymacs/blob/master/site-lisp/outline+.el
+(defun shrface-outline--cycle-state ()
+  "Return the cycle state of current heading.
+Return either 'hide-all, 'headings-only, or 'show-all."
+  (save-excursion
+    (let (start end ov-list heading-end)
+      (outline-back-to-heading)
+      (setq start (point))
+      (outline-end-of-heading)
+      (setq heading-end (point))
+      (outline-end-of-subtree)
+      (setq end (point))
+      (setq ov-list (cl-remove-if-not
+                     (lambda (o) (eq (overlay-get o 'invisible) 'outline))
+                     (overlays-in start end)))
+      (cond ((eq ov-list nil) 'show-all)
+            ;; (eq (length ov-list) 1) wouldn’t work: what if there is
+            ;; one folded subheading?
+            ((and (eq (overlay-end (car ov-list)) end)
+                  (eq (overlay-start (car ov-list)) heading-end))
+             'hide-all)
+            (t 'headings-only)))))
+
+(defun outline-has-subheading-p ()
+  "Return t if this heading has subheadings, nil otherwise."
+  (save-excursion
+    (outline-back-to-heading)
+    (< (save-excursion (outline-next-heading) (point))
+       (save-excursion (outline-end-of-subtree) (point)))))
+
+(defun shrface-outline-cycle ()
+  "Cycle between “hide all”, “headings only” and “show all”.
+“Hide all” means hide all subheadings and their bodies.
+“Headings only” means show sub headings but not their bodies.
+“Show all” means show all subheadings and their bodies."
+  (interactive)
+  (pcase (shrface-outline--cycle-state)
+    ('hide-all (if (outline-has-subheading-p)
+                   (progn (outline-show-children)
+                          (message "Only headings"))
+                 (outline-show-subtree)
+                 (message "Show all")))
+    ('headings-only (outline-show-subtree)
+                    (message "Show all"))
+    ('show-all (outline-hide-subtree)
+               (message "Hide all"))))
+
+(defun shrface-outline-cycle-buffer ()
+  "Cycle the whole buffer like in ‘shrface-outline-cycle’."
+  (interactive)
+  (pcase shrface-outline--cycle-buffer-state
+    ('show-all (save-excursion
+                 (let ((start-point (point)))
+                   (while (not (eq (point) start-point))
+                     (outline-up-heading 1))
+                   (outline-hide-sublevels
+                    (progn (outline-back-to-heading)
+                           (funcall 'outline-level)))))
+               (setq shrface-outline--cycle-buffer-state 'top-level)
+               (message "Top level headings"))
+    ('top-level (outline-show-all)
+                (outline-hide-region-body (point-min) (point-max))
+                (setq shrface-outline--cycle-buffer-state 'all-heading)
+                (message "All headings"))
+    ('all-heading (outline-show-all)
+                  (setq shrface-outline--cycle-buffer-state 'show-all)
+                  (message "Show all"))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
