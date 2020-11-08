@@ -1333,7 +1333,7 @@ Return either 'hide-all, 'headings-only, or 'show-all."
              'hide-all)
             (t 'headings-only)))))
 
-(defun outline-has-subheading-p ()
+(defun shrface-outline-has-subheading-p ()
   "Return t if this heading has subheadings, nil otherwise."
   (save-excursion
     (outline-back-to-heading)
@@ -1347,7 +1347,7 @@ Return either 'hide-all, 'headings-only, or 'show-all."
 “Show all” means show all subheadings and their bodies."
   (interactive)
   (pcase (shrface-outline--cycle-state)
-    ('hide-all (if (outline-has-subheading-p)
+    ('hide-all (if (shrface-outline-has-subheading-p)
                    (progn (outline-show-children)
                           (message "Only headings"))
                  (outline-show-subtree)
