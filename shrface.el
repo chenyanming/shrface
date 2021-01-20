@@ -319,7 +319,7 @@ NON-nil"
     (define-key map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
     (define-key map (kbd "C-h") 'shrface-headline-counsel)
     map)
-  "Keymap for `shrface-mode'.")
+  "Keymap for function `shrface-mode'.")
 
 ;;; Utility
 
