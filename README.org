@@ -496,6 +496,12 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 
 * News/Logs
 
+** =2021-01-20=
+Version *2.6.2*:
+- Add keys for ~shrface-mode~.
+- Move settings to shrface-mode. So that we can use ~shrface-mode~ on other shr rendered buffers
+  via ~M-x~.
+
 ** =2020-11-08=
 Version *2.6.1*:
 - Add: shrface-outline-cycle
