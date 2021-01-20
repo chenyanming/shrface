@@ -307,6 +307,20 @@ NON-nil"
 (defvar-local shrface-outline--cycle-buffer-state 'show-all
   "Interval variable used for tracking buffer cycle state.")
 
+;;; Keys
+
+(defvar shrface-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "TAB") 'shrface-outline-cycle)
+    (define-key map (kbd "<backtab>") 'shrface-outline-cycle-buffer)
+    (define-key map (kbd "C-t") 'shrface-toggle-bullets)
+    (define-key map (kbd "C-j") 'shrface-next-headline)
+    (define-key map (kbd "C-k") 'shrface-previous-headline)
+    (define-key map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+    (define-key map (kbd "C-h") 'shrface-headline-counsel)
+    map)
+  "Keymap for `shrface-mode'.")
+
 ;;; Utility
 
 ;;;###autoload
@@ -710,16 +724,16 @@ Argument DOM dom."
   :group 'shrface
   (cond
    ((and shrface-mode (not shrface-toggle-bullets))
-    ;; (shrface-basic)
-    ;; (shrface-trial)
+    (shrface-basic)
+    (shrface-trial)
     (shrface-regexp)
     (setq imenu-create-index-function #'shrface-imenu-get-tree)
     (outline-minor-mode)
     (org-indent-mode)
     (run-hooks 'shrface-mode-hook))
    (t
-    ;; (shrface-resume)
-    ;; (setq shr-bullet "* ")
+    (shrface-resume)
+    (setq shr-bullet "* ")
     (setq imenu-create-index-function nil)
     (outline-minor-mode -1)
     (org-indent-mode -1))))
@@ -732,9 +746,10 @@ Need to be called once before loading eww, nov.el, dash-docs, mu4e, after shr."
   (dolist (sub shrface-supported-faces-alist)
     (unless (member sub shr-external-rendering-functions)
       (add-to-list 'shr-external-rendering-functions sub)))
-  ;; this setting is still needed to be setup by the user
-  ;; (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
-  ;; (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
+  (if (boundp 'nov-shr-rendering-functions)
+      (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))))
+  (if (boundp 'nov-shr-rendering-functions)
+      (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions)))
 
   ;; setup occur flash
   (add-hook 'occur-mode-find-occurrence-hook #'shrface-occur-flash)

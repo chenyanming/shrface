@@ -98,35 +98,6 @@ I recommend configure with ~use-package~, it is more elegant:
   (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1"))
 #+END_SRC
 
-*** with-eval-after-load
-If you don't use ~use-package~, configure with the following snippet:
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'shr ; lazy load is very important, it can save you a lot of boot up time
-  (require 'shrface)
-  (shrface-basic) ; enable shrfaces, must be called before loading eww/dash-docs/nov.el
-  (shrface-trial) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
-  (setq shrface-href-versatile t) ; enable versatile URL faces support
-                                  ; (http/https/ftp/file/mailto/other), if
-                                  ; `shrface-href-versatile' is nil, default
-                                  ; face `shrface-href-face' would be used.
-  (setq shrface-toggle-bullets nil) ; Set t if you do not like headline bullets
-
-  ;; eww support
-  (with-eval-after-load 'eww
-    (add-hook 'eww-after-render-hook 'shrface-mode))
-
-  ;; nov support
-  (with-eval-after-load 'nov
-    (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))) ; reset nov-shr-rendering-functions, in case of the list get bigger and bigger
-    (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-    (add-hook 'nov-mode-hook 'shrface-mode))
-
-  ;; mu4e support
-  (with-eval-after-load 'mu4e
-    (add-hook 'mu4e-view-mode-hook 'shrface-mode)))
-
-#+END_SRC
-
 - Check this section to see the supported faces:
     #+html: <a href="#supported-faces">Supported Faces</a>
 
@@ -145,99 +116,61 @@ The default font is ~variable-pitch~.
 #+END_SRC
 
 ** Keybinding Settings
-You can set the keybinding directly with the original org outline related functions, like =org-cycle=,
-=org-shifttab=, =org-content=, =org-overview=, etc, and most of =outline= minior mode functions (prefix with
-=outline-=) after testing.
+Here is the keybindings bind to ~shrface-mode~
+#+begin_src emacs-lisp
+(defvar shrface-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "TAB") 'shrface-outline-cycle)
+    (define-key map (kbd "<backtab>") 'shrface-outline-cycle-buffer)
+    (define-key map (kbd "C-t") 'shrface-toggle-bullets)
+    (define-key map (kbd "C-j") 'shrface-next-headline)
+    (define-key map (kbd "C-k") 'shrface-previous-headline)
+    (define-key map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+    (define-key map (kbd "C-h") 'shrface-headline-counsel)
+    map)
+  "Keymap for `shrface-mode'.")
+#+end_src
 
-You can use =shrface-outline-cycle= / =shrface-outline-cycle-buffer= to archive the same purpose as =org-cycle= / =org-shifttab=.
+In additional to the keys provided by ~shrface-mode~, the following features should also work, you can test and find which fits your requirement:
+*** ~org-mode~ related
+1. =org-cycle=,
+2. =org-shifttab=
+3. =org-content=
+4. =org-overview=
+etc.
 
-PS: =org-cycle= (If you use =org-cycle= rather than =shrface-outline-cycle=) is not 100% supported, since
- the =regexp-fmt= is hard coded and override it is inappropriate (It is better to update =org.el=
- directly).
-
-Here is the keybinding example:
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'nov
-  (define-key nov-mode-map (kbd "<tab>") 'shrface-outline-cycle)
-  (define-key nov-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
-  (define-key nov-mode-map (kbd "C-t") 'shrface-toggle-bullets)
-  (define-key nov-mode-map (kbd "C-j") 'shrface-next-headline)
-  (define-key nov-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key nov-mode-map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key nov-mode-map (kbd "C-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
-
-(with-eval-after-load 'eww
-  (define-key eww-mode-map (kbd "<tab>") 'shrface-outline-cycle)
-  (define-key eww-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
-  (define-key eww-mode-map (kbd "C-t") 'shrface-toggle-bullets)
-  (define-key eww-mode-map (kbd "C-j") 'shrface-next-headline)
-  (define-key eww-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key eww-mode-map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key eww-mode-map (kbd "C-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
-
-(with-eval-after-load 'mu4e
-  (define-key mu4e-view-mode-map (kbd "<tab>") 'shrface-outline-cycle)
-  (define-key mu4e-view-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
-  (define-key mu4e-view-mode-map (kbd "C-t") 'shrface-toggle-bullets)
-  (define-key mu4e-view-mode-map (kbd "C-j") 'shrface-next-headline)
-  (define-key mu4e-view-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key mu4e-view-mode-map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key mu4e-view-mode-map (kbd "C-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
-#+END_SRC
-
+*** ~outline-minor-mode~ related
+*** ~imenu-mode~ related
 
 ** Features Anatomy
-*** shrface-basic, shrface-trail, shrface-resume
-By calling =shrface-basic= and =shrface-trail=, it will do some configurations to enable *shrface*.
-
-By calling =shrface-resume=, you can disable *shrface* and resume to original setting.
-
-To resume nov original setting, you should also run this:
-#+BEGIN_SRC emacs-lisp
-(setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
-#+END_SRC
-
-Please notice: The above features may be handled by =shrface-mode= directly in
-future versions.
 
 *** shrface-mode
-From version =1.8=, =shrface-mode= is adapted, for it is more flexible to
-enable/disable the following additional features:
+~shrface-mode~ is a minor mode that help you enable/disable the following additional features:
 1. =imenu=
 2. =outline-minior-mode=
 3. =org-indent-mode=
+4. Setup shr faces
 
-For example, to enable =shrface-mode= to =eww=, =nov= or =mu4e=
-#+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'eww
-    (add-hook 'eww-after-render-hook 'shrface-mode)) ; this will affect eww and dash-docs
-  (with-eval-after-load 'nov
-    (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))) ; reset nov-shr-rendering-functions, in case of the list get bigger and bigger
-    (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-    (add-hook 'nov-mode-hook 'shrface-mode))
-  (with-eval-after-load 'mu4e
-    (add-hook 'mu4e-view-mode-hook 'shrface-mode))
-#+END_SRC
+Please be careful, every time you run ~shrface-mode~, faces will be enable/disable globally for
+all shr rendered buffers. Since I have not found a good way to enable/disable the faces per
+buffer yet.
 
-Besides, you can enable/disable =shrface-mode= via =M-x=
+If you want to enable shrface just when you need to, you should avoid to use ~add-hook~ like the
+recommended settings above, and just enable/disable =shrface-mode= via =M-x=.
 
-*** shrface-analysis
-*shrface-analysis* is new concept brought from version *2.2*.
-*shrface-analysis* will help you analyze the html buffer, and give you a robust
-result that you can interactive with.
 
-**** shrface-occur
+*** shrface-occur
 List all headlines, and you can easily jump between them by
 mouse click.
 
-**** shrface-links
+*** shrface-links
 List all URLs and classify them.
 You can easily go to the
 occurrence (Left Click/Enter), copy the URL (Middle Click) or browse the URL
 (Right Click). Besides, if [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] is available, web icon for each link
 will be shown.
 
-**** shrface-links-counsel
+*** shrface-links-counsel
 List all URLs with =counsel=.
 - The URLs are listed in order based the position on the buffer.
 - The first candidate to select is the *next url* counting from the current cursor
@@ -247,7 +180,7 @@ List all URLs with =counsel=.
 - =C-o= to fire the action menu on the selected candidate.
 - =C-c C-o= to fire the =ivy-occur=
 
-**** shrface-headline-counsel
+*** shrface-headline-counsel
 List all headlines with =counsel=.
 - It is a better solution than =imenu= and =shrface-occur.=
 - It can work without the headline bullets. You can disable the bullets via
@@ -259,17 +192,17 @@ List all headlines with =counsel=.
 - =C-o= to fire the action menu on the selected candidate.
 - =C-c C-o= to fire the =ivy-occur=
 
-**** shrface-links-helm
+*** shrface-links-helm
 List all URLs with =helm=.
 - =TAB= to preview the link
 - =RET= to goto the link
 
-**** shrface-headline-helm
+*** shrface-headline-helm
 List all headlines with =helm=.
 - =TAB= to preview the headline
 - =RET= to goto the headline
 
-**** shrface-next-headline, shrface-previous-headline
+*** shrface-next-headline, shrface-previous-headline
 These two headline functions are designed to replace =outline-next-headline= and
 =outline-previous-headline=. They scan the headline number text properties and
 jump to the headlines which means it can work under no bullets circumstance if
@@ -484,33 +417,6 @@ NON-nil"
   :group 'shrface-faces)
 #+END_SRC
 
-**** Enable the =shrface-code=
-=shrface-code= is experimental face, and it is not stable to use, but you can
-still add the following statement to enable it:
-
-#+BEGIN_SRC emacs-lisp
-(shrface-trial)
-#+END_SRC
-
-**** Important notes on experimental faces
-Please notice, =shrface-code= is an experimental face, which may make =eww= hangup
-at some specific websites (not all). However, it work perfectly with local html files
-during testing with =dash-docs= or =nov.el=
-
-For example, browse =eww= with
-[[https://github.com/chenyanming/shrface]]
-
-=eww= still keep connecting to the remote which sometimes
-will trigger a loop, the only solution so far is after loading the page,
-list all connections through
-
-#+BEGIN_SRC emacs-lisp
-M-x list-processes
-#+END_SRC
-
-then press "d" to kill the connections before the hangup.
-
-Welcome test and report.
 
 ** (Optional) Enable source codes highlight
 You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight and
