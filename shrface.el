@@ -185,6 +185,7 @@ The following features are also disabled:
   '((em  . shrface-tag-em)
     (u  . shrface-tag-u)
     (strong  . shrface-tag-strong)
+    (svg . shrface-tag-svg)
     (h1  . shrface-tag-h1)
     (h2  . shrface-tag-h2)
     (h3  . shrface-tag-h3)
@@ -671,25 +672,31 @@ Argument DOM dom."
   (if (not (url-type (url-generic-parse-url url)))
       t))
 
+(defun shrface-tag-svg (dom)
+  "Fontize tag svg.
+Argument DOM dom."
+  (if shrface-org
+      nil
+      (shr-tag-svg dom)))
 
 (defun shrface-tag-a (dom)
   "Fontize tag a.
 Argument DOM dom."
   (let ((url (dom-attr dom 'href))
+        (img-src (dom-attr (dom-by-tag dom 'img) 'src))
         (title (dom-attr dom 'title))
         (start (point))
         shr-start)
     (if shrface-org
         (cond ((equal url "") (shr-generic dom))
               ((equal url nil) (shr-generic dom))
-              ((shrface-relative-p url) (shr-generic dom))
+              (img-src (insert (format "[[%s][%s]]" url img-src)))
+              ;; ((shrface-relative-p url) (shr-generic dom))
               ((equal (dom-text dom) "")
                (insert (format "[[%s]]" url)))
               ((string-match-p "\\`\\s-*$" (dom-text dom))
                (insert (format "[[%s]]" url)))
-              (t (insert (format "[[%s][%s]]" url (let ((src (dom-attr (dom-by-tag dom 'img) 'src)))
-                                                    (if src src
-                                                      (dom-text dom)))))))
+              (t (insert (format "[[%s][%s]]" url (dom-text dom)))))
       (shr-generic dom)
       (when (and shr-target-id
                  (equal (dom-attr dom 'name) shr-target-id))
