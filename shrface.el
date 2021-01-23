@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.6.2
+;; Version: 2.6.3
 ;; Package-Requires: ((emacs "25.1") (org "9.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
