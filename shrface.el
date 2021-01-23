@@ -1482,21 +1482,38 @@ Return either 'hide-all, 'headings-only, or 'show-all."
                   (setq shrface-outline--cycle-buffer-state 'show-all)
                   (message "Show all"))))
 
-(defun shrface-html-export-as-org ()
-  "Export current html buffer to an org buffer."
-  (interactive)
+(defun shrface-html-convert-as-org-string (&optional html)
+  "Convert current html buffer to return org string.
+Optional argument HTML: If HTML string is provided, will convert
+the HTML string to org string."
   (or (fboundp 'libxml-parse-html-region)
       (error "This function requires Emacs to be compiled with libxml2"))
-  (let ((buf (current-buffer))
-        (new (get-buffer-create "*Shrface Org Export*")))
-    (with-current-buffer new
+  (let ((buf (current-buffer)))
+    (with-temp-buffer
       (let ((shrface-org t)
             (shr-bullet "- ")
             (shr-table-vertical-line "|"))
-        (shr-insert-document
-         (with-current-buffer buf
-           (libxml-parse-html-region (point-min) (point-max)))))
-      (pop-to-buffer new)
+        (if html
+            (shr-insert-document
+             (with-temp-buffer
+               (insert html)
+               (libxml-parse-html-region (point-min) (point-max))))
+          (shr-insert-document
+           (with-current-buffer buf
+             (libxml-parse-html-region (point-min) (point-max))))))
+      (buffer-substring-no-properties (point-min) (point-max)))))
+
+(defun shrface-html-export-as-org (&optional html)
+  "Export current html buffer to an org buffer.
+Optional argument HTML: If HTML string is provided, will convert
+the HTML string to an org buffer."
+  (interactive)
+  (let ((buf (get-buffer-create "*Shrface Org Export*"))
+        (str (shrface-html-convert-as-org-string html)))
+    (with-current-buffer buf
+      (erase-buffer)
+      (insert str)
+      (pop-to-buffer buf)
       (goto-char (point-min))
       (org-mode))))
 
