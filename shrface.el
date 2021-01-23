@@ -55,6 +55,7 @@
 (require 'compile)
 (require 'pcase)
 (require 'cl-lib)
+(require 'url)
 
 (ignore-errors
   ;; in case the users lazy load org-mode before require shrface
@@ -665,6 +666,12 @@ Argument DOM dom."
         (insert "_"))
     (shr-fontize-dom dom 'underline)))
 
+(defun shrface-relative-p (url)
+  "Check URL if relative or not."
+  (if (not (url-type (url-generic-parse-url url)))
+      t))
+
+
 (defun shrface-tag-a (dom)
   "Fontize tag a.
 Argument DOM dom."
@@ -674,7 +681,8 @@ Argument DOM dom."
         shr-start)
     (if shrface-org
         (cond ((equal url "") (shr-generic dom))
-              ((equal url nil) nil)
+              ((equal url nil) (shr-generic dom))
+              ((shrface-relative-p url) (shr-generic dom))
               ((equal (dom-text dom) "")
                (insert (format "[[%s]]" url)))
               ((string-match-p "\\`\\s-*$" (dom-text dom))
@@ -1508,7 +1516,8 @@ Return either 'hide-all, 'headings-only, or 'show-all."
         (write-region (point-min) (point-max) filename)
         (find-file filename)
         (org-table-map-tables 'org-table-align)
-        (write-file filename nil)))))
+        (write-file filename nil)
+        (goto-char (point-min))))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
