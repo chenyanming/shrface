@@ -48,6 +48,7 @@
 
 (require 'shr)
 (require 'org)
+(require 'org-table)
 (require 'org-faces)
 (require 'outline)
 (require 'org-indent)
@@ -672,10 +673,15 @@ Argument DOM dom."
         (start (point))
         shr-start)
     (if shrface-org
-        (when url
-          (org-insert-link nil url (let ((src (dom-attr (dom-by-tag dom 'img) 'src)))
-                                     (if src src
-                                       (dom-text dom)))))
+        (cond ((equal url "") (shr-generic dom))
+              ((equal url nil) nil)
+              ((equal (dom-text dom) "")
+               (insert (format "[[%s]]" url)))
+              ((string-match-p "\\`\\s-*$" (dom-text dom))
+               (insert (format "[[%s]]" url)))
+              (t (insert (format "[[%s][%s]]" url (let ((src (dom-attr (dom-by-tag dom 'img) 'src)))
+                                                    (if src src
+                                                      (dom-text dom)))))))
       (shr-generic dom)
       (when (and shr-target-id
                  (equal (dom-attr dom 'name) shr-target-id))
@@ -1500,7 +1506,9 @@ Return either 'hide-all, 'headings-only, or 'show-all."
          (with-current-buffer buf
            (libxml-parse-html-region (point-min) (point-max))))
         (write-region (point-min) (point-max) filename)
-        (find-file filename)))))
+        (find-file filename)
+        (org-table-map-tables 'org-table-align)
+        (write-file filename nil)))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
