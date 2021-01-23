@@ -11,8 +11,9 @@
 - [[#newslogs][News/Logs]]
 
 * Description
-This package extends =shr= / =eww= with org features and analysis capability.
-It can be used in =dash-docs=, =eww=, =nov.el=, =mu4e=, and [[https://github.com/chenyanming/anki.el][anki.el]].
+This package extends =shr= / =eww= with org features and analysis capability. It can be used in
+[[https://github.com/dash-docs-el/dash-docs][dash-docs]], [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]], [[https://github.com/wasamasa/nov.el][nov.el]], [[https://github.com/djcb/mu][mu/mu4e]], [[https://github.com/chenyanming/anki.el][anki.el]], etc. It is also able to export HTML buffer to Org
+buffer/file.
 
 #+attr_org: :width 600px
 [[file:img/eww.png]]
@@ -29,10 +30,11 @@ It can be used in =dash-docs=, =eww=, =nov.el=, =mu4e=, and [[https://github.com
 + Toggle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
   , =org-cycle/org-shifttab=, or =shrface-outline-cycle= / =shrface-outline-cycle-buffer=.
 + Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
-+ Analysis capability for Researchers:
++ Analysis capability:
   - Headline analysis: List all headlines with clickable texts, or jump around with [[https://github.com/abo-abo/swiper][ivy]].
   - URL analysis: List all classified URL with clickable texts in a buffer, or jump around with
    [[https://github.com/abo-abo/swiper][ivy]].
++ Export HTML buffer to org buffer/file using shr engine (no [[https://pandoc.org/][Pandoc]] is needed).
 
 #+BEGIN_QUOTE
 The project target is to apply org features and analysis capability to =shr=, and
@@ -417,6 +419,9 @@ NON-nil"
   :group 'shrface-faces)
 #+END_SRC
 
+*** Export Html to Org
+- ~shrface-html-export-as-org~: Export current html buffer to an org buffer.
+- ~shrface-html-export-to-org~: Export current html buffer to an org file.
 
 ** (Optional) Enable source codes highlight
 You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight and
@@ -495,6 +500,13 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 
 
 * News/Logs
+
+** =2021-01-23=
+Version *2.6.3*:
+- Add ~shrface-html-export-as-org~
+- Add ~shrface-html-export-to-org~
+- Add ~shrface-tag-u~
+- Add ~shrface-tag-strong~
 
 ** =2021-01-20=
 Version *2.6.2*:

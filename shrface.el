@@ -25,7 +25,7 @@
 ;;; Commentary:
 
 ;; This package extends `shr' / `eww' with org features and analysis capability.
-;; It can be used in `dash-docs', `eww', `nov.el', and `mu4e'.
+;; It can be used in `dash-docs', `eww', `nov.el', `mu4e', `anki.el', etc.
 ;; - Configurable org-like heading faces, headline bullets, item bullets, paragraph
 ;;   indentation, fill-column, item bullet, versatile hyper
 ;;   links(http/https/file/mailto/etc) face and so on.
@@ -38,14 +38,16 @@
 ;; - Toggle/cycle the headlines just like org-mode in `eww' and `nov.el' with `outline-minor-mode'
 ;;   and `org-cycle'/`org-shifttab'
 ;; - Enable indentation just like org-mode in `eww' and `nov.el' with `org-indent-mode'
-;; - Analysis capability for Researchers:
+;; - Analysis capability:
 ;;   - Headline analysis: List all headlines with clickable texts.
 ;;   - URL analysis: List all classified URL with clickable texts.
+;; - Export HTML buffer to an org file using shr engine (no Pandoc is needed).
 
 
 ;;; Code:
 
 (require 'shr)
+(require 'org)
 (require 'org-faces)
 (require 'outline)
 (require 'org-indent)
@@ -129,6 +131,9 @@ The following features are also disabled:
   :group 'shrface
   :type 'boolean)
 
+(defvar shrface-org nil
+  "NON-nil to render with original org features.")
+
 (defvar shrface-headline-property 'shrface-headline
   "Property name to use for href.")
 
@@ -176,6 +181,8 @@ The following features are also disabled:
 
 (defvar shrface-supported-faces-alist
   '((em  . shrface-tag-em)
+    (u  . shrface-tag-u)
+    (strong  . shrface-tag-strong)
     (h1  . shrface-tag-h1)
     (h2  . shrface-tag-h2)
     (h3  . shrface-tag-h3)
@@ -509,9 +516,13 @@ Argument DOM dom."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (unless shrface-toggle-bullets
-   (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face 'shrface-bullet "shrface-h1-bullet")))
-  (apply #'shrface-shr-fontize-dom dom types)
+  (if shrface-org
+      (progn
+        (insert "* ")
+        (shr-generic dom))
+    (unless shrface-toggle-bullets
+      (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face 'shrface-bullet "shrface-h1-bullet")))
+    (apply #'shrface-shr-fontize-dom dom types))
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h2 (dom &rest types)
@@ -519,10 +530,13 @@ Optional argument TYPES face attributes."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (unless shrface-toggle-bullets
-    (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face 'shrface-bullet "shrface-h2-bullet")))
-  ;; (insert (propertize  "** " 'face 'shrface-h2-face))
-  (apply #'shrface-shr-fontize-dom dom types)
+  (if shrface-org
+      (progn
+        (insert "** ")
+        (shr-generic dom))
+    (unless shrface-toggle-bullets
+      (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face 'shrface-bullet "shrface-h2-bullet")))
+    (apply #'shrface-shr-fontize-dom dom types))
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h3 (dom &rest types)
@@ -530,10 +544,13 @@ Optional argument TYPES face attributes."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (unless shrface-toggle-bullets
-    (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face 'shrface-bullet "shrface-h3-bullet")))
-  ;; (insert (propertize  "*** " 'face 'shrface-h3-face))
-  (apply #'shrface-shr-fontize-dom dom types)
+  (if shrface-org
+      (progn
+        (insert "*** ")
+        (shr-generic dom))
+    (unless shrface-toggle-bullets
+      (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face 'shrface-bullet "shrface-h3-bullet")))
+    (apply #'shrface-shr-fontize-dom dom types))
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h4 (dom &rest types)
@@ -541,10 +558,14 @@ Optional argument TYPES face attributes."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (unless shrface-toggle-bullets
-    (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face 'shrface-bullet "shrface-h4-bullet")))
-  ;; (insert (propertize  "**** " 'face 'shrface-h4-face))
-  (apply #'shrface-shr-fontize-dom dom types)
+  (if shrface-org
+      (progn
+        (insert "**** ")
+        (shr-generic dom))
+    (unless shrface-toggle-bullets
+      (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face 'shrface-bullet "shrface-h4-bullet")))
+    ;; (insert (propertize  "**** " 'face 'shrface-h4-face))
+    (apply #'shrface-shr-fontize-dom dom types))
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h5 (dom &rest types)
@@ -552,10 +573,13 @@ Optional argument TYPES face attributes."
 Argument DOM dom.
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (unless shrface-toggle-bullets
-    (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face 'shrface-bullet "shrface-h5-bullet")) )
-  ;; (insert (propertize  "***** " 'face 'shrface-h5-face))
-  (apply #'shrface-shr-fontize-dom dom types)
+  (if shrface-org
+      (progn
+        (insert "***** ")
+        (shr-generic dom))
+    (unless shrface-toggle-bullets
+      (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face 'shrface-bullet "shrface-h5-bullet")) )
+    (apply #'shrface-shr-fontize-dom dom types))
   (shr-ensure-paragraph))
 
 (defun shrface-shr-h6 (dom &rest types)
@@ -563,16 +587,27 @@ Optional argument TYPES face attributes."
 Argument DOM .
 Optional argument TYPES face attributes."
   (shr-ensure-paragraph)
-  (unless shrface-toggle-bullets
-    (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face 'shrface-bullet "shrface-h6-bullet")) )
-  ;; (insert (propertize  "****** " 'face 'shrface-h6-face))
-  (apply #'shrface-shr-fontize-dom dom types)
+  (if shrface-org
+      (progn
+        (insert "****** ")
+        (shr-generic dom))
+    (unless shrface-toggle-bullets
+      (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face 'shrface-bullet "shrface-h6-bullet")))
+    ;; (insert (propertize  "****** " 'face 'shrface-h6-face))
+    (apply #'shrface-shr-fontize-dom dom types))
   (shr-ensure-paragraph))
 
 (defun shrface-tag-code (dom)
   "Fontize tag code.
 Argument DOM dom."
-  (shrface-shr-fontize-dom dom '(comment t face shrface-code)))
+  (if shrface-org
+      ;; TODO not a good way to check if it is inline code
+      (if (string-match-p "\n" (dom-text dom))
+          (shr-generic dom)
+        (insert "~")
+        (shr-generic dom)
+        (insert "~"))
+    (shrface-shr-fontize-dom dom '(comment t face shrface-code))))
 
 (defun shrface-tag-figure (dom)
   "Fontize tag figure.
@@ -582,22 +617,52 @@ Argument DOM dom."
   (shr-ensure-newline))
 
 (defun shrface-tag-p (dom)
-    "Fontize tag p.
+  "Fontize tag p.
 Argument DOM dom."
-  (setq shr-indentation shrface-paragraph-indentation)
-  (setq-local fill-column shrface-paragraph-fill-column)
-  (shr-ensure-paragraph)
-  (let (start end)
-    (setq start (point))
-    (shr-generic dom)
-    (setq end (point))
-    (fill-region start end nil nil nil)
-    (shr-ensure-paragraph)))
+  (if shrface-org
+      (progn
+        (shr-ensure-paragraph)
+        (shr-generic dom)
+        (shr-ensure-paragraph))
+    (setq shr-indentation shrface-paragraph-indentation)
+    (setq-local fill-column shrface-paragraph-fill-column)
+    (shr-ensure-paragraph)
+    (let (start end)
+      (setq start (point))
+      (shr-generic dom)
+      (setq end (point))
+      (fill-region start end nil nil nil)
+      (shr-ensure-paragraph))))
 
 (defun shrface-tag-em (dom)
   "Fontize tag em.
 Argument DOM dom."
-  (shrface-shr-fontize-dom dom '(comment t face shrface-verbatim)))
+  (if shrface-org
+      (progn
+        (insert "/")
+        (shr-generic dom)
+        (insert "/"))
+      (shrface-shr-fontize-dom dom '(comment t face shrface-verbatim))))
+
+(defun shrface-tag-strong (dom)
+  "Fontize tag strong.
+Argument DOM dom."
+  (if shrface-org
+      (progn
+        (insert "*")
+        (shr-generic dom)
+        (insert "*"))
+    (shr-fontize-dom dom 'bold)))
+
+(defun shrface-tag-u (dom)
+  "Fontize tag u.
+Argument DOM dom."
+  (if shrface-org
+      (progn
+        (insert "_")
+        (shr-generic dom)
+        (insert "_"))
+    (shr-fontize-dom dom 'underline)))
 
 (defun shrface-tag-a (dom)
   "Fontize tag a.
@@ -606,43 +671,53 @@ Argument DOM dom."
         (title (dom-attr dom 'title))
         (start (point))
         shr-start)
-    (shr-generic dom)
-    (when (and shr-target-id
-               (equal (dom-attr dom 'name) shr-target-id))
-      ;; We have a zero-length <a name="foo"> element, so just
-      ;; insert...  something.
-      (when (= start (point))
-        (shr-ensure-newline)
-        (insert " "))
-      (put-text-property start (1+ start) 'shr-target-id shr-target-id))
-    (when url
-      (shrface-shr-urlify (or shr-start start) (shr-expand-url url) title))))
+    (if shrface-org
+        (when url
+          (org-insert-link nil url (let ((src (dom-attr (dom-by-tag dom 'img) 'src)))
+                                     (if src src
+                                       (dom-text dom)))))
+      (shr-generic dom)
+      (when (and shr-target-id
+                 (equal (dom-attr dom 'name) shr-target-id))
+        ;; We have a zero-length <a name="foo"> element, so just
+        ;; insert...  something.
+        (when (= start (point))
+          (shr-ensure-newline)
+          (insert " "))
+        (put-text-property start (1+ start) 'shr-target-id shr-target-id))
+      (when url
+        (shrface-shr-urlify (or shr-start start) (shr-expand-url url) title)))))
 
 (defun shrface-tag-li (dom)
   "Fontize tag li.
 Argument DOM dom."
   (shr-ensure-newline)
   ;; (setq shr-indentation 40)
-  (let ((start (point)))
-    (let* ((bullet
-            (if (numberp shr-list-mode)
-                (prog1
-                    (format "%d " shr-list-mode)
-                  (setq shr-list-mode (1+ shr-list-mode)))
-              (car shr-internal-bullet)))
-           (width (if (numberp shr-list-mode)
-                      (shr-string-pixel-width bullet)
-                    (cdr shr-internal-bullet))))
-      (ignore-errors
-        (if (numberp shr-list-mode)
-            (insert (propertize bullet 'face 'shrface-item-number-face))
-          (insert (propertize bullet 'face 'shrface-item-bullet-face))))
-      (shr-mark-fill start)
-      (let ((shr-indentation (+ shr-indentation width)))
-        (put-text-property start (1+ start)
-                           'shr-continuation-indentation shr-indentation)
-        (put-text-property start (1+ start) 'shr-prefix-length (length bullet))
-        (shr-generic dom))))
+  (if shrface-org
+      (progn
+        (insert shr-bullet)
+        (insert " ")
+        (shr-generic dom))
+    (let ((start (point)))
+      (let* ((bullet
+              (if (numberp shr-list-mode)
+                  (prog1
+                      (format "%d " shr-list-mode)
+                    (setq shr-list-mode (1+ shr-list-mode)))
+                (car shr-internal-bullet)))
+             (width (if (numberp shr-list-mode)
+                        (shr-string-pixel-width bullet)
+                      (cdr shr-internal-bullet))))
+        (ignore-errors
+          (if (numberp shr-list-mode)
+              (insert (propertize bullet 'face 'shrface-item-number-face))
+            (insert (propertize bullet 'face 'shrface-item-bullet-face))))
+        (shr-mark-fill start)
+        (let ((shr-indentation (+ shr-indentation width)))
+          (put-text-property start (1+ start)
+                             'shr-continuation-indentation shr-indentation)
+          (put-text-property start (1+ start) 'shr-prefix-length (length bullet))
+          (shr-generic dom)))))
   (unless (bolp)
     (insert "\n")))
 
@@ -1392,6 +1467,40 @@ Return either 'hide-all, 'headings-only, or 'show-all."
     ('all-heading (outline-show-all)
                   (setq shrface-outline--cycle-buffer-state 'show-all)
                   (message "Show all"))))
+
+(defun shrface-html-export-as-org ()
+  "Export current html buffer to an org buffer."
+  (interactive)
+  (or (fboundp 'libxml-parse-html-region)
+      (error "This function requires Emacs to be compiled with libxml2"))
+  (let ((buf (current-buffer))
+        (new (get-buffer-create "*Shrface Org Export*")))
+    (with-current-buffer new
+      (let ((shrface-org t)
+            (shr-bullet "- ")
+            (shr-table-vertical-line "|"))
+        (shr-insert-document
+         (with-current-buffer buf
+           (libxml-parse-html-region (point-min) (point-max)))))
+      (pop-to-buffer new)
+      (goto-char (point-min))
+      (org-mode))))
+
+(defun shrface-html-export-to-org (filename)
+  "Export current html buffer to an org file."
+  (interactive "F")
+  (or (fboundp 'libxml-parse-html-region)
+      (error "This function requires Emacs to be compiled with libxml2"))
+  (let ((buf (current-buffer)))
+    (with-temp-buffer
+      (let ((shrface-org t)
+            (shr-bullet "- ")
+            (shr-table-vertical-line "|"))
+        (shr-insert-document
+         (with-current-buffer buf
+           (libxml-parse-html-region (point-min) (point-max))))
+        (write-region (point-min) (point-max) filename)
+        (find-file filename)))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
