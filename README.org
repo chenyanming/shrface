@@ -423,6 +423,14 @@ NON-nil"
 - ~shrface-html-export-as-org~: Export current html buffer to an org buffer.
 - ~shrface-html-export-to-org~: Export current html buffer to an org file.
 
+If you use [[https://github.com/alphapapa/org-web-tools][org-web-tools]] to download the http page into org, you can also override its pandoc
+engine with shr engine as following:
+
+#+begin_src emacs-lisp
+(advice-add 'org-web-tools--html-to-org-with-pandoc :override 'shrface-html-convert-as-org-string)
+#+end_src
+
+
 ** (Optional) Enable source codes highlight
 You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight and
 background color.
