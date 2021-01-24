@@ -318,18 +318,22 @@ NON-nil"
   "Interval variable used for tracking buffer cycle state.")
 
 ;;; Keys
-
 (defvar shrface-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "TAB") 'shrface-outline-cycle)
-    (define-key map (kbd "<backtab>") 'shrface-outline-cycle-buffer)
-    (define-key map (kbd "C-t") 'shrface-toggle-bullets)
-    (define-key map (kbd "C-j") 'shrface-next-headline)
-    (define-key map (kbd "C-k") 'shrface-previous-headline)
-    (define-key map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-    (define-key map (kbd "C-h") 'shrface-headline-counsel)
     map)
   "Keymap for function `shrface-mode'.")
+
+(defun shrface-default-keybindings ()
+  "Setup default keybingings for `shrface-mode'."
+  (interactive)
+  "Sets up the default keybindings for `shrface-mode'."
+  (define-key shrface-mode-map (kbd "TAB") 'shrface-outline-cycle)
+  (define-key shrface-mode-map (kbd "<backtab>") 'shrface-outline-cycle-buffer)
+  (define-key shrface-mode-map (kbd "C-t") 'shrface-toggle-bullets)
+  (define-key shrface-mode-map (kbd "C-j") 'shrface-next-headline)
+  (define-key shrface-mode-map (kbd "C-k") 'shrface-previous-headline)
+  (define-key shrface-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key shrface-mode-map (kbd "M-h") 'shrface-headline-counsel))
 
 ;;; Utility
 

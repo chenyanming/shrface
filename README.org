@@ -67,6 +67,7 @@ I recommend configure with ~use-package~, it is more elegant:
   :config
   (shrface-basic)
   (shrface-trial)
+  (shrface-default-keybindings) ; setup default keybindings
   (setq shrface-href-versatile t))
 
 (use-package eww
@@ -118,31 +119,62 @@ The default font is ~variable-pitch~.
 #+END_SRC
 
 ** Keybinding Settings
-Here is the keybindings bind to ~shrface-mode~
+You can to call =shrface-default-keybindings= to enable the recommended keybindings.
 #+begin_src emacs-lisp
-(defvar shrface-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "TAB") 'shrface-outline-cycle)
-    (define-key map (kbd "<backtab>") 'shrface-outline-cycle-buffer)
-    (define-key map (kbd "C-t") 'shrface-toggle-bullets)
-    (define-key map (kbd "C-j") 'shrface-next-headline)
-    (define-key map (kbd "C-k") 'shrface-previous-headline)
-    (define-key map (kbd "C-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-    (define-key map (kbd "C-h") 'shrface-headline-counsel)
-    map)
-  "Keymap for `shrface-mode'.")
+(defun shrface-default-keybindings ()
+  (interactive)
+  "Sets up the default keybindings for `shrface-mode'."
+  (define-key shrface-mode-map (kbd "TAB") 'shrface-outline-cycle)
+  (define-key shrface-mode-map (kbd "<backtab>") 'shrface-outline-cycle-buffer)
+  (define-key shrface-mode-map (kbd "C-t") 'shrface-toggle-bullets)
+  (define-key shrface-mode-map (kbd "C-j") 'shrface-next-headline)
+  (define-key shrface-mode-map (kbd "C-k") 'shrface-previous-headline)
+  (define-key shrface-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key shrface-mode-map (kbd "M-h") 'shrface-headline-counsel))
 #+end_src
 
+Since the keybindings may conflict with other modes, such as =nov-mode-map=, =eww-mode-map=, =mu4e-mode-map=. If you want to enable shrface's keybindings on these modes, you have to bind the functions to those maps as well.
+
+Here is the keybinding example:
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'nov
+  (define-key nov-mode-map (kbd "<tab>") 'shrface-outline-cycle)
+  (define-key nov-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
+  (define-key nov-mode-map (kbd "C-t") 'shrface-toggle-bullets)
+  (define-key nov-mode-map (kbd "C-j") 'shrface-next-headline)
+  (define-key nov-mode-map (kbd "C-k") 'shrface-previous-headline)
+  (define-key nov-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key nov-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+
+(with-eval-after-load 'eww
+  (define-key eww-mode-map (kbd "<tab>") 'shrface-outline-cycle)
+  (define-key eww-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
+  (define-key eww-mode-map (kbd "C-t") 'shrface-toggle-bullets)
+  (define-key eww-mode-map (kbd "C-j") 'shrface-next-headline)
+  (define-key eww-mode-map (kbd "C-k") 'shrface-previous-headline)
+  (define-key eww-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key eww-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+
+(with-eval-after-load 'mu4e
+  (define-key mu4e-view-mode-map (kbd "<tab>") 'shrface-outline-cycle)
+  (define-key mu4e-view-mode-map (kbd "S-<tab>") 'shrface-outline-cycle-buffer)
+  (define-key mu4e-view-mode-map (kbd "C-t") 'shrface-toggle-bullets)
+  (define-key mu4e-view-mode-map (kbd "C-j") 'shrface-next-headline)
+  (define-key mu4e-view-mode-map (kbd "C-k") 'shrface-previous-headline)
+  (define-key mu4e-view-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
+  (define-key mu4e-view-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+#+END_SRC
+
 In additional to the keys provided by ~shrface-mode~, the following features should also work, you can test and find which fits your requirement:
-*** ~org-mode~ related
+*** ~org-mode~
 1. =org-cycle=,
 2. =org-shifttab=
 3. =org-content=
 4. =org-overview=
 etc.
 
-*** ~outline-minor-mode~ related
-*** ~imenu-mode~ related
+*** ~outline-minor-mode~
+*** ~imenu-mode~
 
 ** Features Anatomy
 
