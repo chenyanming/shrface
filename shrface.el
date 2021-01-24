@@ -526,7 +526,8 @@ Optional argument TYPES face attributes."
   (if shrface-org
       (progn
         (insert "* ")
-        (shr-generic dom))
+        (let ((url (dom-attr (dom-by-tag dom 'a) 'href)))
+          (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face 'shrface-bullet "shrface-h1-bullet")))
     (apply #'shrface-shr-fontize-dom dom types))
@@ -540,7 +541,8 @@ Optional argument TYPES face attributes."
   (if shrface-org
       (progn
         (insert "** ")
-        (shr-generic dom))
+        (let ((url (dom-attr (dom-by-tag dom 'a) 'href)))
+          (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face 'shrface-bullet "shrface-h2-bullet")))
     (apply #'shrface-shr-fontize-dom dom types))
@@ -554,7 +556,8 @@ Optional argument TYPES face attributes."
   (if shrface-org
       (progn
         (insert "*** ")
-        (shr-generic dom))
+        (let ((url (dom-attr (dom-by-tag dom 'a) 'href)))
+          (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face 'shrface-bullet "shrface-h3-bullet")))
     (apply #'shrface-shr-fontize-dom dom types))
@@ -568,7 +571,8 @@ Optional argument TYPES face attributes."
   (if shrface-org
       (progn
         (insert "**** ")
-        (shr-generic dom))
+        (let ((url (dom-attr (dom-by-tag dom 'a) 'href)))
+          (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face 'shrface-bullet "shrface-h4-bullet")))
     ;; (insert (propertize  "**** " 'face 'shrface-h4-face))
@@ -583,7 +587,8 @@ Optional argument TYPES face attributes."
   (if shrface-org
       (progn
         (insert "***** ")
-        (shr-generic dom))
+        (let ((url (dom-attr (dom-by-tag dom 'a) 'href)))
+          (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face 'shrface-bullet "shrface-h5-bullet")) )
     (apply #'shrface-shr-fontize-dom dom types))
@@ -597,7 +602,8 @@ Optional argument TYPES face attributes."
   (if shrface-org
       (progn
         (insert "****** ")
-        (shr-generic dom))
+        (let ((url (dom-attr (dom-by-tag dom 'a) 'href)))
+          (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face 'shrface-bullet "shrface-h6-bullet")))
     ;; (insert (propertize  "****** " 'face 'shrface-h6-face))
@@ -703,24 +709,29 @@ Argument DOM dom."
       (shr-generic dom)
       (shr-ensure-newline))))
 
+(defun shrface-insert-org-link (url dom)
+  "TODO: Insert org link based on URL and DOM."
+  (cond ((equal url "") (shr-generic dom))
+        ((equal url nil) (shr-generic dom))
+        ;; (img-src (insert (format "[[%s][%s]]" url img-src)))
+        ((shrface-relative-p url) (shr-generic dom))
+        ((equal (dom-text dom) "")
+         (insert (format "[[%s]]" url)))
+        ((string-match-p "\\`\\s-*$" (dom-texts dom))
+         (insert (format "[[%s]]" url)))
+        ;; delete heading whitespaces
+        (t (insert (format "[[%s][%s]]" url (replace-regexp-in-string "^\\s-*" "" (dom-texts dom)))))))
+
 (defun shrface-tag-a (dom)
   "Fontize tag a.
 Argument DOM dom."
   (let ((url (dom-attr dom 'href))
-        (img-src (dom-attr (dom-by-tag dom 'img) 'src))
+        ;; (img-src (dom-attr (dom-by-tag dom 'img) 'src))
         (title (dom-attr dom 'title))
         (start (point))
         shr-start)
     (if shrface-org
-        (cond ((equal url "") (shr-generic dom))
-              ((equal url nil) (shr-generic dom))
-              (img-src (insert (format "[[%s][%s]]" url img-src)))
-              ;; ((shrface-relative-p url) (shr-generic dom))
-              ((equal (dom-text dom) "")
-               (insert (format "[[%s]]" url)))
-              ((string-match-p "\\`\\s-*$" (dom-text dom))
-               (insert (format "[[%s]]" url)))
-              (t (insert (format "[[%s][%s]]" url (dom-text dom)))))
+        (shrface-insert-org-link url dom)
       (shr-generic dom)
       (when (and shr-target-id
                  (equal (dom-attr dom 'name) shr-target-id))
