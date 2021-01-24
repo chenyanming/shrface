@@ -466,7 +466,7 @@ engine with shr engine as following:
 
 Here is a simple example to use ~shrface-html-export-as-org~, and ~shrface-html-export-to-org~.
 
-Download an URL and output an Org buffer:
+Download an URL and output an Org buffer/file:
 #+begin_src emacs-lisp
 (defun request-url-as-org (url)
   (interactive "sRequest url: ")
