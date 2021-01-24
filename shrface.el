@@ -715,12 +715,13 @@ Argument DOM dom."
         ((equal url nil) (shr-generic dom))
         ;; (img-src (insert (format "[[%s][%s]]" url img-src)))
         ((shrface-relative-p url) (shr-generic dom))
-        ((equal (dom-text dom) "")
+        ((equal (dom-texts dom) "")
          (insert (format "[[%s]]" url)))
-        ((string-match-p "\\`\\s-*$" (dom-texts dom))
+        ((= (length (replace-regexp-in-string "^\\s-*" "" (dom-texts dom))) 0) ;; delete heading whitespaces
          (insert (format "[[%s]]" url)))
-        ;; delete heading whitespaces
-        (t (insert (format "[[%s][%s]]" url (replace-regexp-in-string "^\\s-*" "" (dom-texts dom)))))))
+        ((> (length (replace-regexp-in-string "^\\s-*" "" (dom-texts dom))) 0) ;; delete heading whitespaces
+         (insert (format "[[%s][%s]]" url (replace-regexp-in-string "^\\s-*" "" (dom-texts dom)))))
+        (t (shr-generic dom))))
 
 (defun shrface-tag-a (dom)
   "Fontize tag a.
