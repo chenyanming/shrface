@@ -41,6 +41,7 @@
 (shrface-html-export-as-org)
 
 (defun request-url-as-org (url)
+  "Request URL and save it as org buffer."
   (interactive "sRequest url: ")
   (let ((name "request-url")
         (buf "*request-url*")
@@ -55,6 +56,7 @@
            (shrface-html-export-as-org (buffer-string))))))))
 
 (defun request-url-to-org (url)
+  "Request URL and save it to org file."
   (interactive "sRequest url: ")
   (let ((name "request-url")
         (buf "*request-url*")
