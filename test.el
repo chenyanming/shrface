@@ -14,11 +14,11 @@
  "/var/folders/st/mkq0gxld3rv39t6y6zv45j540000gn/T/github-chenyanmingshrface-extend-ewwnov-with-org-mode-features-archive-web-pages-to-org-files-with-shr.html"
  "test.org")
 ;; to org file with specified file name, relative html
-(shrface-html-export-to-org
- "test.html"
- "hello.org")
+(shrface-html-export-to-org "test.html" "hello.org")
 ;; no html and filename
 (shrface-html-export-to-org)
+;; convert sliently
+(shrface-html-export-to-org "test.html" "helloworld-man.org" t)
 
 ;; html string to org string
 (shrface-html-convert-as-org-string "<h1>hello</h1>")

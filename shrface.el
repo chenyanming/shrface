@@ -1637,14 +1637,15 @@ Optional argument HTML:
       (org-mode)
       (org-table-map-tables 'org-table-align))))
 
-(defun shrface-html-export-to-org (&optional html filename)
+(defun shrface-html-export-to-org (&optional html filename slient)
   "Export HTML to an org file as FILENAME.
 Optional argument HTML The html file name/string
 1. If HTML is a valid file, will convert the HTML file to file specified by FILENAME.
 2. If HTML is a string, will convert the HTML string to file specified by FILENAME.
 Optional argument FILENAME The org file name.
 1. If FILENAME is provided, save as FILENAME.
-2. If FILENAME is nil, save as a org file with same file name base as HTML, under same directory as HTML."
+2. If FILENAME is nil, save as a org file with same file name base as HTML, under same directory as HTML.
+Optional argument SLIENT Non-Nil to export sliently."
   (interactive)
   (or (fboundp 'libxml-parse-html-region)
       (error "This function requires Emacs to be compiled with libxml2"))
@@ -1662,11 +1663,12 @@ Optional argument FILENAME The org file name.
     (with-temp-buffer
       (erase-buffer)
       (insert str)
-      (write-region (point-min) (point-max) file)
-      (find-file file)
       (org-table-map-tables 'org-table-align)
-      (write-file file nil)
-      (goto-char (point-min)))))
+      (write-region (point-min) (point-max) file)
+      (unless slient
+        (find-file file)
+        (write-file file nil)
+        (goto-char (point-min))))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
