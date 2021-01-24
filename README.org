@@ -462,8 +462,9 @@ engine with shr engine as following:
 (advice-add 'org-web-tools--html-to-org-with-pandoc :override 'shrface-html-convert-as-org-string)
 #+end_src
 
-Here is an simple example to use ~shrface-html-export-as-org~, download an URL and output an Org
-buffer:
+Here is a simple example to use ~shrface-html-export-as-org~.
+
+Download an URL and output an Org buffer:
 #+begin_src emacs-lisp
 (defun request-url (url)
   (interactive "sRequest url: ")
