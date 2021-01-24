@@ -1560,7 +1560,8 @@ Return either 'hide-all, 'headings-only, or 'show-all."
   "Convert HTML buffer/string/file and return as org string.
 Optional argument HTML:
 1. If HTML is a valid file, will convert the HTML file to org string.
-2. If HTML is a string, will convert the HTML string to org string."
+2. If HTML is a string, will convert the HTML string to org string.
+Detail uses cases can be found at test.el."
   (or (fboundp 'libxml-parse-html-region)
       (error "This function requires Emacs to be compiled with libxml2"))
   (let* ((current-directory default-directory)
@@ -1623,7 +1624,8 @@ Optional argument HTML:
   "Export HTML to an org buffer.
 Optional argument HTML:
 1. If HTML is a valid file, will convert the HTML file to buffer *Shrface Org Export*.
-2. If HTML is a string, will convert the HTML string to buffer *Shrface Org Export*."
+2. If HTML is a string, will convert the HTML string to buffer *Shrface Org Export*.
+Detail uses cases can be found at test.el."
   (interactive)
   ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
   (let* ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
@@ -1642,10 +1644,13 @@ Optional argument HTML:
 Optional argument HTML The html file name/string
 1. If HTML is a valid file, will convert the HTML file to file specified by FILENAME.
 2. If HTML is a string, will convert the HTML string to file specified by FILENAME.
+3. If HTML is Nil, will try to select the current html buffer as input.
+   if current buffer is not html, simply select the current `buffer-string'.
 Optional argument FILENAME The org file name.
 1. If FILENAME is provided, save as FILENAME.
 2. If FILENAME is nil, save as a org file with same file name base as HTML, under same directory as HTML.
-Optional argument SLIENT Non-Nil to export sliently."
+Optional argument SLIENT Non-Nil to export sliently. Set Nil will open the exported org file after exporting.
+Detail uses cases can be found at test.el."
   (interactive)
   (or (fboundp 'libxml-parse-html-region)
       (error "This function requires Emacs to be compiled with libxml2"))
