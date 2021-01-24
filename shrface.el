@@ -136,6 +136,9 @@ The following features are also disabled:
 (defvar shrface-org nil
   "NON-nil to render with original org features.")
 
+(defvar shrface-org-title ""
+  "Title of exported org file.")
+
 (defvar shrface-headline-property 'shrface-headline
   "Property name to use for href.")
 
@@ -324,7 +327,7 @@ NON-nil"
   "Keymap for function `shrface-mode'.")
 
 (defun shrface-default-keybindings ()
-  "Setup default keybingings for `shrface-mode'."
+  "Setup default keybingings for variable `shrface-mode'."
   (interactive)
   "Sets up the default keybindings for `shrface-mode'."
   (define-key shrface-mode-map (kbd "TAB") 'shrface-outline-cycle)
@@ -709,19 +712,47 @@ Argument DOM dom."
       (shr-generic dom)
       (shr-ensure-newline))))
 
+(defun shrface-tag-title (dom)
+  "Fontize tag title.
+Argument DOM dom."
+  (if shrface-org
+        (setq shrface-org-title (dom-text dom))
+    (shr-tag-title dom)))
+
+(defun shrface-tag-span (dom)
+  "Fontize tag span.
+Argument DOM dom."
+  (if shrface-org
+      (let ((url (dom-attr dom 'href)))
+        (shrface-insert-org-link url dom))
+    (shr-tag-span dom)))
+
 (defun shrface-insert-org-link (url dom)
   "TODO: Insert org link based on URL and DOM."
-  (cond ((equal url "") (shr-generic dom))
-        ((equal url nil) (shr-generic dom))
-        ;; (img-src (insert (format "[[%s][%s]]" url img-src)))
-        ((shrface-relative-p url) (shr-generic dom))
-        ((equal (dom-texts dom) "")
-         (insert (format "[[%s]]" url)))
-        ((= (length (replace-regexp-in-string "^\\s-*" "" (dom-texts dom))) 0) ;; delete heading whitespaces
-         (insert (format "[[%s]]" url)))
-        ((> (length (replace-regexp-in-string "^\\s-*" "" (dom-texts dom))) 0) ;; delete heading whitespaces
-         (insert (format "[[%s][%s]]" url (replace-regexp-in-string "^\\s-*" "" (dom-texts dom)))))
-        (t (shr-generic dom))))
+  (let ((img-src (dom-attr (dom-by-tag dom 'img) 'src))
+        (img-alt (dom-attr (dom-by-tag dom 'img) 'alt))
+        (img-title (dom-attr (dom-by-tag dom 'img) 'title)))
+    (cond
+     ((equal url "") (shr-generic dom))
+     ;; ((equal url nil) (shr-generic dom))
+     (img-src
+      (shr-ensure-newline)
+      (insert (format "#+CAPTION: %s" (or img-alt img-title img-src)))
+      (shr-ensure-newline)
+      (if (shrface-relative-p img-src)
+          (if (file-exists-p img-src)
+              (insert (format "[[./%s]]" img-src)) ; if local images exists, add ./
+            (insert (format "[[%s]]" img-src)))    ; if no local images, just original img-src
+        (insert (format "[[%s]]" img-src))) ; if not relative path, just orignial img-src
+      (shr-ensure-newline))
+     ((shrface-relative-p url) (shr-generic dom))
+     ((equal (dom-texts dom) "")
+      (insert (format "[[%s]]" url)))
+     ((= (length (replace-regexp-in-string "^\\s-*" "" (dom-texts dom))) 0) ;; delete heading whitespaces
+      (insert (format "[[%s]]" url)))
+     ((> (length (replace-regexp-in-string "^\\s-*" "" (dom-texts dom))) 0) ;; delete heading whitespaces
+      (insert (format "[[%s][%s]]" url (replace-regexp-in-string "^\\s-*" "" (dom-texts dom)))))
+     (t (shr-generic dom))) ))
 
 (defun shrface-tag-a (dom)
   "Fontize tag a.
@@ -1552,7 +1583,9 @@ the HTML string to org string."
                (strong . shrface-tag-strong)
                (u . shrface-tag-u)
                (em . shrface-tag-em)
-               (pre . shrface-tag-pre))))
+               (pre . shrface-tag-pre)
+               (title . shrface-tag-title)
+               (span . shrface-tag-span))))
         (if html
             (shr-insert-document
              (with-temp-buffer
@@ -1569,16 +1602,19 @@ Optional argument HTML: If HTML string is provided, will convert
 the HTML string to an org buffer."
   (interactive)
   (let ((buf (get-buffer-create "*Shrface Org Export*"))
-        (str (shrface-html-convert-as-org-string html)))
+        (str (shrface-html-convert-as-org-string html))
+        ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
+        (image-file-name-regexps ".*")) ; Any files can be treated as images, since internet images may have no extenstion
     (with-current-buffer buf
       (erase-buffer)
       (insert str)
-      (pop-to-buffer buf)
+      (switch-to-buffer buf)
       (goto-char (point-min))
       (org-mode))))
 
 (defun shrface-html-export-to-org (filename)
-  "Export current html buffer to an org file."
+  "Export current html buffer to an org file.
+Argument FILENAME The org file name."
   (interactive "F")
   (or (fboundp 'libxml-parse-html-region)
       (error "This function requires Emacs to be compiled with libxml2"))
@@ -1603,15 +1639,23 @@ the HTML string to an org buffer."
                (strong . shrface-tag-strong)
                (u . shrface-tag-u)
                (em . shrface-tag-em)
-               (pre . shrface-tag-pre))))
+               (pre . shrface-tag-pre)
+               (title . shrface-tag-title)
+               (span . shrface-tag-span))))
         (shr-insert-document
          (with-current-buffer buf
            (libxml-parse-html-region (point-min) (point-max))))
+        (goto-char (point-min))
+        (insert (format "#+TITLE: %s\n" shrface-org-title))
         (write-region (point-min) (point-max) filename)
-        (find-file filename)
-        (org-table-map-tables 'org-table-align)
-        (write-file filename nil)
-        (goto-char (point-min))))))
+        ;; bind image-file-name-regexps to any file name as images
+        (let ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
+              ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
+              )
+          (find-file filename)
+          (org-table-map-tables 'org-table-align)
+          (write-file filename nil)
+          (goto-char (point-min)))))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
