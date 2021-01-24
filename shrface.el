@@ -638,7 +638,8 @@ Argument DOM dom."
   (if shrface-org
       (progn
         (shr-ensure-paragraph)
-        (shr-generic dom)
+        (let ((url (dom-attr dom 'href)))
+          (shrface-insert-org-link url dom))
         (shr-ensure-paragraph))
     (setq shr-indentation shrface-paragraph-indentation)
     (setq-local fill-column shrface-paragraph-fill-column)
@@ -1556,14 +1557,25 @@ Return either 'hide-all, 'headings-only, or 'show-all."
                   (message "Show all"))))
 
 (defun shrface-html-convert-as-org-string (&optional html)
-  "Convert current html buffer to return org string.
-Optional argument HTML: If HTML string is provided, will convert
-the HTML string to org string."
+  "Convert HTML buffer/string/file and return as org string.
+Optional argument HTML:
+1. If HTML is a valid file, will convert the HTML file to org string.
+2. If HTML is a string, will convert the HTML string to org string."
   (or (fboundp 'libxml-parse-html-region)
       (error "This function requires Emacs to be compiled with libxml2"))
-  (let ((buf (current-buffer)))
+  (let* ((current-directory default-directory)
+         (buf (current-buffer))
+         (html (or html (if (equal (file-name-extension (or buffer-file-name "")) "html")
+                            buffer-file-name
+                          (buffer-string))))
+         (default-directory (if (file-exists-p html)
+                                (if (file-name-directory html)
+                                    (file-name-directory html)
+                                  current-directory)
+                              current-directory)))
     (with-temp-buffer
-      (let ((shrface-org t)
+      (let ((shrface-org-title "NO TITLE")
+            (shrface-org t)
             (shr-bullet "- ")
             (shr-table-vertical-line "|")
             (shr-external-rendering-functions
@@ -1585,76 +1597,76 @@ the HTML string to org string."
                (pre . shrface-tag-pre)
                (title . shrface-tag-title)
                (span . shrface-tag-span))))
-        (if html
-            (shr-insert-document
-             (with-temp-buffer
-               (insert html)
-               (libxml-parse-html-region (point-min) (point-max))))
+        (cond
+         ((not html)
           (shr-insert-document
            (with-current-buffer buf
-             (libxml-parse-html-region (point-min) (point-max))))))
+             (libxml-parse-html-region (point-min) (point-max)))))
+         ((file-exists-p html)
+          (shr-insert-document
+           (with-temp-buffer
+             (insert-file-contents html)
+             (libxml-parse-html-region (point-min) (point-max)))))
+         ((stringp html)
+          (shr-insert-document
+           (with-temp-buffer
+             (insert html)
+             (libxml-parse-html-region (point-min) (point-max)))))
+         (t (shr-insert-document
+             (with-current-buffer buf
+               (libxml-parse-html-region (point-min) (point-max))))))
+        (goto-char (point-min))
+        (insert (format "#+TITLE: %s\n" shrface-org-title)))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun shrface-html-export-as-org (&optional html)
-  "Export current html buffer to an org buffer.
-Optional argument HTML: If HTML string is provided, will convert
-the HTML string to an org buffer."
+  "Export HTML to an org buffer.
+Optional argument HTML:
+1. If HTML is a valid file, will convert the HTML file to buffer *Shrface Org Export*.
+2. If HTML is a string, will convert the HTML string to buffer *Shrface Org Export*."
   (interactive)
-  (let ((buf (get-buffer-create "*Shrface Org Export*"))
-        (str (shrface-html-convert-as-org-string html))
-        ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
-        (image-file-name-regexps ".*")) ; Any files can be treated as images, since internet images may have no extenstion
+  ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
+  (let* ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
+         (buf (get-buffer-create "*Shrface Org Export*"))
+         (str (shrface-html-convert-as-org-string html)))
     (with-current-buffer buf
       (erase-buffer)
       (insert str)
       (switch-to-buffer buf)
       (goto-char (point-min))
-      (org-mode))))
+      (org-mode)
+      (org-table-map-tables 'org-table-align))))
 
-(defun shrface-html-export-to-org (filename)
-  "Export current html buffer to an org file.
-Argument FILENAME The org file name."
-  (interactive "F")
+(defun shrface-html-export-to-org (&optional html filename)
+  "Export HTML to an org file as FILENAME.
+Optional argument HTML The html file name/string
+1. If HTML is a valid file, will convert the HTML file to file specified by FILENAME.
+2. If HTML is a string, will convert the HTML string to file specified by FILENAME.
+Optional argument FILENAME The org file name.
+1. If FILENAME is provided, save as FILENAME.
+2. If FILENAME is nil, save as a org file with same file name base as HTML, under same directory as HTML."
+  (interactive)
   (or (fboundp 'libxml-parse-html-region)
       (error "This function requires Emacs to be compiled with libxml2"))
-  (let ((buf (current-buffer)))
+  ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
+  (let* ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
+         (str (shrface-html-convert-as-org-string html))
+         (html (or html (if (equal (file-name-extension (or buffer-file-name "")) "html")
+                            buffer-file-name
+                          (buffer-string))))
+         (file (or filename
+                   (if (file-exists-p html)
+                       (expand-file-name
+                        (concat (file-name-base html) ".org")
+                        (file-name-directory html))))))
     (with-temp-buffer
-      (let ((shrface-org t)
-            (shr-bullet "- ")
-            (shr-table-vertical-line "|")
-            (shr-external-rendering-functions
-             '((figure . shrface-tag-figure)
-               (dt . shrface-tag-dt)
-               (li . shrface-tag-li)
-               (p . shrface-tag-p)
-               (a . shrface-tag-a)
-               (h6 . shrface-tag-h6)
-               (h5 . shrface-tag-h5)
-               (h4 . shrface-tag-h4)
-               (h3 . shrface-tag-h3)
-               (h2 . shrface-tag-h2)
-               (h1 . shrface-tag-h1)
-               (svg . shrface-tag-svg)
-               (strong . shrface-tag-strong)
-               (u . shrface-tag-u)
-               (em . shrface-tag-em)
-               (pre . shrface-tag-pre)
-               (title . shrface-tag-title)
-               (span . shrface-tag-span))))
-        (shr-insert-document
-         (with-current-buffer buf
-           (libxml-parse-html-region (point-min) (point-max))))
-        (goto-char (point-min))
-        (insert (format "#+TITLE: %s\n" shrface-org-title))
-        (write-region (point-min) (point-max) filename)
-        ;; bind image-file-name-regexps to any file name as images
-        (let ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
-              ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
-              )
-          (find-file filename)
-          (org-table-map-tables 'org-table-align)
-          (write-file filename nil)
-          (goto-char (point-min)))))))
+      (erase-buffer)
+      (insert str)
+      (write-region (point-min) (point-max) file)
+      (find-file file)
+      (org-table-map-tables 'org-table-align)
+      (write-file file nil)
+      (goto-char (point-min)))))
 
 (provide 'shrface)
 ;;; shrface.el ends here

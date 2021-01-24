@@ -462,11 +462,11 @@ engine with shr engine as following:
 (advice-add 'org-web-tools--html-to-org-with-pandoc :override 'shrface-html-convert-as-org-string)
 #+end_src
 
-Here is a simple example to use ~shrface-html-export-as-org~.
+Here is a simple example to use ~shrface-html-export-as-org~, and ~shrface-html-export-to-org~.
 
 Download an URL and output an Org buffer:
 #+begin_src emacs-lisp
-(defun request-url (url)
+(defun request-url-as-org (url)
   (interactive "sRequest url: ")
   (let ((name "request-url")
         (buf "*request-url*")
@@ -478,7 +478,21 @@ Download an URL and output an Org buffer:
      (lambda (p e)
        (when (= 0 (process-exit-status p))
          (with-current-buffer buf
-           (shrface-html-export-as-org)))))))
+           (shrface-html-export-as-org (buffer-string))))))))
+
+(defun request-url-to-org (url)
+  (interactive "sRequest url: ")
+  (let ((name "request-url")
+        (buf "*request-url*")
+        (cmd (format "curl -L %s" url)))
+    (if (get-buffer buf)
+        (kill-buffer buf))
+    (set-process-sentinel
+     (start-process-shell-command name buf cmd)
+     (lambda (p e)
+       (when (= 0 (process-exit-status p))
+         (with-current-buffer buf
+           (shrface-html-export-to-org (buffer-string) "request.org")))))))
 #+end_src
 
 ** (Optional) Enable source codes highlight
