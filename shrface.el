@@ -683,6 +683,26 @@ Argument DOM dom."
       nil
       (shr-tag-svg dom)))
 
+(defun shrface-tag-pre (dom)
+  "Fontize tag pre.
+Argument DOM dom."
+  (if shrface-org
+      (progn
+        (let ((shr-folding-mode 'none)
+              (shr-current-font 'default))
+          (shr-ensure-newline)
+          (insert (propertize "#+BEGIN_SRC " 'face 'org-block-begin-line))
+          (shr-ensure-newline)
+          (shr-generic dom)
+          (shr-ensure-newline)
+          (insert (propertize "#+END_SRC" 'face 'org-block-end-line))
+          (shr-ensure-newline)))
+    (let ((shr-folding-mode 'none)
+          (shr-current-font 'default))
+      (shr-ensure-newline)
+      (shr-generic dom)
+      (shr-ensure-newline))))
+
 (defun shrface-tag-a (dom)
   "Fontize tag a.
 Argument DOM dom."
@@ -1503,7 +1523,24 @@ the HTML string to org string."
     (with-temp-buffer
       (let ((shrface-org t)
             (shr-bullet "- ")
-            (shr-table-vertical-line "|"))
+            (shr-table-vertical-line "|")
+            (shr-external-rendering-functions
+             '((figure . shrface-tag-figure)
+               (dt . shrface-tag-dt)
+               (li . shrface-tag-li)
+               (p . shrface-tag-p)
+               (a . shrface-tag-a)
+               (h6 . shrface-tag-h6)
+               (h5 . shrface-tag-h5)
+               (h4 . shrface-tag-h4)
+               (h3 . shrface-tag-h3)
+               (h2 . shrface-tag-h2)
+               (h1 . shrface-tag-h1)
+               (svg . shrface-tag-svg)
+               (strong . shrface-tag-strong)
+               (u . shrface-tag-u)
+               (em . shrface-tag-em)
+               (pre . shrface-tag-pre))))
         (if html
             (shr-insert-document
              (with-temp-buffer
@@ -1537,7 +1574,24 @@ the HTML string to an org buffer."
     (with-temp-buffer
       (let ((shrface-org t)
             (shr-bullet "- ")
-            (shr-table-vertical-line "|"))
+            (shr-table-vertical-line "|")
+            (shr-external-rendering-functions
+             '((figure . shrface-tag-figure)
+               (dt . shrface-tag-dt)
+               (li . shrface-tag-li)
+               (p . shrface-tag-p)
+               (a . shrface-tag-a)
+               (h6 . shrface-tag-h6)
+               (h5 . shrface-tag-h5)
+               (h4 . shrface-tag-h4)
+               (h3 . shrface-tag-h3)
+               (h2 . shrface-tag-h2)
+               (h1 . shrface-tag-h1)
+               (svg . shrface-tag-svg)
+               (strong . shrface-tag-strong)
+               (u . shrface-tag-u)
+               (em . shrface-tag-em)
+               (pre . shrface-tag-pre))))
         (shr-insert-document
          (with-current-buffer buf
            (libxml-parse-html-region (point-min) (point-max))))
