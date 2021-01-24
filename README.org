@@ -13,7 +13,7 @@
 * Description
 This package extends =shr= / =eww= with org features and analysis capability. It can be used in
 [[https://github.com/dash-docs-el/dash-docs][dash-docs]], [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]], [[https://github.com/wasamasa/nov.el][nov.el]], [[https://github.com/djcb/mu][mu/mu4e]], [[https://github.com/chenyanming/anki.el][anki.el]], etc. It is also able to export HTML buffer to Org
-buffer/file.
+buffer/file, or download/archive web pages.
 
 #+attr_org: :width 600px
 [[file:img/eww.png]]
