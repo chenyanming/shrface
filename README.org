@@ -452,6 +452,8 @@ NON-nil"
 #+END_SRC
 
 *** Export Html to Org
+Exporting HTML to Org doesn't need to enable ~shrface-mode~, or run ~shrface-basic~ / ~shrface-trail~, you just make sure you  ~(require 'shrface)~ before using the exporting features:
+
 - ~shrface-html-export-as-org~: Export current html buffer to an org buffer.
 - ~shrface-html-export-to-org~: Export current html buffer to an org file.
 
