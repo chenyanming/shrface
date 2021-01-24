@@ -758,7 +758,6 @@ Argument DOM dom."
   "Fontize tag a.
 Argument DOM dom."
   (let ((url (dom-attr dom 'href))
-        ;; (img-src (dom-attr (dom-by-tag dom 'img) 'src))
         (title (dom-attr dom 'title))
         (start (point))
         shr-start)
