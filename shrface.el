@@ -693,6 +693,14 @@ Argument DOM dom."
       nil
       (shr-tag-svg dom)))
 
+(defun shrface-tag-img (dom)
+  "Fontize tag svg.
+Argument DOM dom."
+  (if shrface-org
+      (let ((url (dom-attr dom 'src)))
+        (shrface-insert-org-link url dom))
+    (shr-tag-img dom)))
+
 (defun shrface-tag-pre (dom)
   "Fontize tag pre.
 Argument DOM dom."
@@ -1601,7 +1609,8 @@ Detail uses cases can be found at test.el."
                (em . shrface-tag-em)
                (pre . shrface-tag-pre)
                (title . shrface-tag-title)
-               (span . shrface-tag-span))))
+               (span . shrface-tag-span)
+               (img . shrface-tag-img))))
         (cond
          ((not html)
           (shr-insert-document
