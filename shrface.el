@@ -7,7 +7,7 @@
 ;; Keywords: faces
 ;; Created: 10 April 2020
 ;; Version: 2.6.3
-;; Package-Requires: ((emacs "25.1") (org "9.0"))
+;; Package-Requires: ((emacs "25.1") (org "9.0") (language-detection "0.1.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -701,11 +701,16 @@ Argument DOM dom."
         (let ((shr-folding-mode 'none)
               (shr-current-font 'default))
           (shr-ensure-newline)
-          (insert (propertize "#+BEGIN_SRC " 'face 'org-block-begin-line))
+          (insert "#+BEGIN_SRC ")
+          (require 'language-detection)
+          (insert (symbol-name
+                   (with-temp-buffer
+                     (shr-generic dom)
+                     (language-detection-buffer))))
           (shr-ensure-newline)
           (shr-generic dom)
           (shr-ensure-newline)
-          (insert (propertize "#+END_SRC" 'face 'org-block-end-line))
+          (insert "#+END_SRC")
           (shr-ensure-newline)))
     (let ((shr-folding-mode 'none)
           (shr-current-font 'default))
