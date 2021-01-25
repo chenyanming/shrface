@@ -69,3 +69,12 @@
        (when (= 0 (process-exit-status p))
          (with-current-buffer buf
            (shrface-html-export-to-org (buffer-string) "request.org")))))))
+
+
+(defun request-url-at-point-as-org ()
+  "Request URL with avy to org buffer."
+  (interactive)
+  (require 'link-hint)
+  (link-hint-copy-link)
+  (message "Connecting %s..." (current-kill 0 t))
+  (request-url-as-org (current-kill 0 t)))

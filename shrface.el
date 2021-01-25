@@ -745,7 +745,13 @@ Argument DOM dom."
 (defun shrface-insert-org-link (url dom)
   "TODO: Insert org link based on URL and DOM."
   (let* ((img-dom (dom-by-tag dom 'img))
-         (img-src (dom-attr img-dom 'src))
+         (img-src (or (dom-attr img-dom 'src)
+                      (let ((srcset (or (dom-attr img-dom 'srcset)
+                                        (dom-attr img-dom 'data-srcset))))
+                        (if (stringp srcset)
+                            (car (split-string
+                                  (car (split-string srcset ","))
+                                  " " )))))) ; get car of src-set, split ',' then split ' '
          (img-alt (dom-attr img-dom 'alt))
          (img-title (dom-attr img-dom 'title))
          (img-width (dom-attr img-dom 'width))
@@ -783,7 +789,7 @@ Argument DOM dom."
       (insert (format "[[%s]]" url)))
      ((> (length (replace-regexp-in-string "^\\s-*" "" (dom-texts dom))) 0) ;; delete heading whitespaces
       (insert (format "[[%s][%s]]" url (replace-regexp-in-string "^\\s-*" "" (dom-texts dom)))))
-     (t (shr-generic dom))) ))
+     (t (shr-generic dom)))))
 
 (defun shrface-tag-a (dom)
   "Fontize tag a.
