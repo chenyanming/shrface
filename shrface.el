@@ -698,7 +698,9 @@ Argument DOM dom."
 Argument DOM dom."
   (if shrface-org
       (let ((url (dom-attr dom 'src)))
-        (shrface-insert-org-link url dom))
+        (shr-ensure-newline)
+        (shrface-insert-org-link url dom)
+        (shr-ensure-newline))
     (shr-tag-img dom)))
 
 (defun shrface-tag-pre (dom)
@@ -742,15 +744,31 @@ Argument DOM dom."
 
 (defun shrface-insert-org-link (url dom)
   "TODO: Insert org link based on URL and DOM."
-  (let ((img-src (dom-attr (dom-by-tag dom 'img) 'src))
-        (img-alt (dom-attr (dom-by-tag dom 'img) 'alt))
-        (img-title (dom-attr (dom-by-tag dom 'img) 'title)))
+  (let* ((img-dom (dom-by-tag dom 'img))
+         (img-src (dom-attr img-dom 'src))
+         (img-alt (dom-attr img-dom 'alt))
+         (img-title (dom-attr img-dom 'title))
+         (img-width (dom-attr img-dom 'width))
+         (img-height (dom-attr img-dom 'height)))
     (cond
      ((equal url "") (shr-generic dom))
      ;; ((equal url nil) (shr-generic dom))
      (img-src
       (shr-ensure-newline)
-      (insert (format "#+CAPTION: %s" (or img-alt img-title img-src)))
+      (if (not (equal (or img-alt img-title img-src) ""))
+          (insert (format "#+CAPTION: %s" (or img-alt img-title img-src))))
+      (shr-ensure-newline)
+      (let ((width (if (stringp img-width) (string-to-number img-width) 0))
+            (height (if (stringp img-height) (string-to-number img-height) 0))
+            (fill-pixels (* (frame-char-width) fill-column)))
+        (cond ((>= width fill-pixels)
+               (insert (format "#+ATTR_ORG: :width %s" fill-pixels)))
+              ((and (> width 0) (> height 0))
+               (insert (format "#+ATTR_ORG: :width %s :height %s" img-width img-height)))
+              ((> width 0)
+               (insert (format "#+ATTR_ORG: :width %s" img-width)))
+              ((> height 0)
+               (insert (format "#+ATTR_ORG: :height %s" img-height)))))
       (shr-ensure-newline)
       (if (shrface-relative-p img-src)
           (if (file-exists-p img-src)
