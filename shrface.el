@@ -745,8 +745,7 @@ Argument DOM dom."
 (defun shrface-insert-org-link (url dom)
   "TODO: Insert org link based on URL and DOM."
   (let* ((img-dom (dom-by-tag dom 'img))
-         (img-src (or (dom-attr img-dom 'data-src) ; https://manga1000.com/ need it
-                      (dom-attr img-dom 'src)
+         (img-src (or (dom-attr img-dom 'src)
                       (let ((srcset (or (dom-attr img-dom 'srcset)
                                         (dom-attr img-dom 'data-srcset))))
                         (if (stringp srcset)
