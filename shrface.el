@@ -700,13 +700,12 @@ Argument DOM dom."
       (progn
         (let ((shr-folding-mode 'none)
               (shr-current-font 'default))
-          (shr-ensure-newline)
-          (insert "#+BEGIN_SRC ")
           (require 'language-detection)
-          (insert (symbol-name
-                   (with-temp-buffer
-                     (shr-generic dom)
-                     (language-detection-buffer))))
+          (shr-ensure-newline)
+          (insert (format "#+BEGIN_SRC %s" (symbol-name
+                                            (with-temp-buffer
+                                              (shr-generic dom)
+                                              (language-detection-buffer)))))
           (shr-ensure-newline)
           (shr-generic dom)
           (shr-ensure-newline)
