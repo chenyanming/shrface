@@ -1611,7 +1611,7 @@ Detail uses cases can be found at test.el."
                                   current-directory)
                               current-directory)))
     (with-temp-buffer
-      (let ((shrface-org-title "NO TITLE")
+      (let ((org-title shrface-org-title)
             (shrface-org t)
             (shr-bullet "- ")
             (shr-table-vertical-line "|")
@@ -1654,7 +1654,7 @@ Detail uses cases can be found at test.el."
              (with-current-buffer buf
                (libxml-parse-html-region (point-min) (point-max))))))
         (goto-char (point-min))
-        (insert (format "#+TITLE: %s\n" shrface-org-title)))
+        (insert (format "#+TITLE: %s\n" org-title)))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun shrface-html-export-as-org (&optional html)
