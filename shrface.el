@@ -731,7 +731,10 @@ Argument DOM dom."
   "Fontize tag title.
 Argument DOM dom."
   (if shrface-org
-        (setq shrface-org-title (dom-text dom))
+        (setq shrface-org-title
+              (decode-coding-string
+               (dom-text dom)
+               'utf-8 t))
     (shr-tag-title dom)))
 
 (defun shrface-tag-span (dom)
@@ -1592,14 +1595,29 @@ Return either 'hide-all, 'headings-only, or 'show-all."
                   (setq shrface-outline--cycle-buffer-state 'show-all)
                   (message "Show all"))))
 
+(defun shrface-parse-html ()
+  "Parse html to dom. Refer to `eww-display-html'."
+  (or (fboundp 'libxml-parse-html-region)
+      (error "This function requires Emacs to be compiled with libxml2"))
+  (goto-char (point-min))
+  (condition-case nil
+      (decode-coding-region (point-min) (point-max) 'utf-8)
+    (coding-system-error nil))
+  (save-excursion
+    ;; Remove CRLF and replace NUL with &#0; before parsing.
+    (while (re-search-forward "\\(\r$\\)\\|\0" nil t)
+      (replace-match (if (match-beginning 1) "" "&#0;") t t)))
+  (unless (fboundp 'eww--preprocess-html)
+    (require 'eww))
+  (eww--preprocess-html (point) (point-max))
+  (libxml-parse-html-region (point) (point-max)))
+
 (defun shrface-html-convert-as-org-string (&optional html)
   "Convert HTML buffer/string/file and return as org string.
 Optional argument HTML:
 1. If HTML is a valid file, will convert the HTML file to org string.
 2. If HTML is a string, will convert the HTML string to org string.
 Detail uses cases can be found at test.el."
-  (or (fboundp 'libxml-parse-html-region)
-      (error "This function requires Emacs to be compiled with libxml2"))
   (let* ((current-directory default-directory)
          (buf (current-buffer))
          (html (or html (if (equal (file-name-extension (or buffer-file-name "")) "html")
@@ -1639,20 +1657,20 @@ Detail uses cases can be found at test.el."
          ((not html)
           (shr-insert-document
            (with-current-buffer buf
-             (libxml-parse-html-region (point-min) (point-max)))))
+             (shrface-parse-html))))
          ((file-exists-p html)
           (shr-insert-document
            (with-temp-buffer
              (insert-file-contents html)
-             (libxml-parse-html-region (point-min) (point-max)))))
+             (shrface-parse-html))))
          ((stringp html)
           (shr-insert-document
            (with-temp-buffer
              (insert html)
-             (libxml-parse-html-region (point-min) (point-max)))))
+             (shrface-parse-html))))
          (t (shr-insert-document
              (with-current-buffer buf
-               (libxml-parse-html-region (point-min) (point-max))))))
+               (shrface-parse-html)))))
         (goto-char (point-min))
         (insert (format "#+TITLE: %s\n" org-title)))
       (buffer-substring-no-properties (point-min) (point-max)))))
@@ -1689,8 +1707,6 @@ Optional argument FILENAME The org file name.
 Optional argument SLIENT Non-Nil to export sliently. Set Nil will open the exported org file after exporting.
 Detail uses cases can be found at test.el."
   (interactive)
-  (or (fboundp 'libxml-parse-html-region)
-      (error "This function requires Emacs to be compiled with libxml2"))
   ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
   (let* ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
          (str (shrface-html-convert-as-org-string html))
