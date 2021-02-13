@@ -136,8 +136,11 @@ The following features are also disabled:
 (defvar shrface-org nil
   "NON-nil to render with original org features.")
 
-(defvar shrface-org-title ""
-  "Title of exported org file.")
+(defvar shrface-org-title nil
+  "Title of exported org file, only used in overwriting `shrface-title'.")
+
+(defvar shrface-title nil
+  "Title of html.")
 
 (defvar shrface-headline-property 'shrface-headline
   "Property name to use for href.")
@@ -731,7 +734,7 @@ Argument DOM dom."
   "Fontize tag title.
 Argument DOM dom."
   (if shrface-org
-        (setq shrface-org-title
+        (setq shrface-title
               (decode-coding-string
                (dom-text dom)
                'utf-8 t))
@@ -1629,8 +1632,7 @@ Detail uses cases can be found at test.el."
                                   current-directory)
                               current-directory)))
     (with-temp-buffer
-      (let ((org-title shrface-org-title)
-            (shrface-org t)
+      (let ((shrface-org t)
             (shr-bullet "- ")
             (shr-table-vertical-line "|")
             (shr-external-rendering-functions
@@ -1672,7 +1674,7 @@ Detail uses cases can be found at test.el."
              (with-current-buffer buf
                (shrface-parse-html)))))
         (goto-char (point-min))
-        (insert (format "#+TITLE: %s\n" org-title)))
+        (insert (format "#+TITLE: %s\n" (or shrface-org-title shrface-title))))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun shrface-html-export-as-org (&optional html)
