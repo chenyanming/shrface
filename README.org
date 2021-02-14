@@ -498,6 +498,27 @@ Download an URL and output an Org buffer/file:
 
 #+end_src
 
+If you use [[https://github.com/alphapapa/org-web-tools][org-web-tools]], it is very easy to capture the web as a readable format:
+#+begin_src emacs-lisp
+(defun request-url-readable (url)
+  (interactive "sRequest url: ")
+  (require 'shrface)
+  (require 'request)
+  (require 'org-web-tools)
+  (request url
+    :parser 'buffer-string
+    :headers '(("User-Agent" . "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"))
+    :sync nil
+    :success (cl-function
+              (lambda (&key data &allow-other-keys)
+                (let* ((web (org-web-tools--eww-readable data))
+                       (title (car web))
+                       (html (cdr web))
+                       (shrface-org-title title)
+                       (shrface-request-url url))
+                  (shrface-html-export-as-org html))))))
+#+end_src
+
 ** (Optional) Enable source codes highlight
 You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight and
 background color.
