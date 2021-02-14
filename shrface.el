@@ -142,8 +142,8 @@ The following features are also disabled:
 (defvar shrface-title nil
   "Title of html.")
 
-(defvar shrface-base-url nil
-  "Base url of html, bound it before generating the org buffer/file.")
+(defvar shrface-request-url nil
+  "Request url of html, bound it before generating the org buffer/file.")
 
 (defvar shrface-headline-property 'shrface-headline
   "Property name to use for href.")
@@ -687,8 +687,36 @@ Argument DOM dom."
         (insert "_"))
     (shr-fontize-dom dom 'underline)))
 
-(defun shrface-relative-p (url)
-  "Check URL if relative or not."
+(defun shrface-fix-url (url r-url)
+  "Fix URL based on R-URL."
+  (if r-url                             ; r-url is Non-Nil
+      (progn
+        (unless (string-match-p "\\`[a-zA-Z][-a-zA-Z0-9+.]*://" r-url) ; fix `r-url' type
+          (setq r-url (concat "http://" r-url)))
+        (if url                         ; url is Non-Nil
+            (let* ((type (url-type (url-generic-parse-url r-url)))
+                   (host (url-host (url-generic-parse-url r-url)))
+                   (filename (url-filename (url-generic-parse-url r-url))))
+              (if (string-match-p "^/.*" url) ; url start with /, absulute url
+                  (setq url
+                        (format "%s%s%s"
+                                (concat type "://")
+                                (if host
+                                    host
+                                  (if filename filename "")) ; no host, just use filename
+                                url))
+                (setq url
+                      (format "%s%s%s"
+                              (concat type "://")
+                              (if host
+                                  (concat host (if (string= filename "/") "" filename) "/")
+                                (if filename filename "")) ; no host, just use filename
+                              url))))
+          "") )
+    url))
+
+(defun shrface-scheme-p (url)
+  "Check URL if has scheme or not."
   (if (not (url-type (url-generic-parse-url url)))
       t))
 
@@ -754,12 +782,8 @@ Argument DOM dom."
 (defun shrface-insert-org-link (url dom)
   "TODO: Insert org link based on URL and DOM."
   (let* (
-         (url (if (shrface-relative-p url)
-                  (if shrface-base-url ; get the base url from external programs
-                      (if url ; url is not nil
-                          (concat shrface-base-url url)
-                        nil)
-                    url)
+         (url (if (shrface-scheme-p url)
+                  (shrface-fix-url url shrface-request-url)
                 url))
          (img-dom (dom-by-tag dom 'img))
          (img-src (or (dom-attr img-dom 'data-src) ; some sites use data-src as real img data
@@ -776,7 +800,6 @@ Argument DOM dom."
          (img-height (dom-attr img-dom 'height)))
     (cond
      ((equal url "") (shr-generic dom))
-     ((equal url nil) (shr-generic dom))
      (img-src
       (shr-ensure-newline)
       (if (not (equal (or img-alt img-title img-src) ""))
@@ -794,10 +817,10 @@ Argument DOM dom."
               ((> height 0)
                (insert (format "#+ATTR_ORG: :height %s" img-height)))))
       (shr-ensure-newline)
-      (if (shrface-relative-p img-src)
+      (if (shrface-scheme-p img-src)
           (if (file-exists-p img-src)
               (insert (format "[[./%s]]" img-src)) ; if local images exists, add ./
-            (insert (format "[[%s]]" img-src)))    ; if no local images, just original img-src
+            (insert (format "[[%s]]" (shrface-fix-url img-src shrface-request-url))))    ; if no local images, just fix img-src
         (insert (format "[[%s]]" img-src))) ; if not relative path, just orignial img-src
       (shr-ensure-newline))
      ((equal (dom-texts dom) "")
