@@ -56,10 +56,14 @@
 (shrface-fix-url "/post/calibredb/" "http://hkvim.com/a" )
 
 (shrface-fix-url "post/calibredb/" "http://hkvim.com/a" )
+(shrface-fix-url "post/calibredb/" "http://hkvim.com/a.html" )
 (shrface-fix-url "post/calibredb/" "http://hkvim.com/" )
 (shrface-fix-url "post/calibredb/" "http://hkvim.com" )
 
 (shrface-fix-url "#debugging-code" "https://docs.rs/clap/2.33.3/clap/")
+(shrface-fix-url "#debugging-code" "https://docs.rs/clap/2.33.3/clap/a")
+
+(shrface-fix-url "index.html#SEC_Contents" "https://www.gnu.org/software/emacs/manual/html_node/url/URI-Encoding.html#URI-Encoding")
 
 (defun request-url-as-org (url)
   "Request URL and save it as org buffer."

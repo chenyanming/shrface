@@ -696,7 +696,8 @@ Argument DOM dom."
         (if url                         ; url is Non-Nil
             (let* ((type (url-type (url-generic-parse-url r-url)))
                    (host (url-host (url-generic-parse-url r-url)))
-                   (filename (url-filename (url-generic-parse-url r-url))))
+                   (filename (url-filename (url-generic-parse-url r-url)))
+                   (directory (or (file-name-directory filename) "/")))
               (if (string-match-p "^/.*" url) ; url start with /, absulute url
                   (setq url
                         (format "%s%s%s"
@@ -709,7 +710,7 @@ Argument DOM dom."
                       (format "%s%s%s"
                               (concat type "://")
                               (if host
-                                  (concat host (replace-regexp-in-string "\\(.*\\)/$" "\\1" filename) "/")
+                                  (concat host directory)
                                 (if filename filename "")) ; no host, just use filename
                               url))))
           "") )
