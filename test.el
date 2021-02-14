@@ -59,6 +59,8 @@
 (shrface-fix-url "post/calibredb/" "http://hkvim.com/" )
 (shrface-fix-url "post/calibredb/" "http://hkvim.com" )
 
+(shrface-fix-url "#debugging-code" "https://docs.rs/clap/2.33.3/clap/")
+
 (defun request-url-as-org (url)
   "Request URL and save it as org buffer."
   (interactive "sRequest url: ")

@@ -709,7 +709,7 @@ Argument DOM dom."
                       (format "%s%s%s"
                               (concat type "://")
                               (if host
-                                  (concat host (if (string= filename "/") "" filename) "/")
+                                  (concat host (replace-regexp-in-string "\\(.*\\)/$" "\\1" filename) "/")
                                 (if filename filename "")) ; no host, just use filename
                               url))))
           "") )
