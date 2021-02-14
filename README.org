@@ -456,6 +456,8 @@ Exporting HTML to Org doesn't need to enable ~shrface-mode~, or run ~shrface-bas
 
 - ~shrface-html-export-as-org~: Export current html buffer to an org buffer.
 - ~shrface-html-export-to-org~: Export current html buffer to an org file.
+- ~shrface-org-title~: Dynamically bound and overwrite the org title.
+- ~shrface-request-url~: Dynamically bound the request url, so that ~shrface~ can fix the relative/absolute urls based on the request url.
 
 If you use [[https://github.com/alphapapa/org-web-tools][org-web-tools]] to download the http page into org, you can also override its pandoc
 engine with shr engine as following:
@@ -464,37 +466,36 @@ engine with shr engine as following:
 (advice-add 'org-web-tools--html-to-org-with-pandoc :override 'shrface-html-convert-as-org-string)
 #+end_src
 
-Here is a simple example to use ~shrface-html-export-as-org~, and ~shrface-html-export-to-org~.
+Here are two simple examples to use ~shrface-html-export-as-org~, and ~shrface-html-export-to-org~, using [[https://github.com/tkf/emacs-request][Request]].
 
 Download an URL and output an Org buffer/file:
 #+begin_src emacs-lisp
 (defun request-url-as-org (url)
   (interactive "sRequest url: ")
-  (let ((name "request-url")
-        (buf "*request-url*")
-        (cmd (format "curl -L %s" url)))
-    (if (get-buffer buf)
-        (kill-buffer buf))
-    (set-process-sentinel
-     (start-process-shell-command name buf cmd)
-     (lambda (p e)
-       (when (= 0 (process-exit-status p))
-         (with-current-buffer buf
-           (shrface-html-export-as-org (buffer-string))))))))
+  (require 'shrface)
+  (require 'request)
+  (request url
+    :parser 'buffer-string
+    :headers '(("User-Agent" . "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"))
+    :sync nil
+    :success (cl-function
+              (lambda (&key data &allow-other-keys)
+                (let ((shrface-request-url url))
+                  (shrface-html-export-as-org data))))))
 
 (defun request-url-to-org (url)
   (interactive "sRequest url: ")
-  (let ((name "request-url")
-        (buf "*request-url*")
-        (cmd (format "curl -L %s" url)))
-    (if (get-buffer buf)
-        (kill-buffer buf))
-    (set-process-sentinel
-     (start-process-shell-command name buf cmd)
-     (lambda (p e)
-       (when (= 0 (process-exit-status p))
-         (with-current-buffer buf
-           (shrface-html-export-to-org (buffer-string) "request.org")))))))
+  (require 'shrface)
+  (require 'request)
+  (request url
+    :parser 'buffer-string
+    :headers '(("User-Agent" . "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"))
+    :sync nil
+    :success (cl-function
+              (lambda (&key data &allow-other-keys)
+                (let ((shrface-request-url url))
+                  (shrface-html-export-to-org data "request.org"))))))
+
 #+end_src
 
 ** (Optional) Enable source codes highlight
