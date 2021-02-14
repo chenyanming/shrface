@@ -1678,6 +1678,24 @@ Detail uses cases can be found at test.el."
         (insert (format "#+TITLE: %s\n" (or shrface-org-title shrface-title))))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
+(defmacro shrface--with-shrface-org-buffer (name &rest body)
+  "Basic setup for a `shrface-org-mode' buffer.
+Create a new buffer with name NAME if it does not exist.  Turn
+on `shrface-org-mode' for that buffer, eval BODY and then switch to it."
+  (declare (indent 0) (debug t))
+  (let ((buffer (make-symbol "shrfacce-org-buffer")))
+    `(let ((,buffer (generate-new-buffer ,name)))
+       ;; `kill-buffer' can change current-buffer in some odd cases.
+       (with-current-buffer ,buffer
+         (unwind-protect
+             (progn
+               ,@body
+               (org-mode))
+           (and (buffer-name ,buffer)
+                (switch-to-buffer ,buffer)
+                (org-table-map-tables 'org-table-align)
+                (goto-char (point-min))))))))
+
 (defun shrface-html-export-as-org (&optional html)
   "Export HTML to an org buffer.
 Optional argument HTML:
@@ -1687,15 +1705,9 @@ Detail uses cases can be found at test.el."
   (interactive)
   ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
   (let* ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
-         (buf (get-buffer-create "*Shrface Org Export*"))
          (str (shrface-html-convert-as-org-string html)))
-    (with-current-buffer buf
-      (erase-buffer)
-      (insert str)
-      (switch-to-buffer buf)
-      (goto-char (point-min))
-      (org-mode)
-      (org-table-map-tables 'org-table-align))))
+    (shrface--with-shrface-org-buffer shrface-title
+      (insert str))))
 
 (defun shrface-html-export-to-org (&optional html filename slient)
   "Export HTML to an org file as FILENAME.
