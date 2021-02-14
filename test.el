@@ -40,6 +40,25 @@
 ;; no html
 (shrface-html-export-as-org)
 
+
+(replace-regexp-in-string "\\(.*\\)/$" "\\1" "http://hello.com/")
+
+(shrface-fix-url "/ox-hugo/mindmap-what-raspberrypi-can-do.jpg" "https://hkvim.com/post/calibredb/" )
+(shrface-fix-url "post/calibredb/" "hkvim.com/" )
+(shrface-fix-url "post/calibredb/" "hkvim.com/a" )
+
+(shrface-fix-url "/post/calibredb/" "hkvim.com" )
+(shrface-fix-url "/post/calibredb/" "hkvim.com/" )
+(shrface-fix-url "/post/calibredb/" "hkvim.com/a" )
+
+(shrface-fix-url "/post/calibredb/" "http://hkvim.com" )
+(shrface-fix-url "/post/calibredb/" "http://hkvim.com/" )
+(shrface-fix-url "/post/calibredb/" "http://hkvim.com/a" )
+
+(shrface-fix-url "post/calibredb/" "http://hkvim.com/a" )
+(shrface-fix-url "post/calibredb/" "http://hkvim.com/" )
+(shrface-fix-url "post/calibredb/" "http://hkvim.com" )
+
 (defun request-url-as-org (url)
   "Request URL and save it as org buffer."
   (interactive "sRequest url: ")
