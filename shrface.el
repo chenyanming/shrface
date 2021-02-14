@@ -142,6 +142,9 @@ The following features are also disabled:
 (defvar shrface-title nil
   "Title of html.")
 
+(defvar shrface-base-url nil
+  "Base url of html, bound it before generating the org buffer/file.")
+
 (defvar shrface-headline-property 'shrface-headline
   "Property name to use for href.")
 
@@ -750,7 +753,15 @@ Argument DOM dom."
 
 (defun shrface-insert-org-link (url dom)
   "TODO: Insert org link based on URL and DOM."
-  (let* ((img-dom (dom-by-tag dom 'img))
+  (let* (
+         (url (if (shrface-relative-p url)
+                  (if shrface-base-url ; get the base url from external programs
+                      (if url ; url is not nil
+                          (concat shrface-base-url url)
+                        nil)
+                    url)
+                url))
+         (img-dom (dom-by-tag dom 'img))
          (img-src (or (dom-attr img-dom 'data-src) ; some sites use data-src as real img data
                       (dom-attr img-dom 'src)
                       (let ((srcset (or (dom-attr img-dom 'srcset)
@@ -765,7 +776,7 @@ Argument DOM dom."
          (img-height (dom-attr img-dom 'height)))
     (cond
      ((equal url "") (shr-generic dom))
-     ;; ((equal url nil) (shr-generic dom))
+     ((equal url nil) (shr-generic dom))
      (img-src
       (shr-ensure-newline)
       (if (not (equal (or img-alt img-title img-src) ""))
@@ -789,7 +800,6 @@ Argument DOM dom."
             (insert (format "[[%s]]" img-src)))    ; if no local images, just original img-src
         (insert (format "[[%s]]" img-src))) ; if not relative path, just orignial img-src
       (shr-ensure-newline))
-     ((shrface-relative-p url) (shr-generic dom))
      ((equal (dom-texts dom) "")
       (insert (format "[[%s]]" url)))
      ((= (length (replace-regexp-in-string "^\\s-*" "" (dom-texts dom))) 0) ;; delete heading whitespaces
