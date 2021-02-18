@@ -801,6 +801,7 @@ Argument DOM dom."
          (img-height (dom-attr img-dom 'height)))
     (cond
      ((equal url "") (shr-generic dom))
+     ((equal url nil) (shr-generic dom))
      (img-src
       (shr-ensure-newline)
       (if (not (equal (or img-alt img-title img-src) ""))
