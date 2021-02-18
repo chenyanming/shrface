@@ -1645,9 +1645,17 @@ Return either 'hide-all, 'headings-only, or 'show-all."
     ;; Remove CRLF and replace NUL with &#0; before parsing.
     (while (re-search-forward "\\(\r$\\)\\|\0" nil t)
       (replace-match (if (match-beginning 1) "" "&#0;") t t)))
-  (unless (fboundp 'eww--preprocess-html)
-    (require 'eww))
-  (eww--preprocess-html (point) (point-max))
+  ;; eww--preprocess-html
+  ;; Translate all < characters that do not look like start of tags into &lt;.
+  (save-excursion
+    (save-restriction
+      (narrow-to-region (point) (point-max))
+      (goto-char (point))
+      (let ((case-fold-search t))
+        (while (re-search-forward "<[^0-9a-z!/]" nil t)
+          (goto-char (match-beginning 0))
+          (delete-region (point) (1+ (point)))
+          (insert "&lt;")))))
   (libxml-parse-html-region (point) (point-max)))
 
 (defun shrface-html-convert-as-org-string (&optional html)
