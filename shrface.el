@@ -1720,7 +1720,7 @@ Detail uses cases can be found at test.el."
         (goto-char (point-min))
         (insert (format "#+TITLE: %s\n" (or shrface-org-title shrface-title)))
         (if shrface-request-url
-            (insert (format "#+LINK_HOME %s\n" shrface-request-url))))
+            (insert (format "#+LINK_HOME: %s\n" shrface-request-url))))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defmacro shrface--with-shrface-org-buffer (name &rest body)
