@@ -264,7 +264,7 @@ M-x shrface-toggle-bullets
 #+END_SRC
 
 Please notice: In =mu4e-view-mode=, using =shrface-toggle-bullets= will toggle
-bullets globally. It can not be fixed right now.
+bullets globally.
 
 **** Disable headline bullets globally
 If you do not like headline bullets, disable them globally by:

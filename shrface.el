@@ -958,13 +958,12 @@ Argument DOM dom."
 ;;;###autoload
 (define-minor-mode shrface-mode
   "Toggle shr minor mode.
-`shrface-mode' will disable if `shrface-toggle-bullets' is Non-nil.
 1. imenu
 2. outline-minor-mode
 3. org-indent-mode"
   :group 'shrface
   (cond
-   ((and shrface-mode (not shrface-toggle-bullets))
+   (shrface-mode
     (shrface-basic)
     (shrface-trial)
     (shrface-regexp)
