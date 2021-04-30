@@ -924,7 +924,7 @@ Argument DOM dom."
                (cl-loop for i from (1+ level) to shrface-imenu-depth
                         do (aset subs i nil)))
              (setq last-level level)))))
-     (aref subs 0))))
+     (or (aref subs 0) (aref subs 1)))))
 
 (defun shrface-level ()
   "Function of no args to compute a header's nesting level in an outline."
