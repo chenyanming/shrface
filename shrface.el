@@ -966,10 +966,11 @@ Argument DOM dom."
    (shrface-mode
     (shrface-basic)
     (shrface-trial)
-    (shrface-regexp)
-    (setq imenu-create-index-function #'shrface-imenu-get-tree)
-    (outline-minor-mode)
-    (org-indent-mode)
+    (unless shrface-toggle-bullets
+      (shrface-regexp)
+      (setq imenu-create-index-function #'shrface-imenu-get-tree)
+      (outline-minor-mode)
+      (org-indent-mode))
     (run-hooks 'shrface-mode-hook))
    (t
     (shrface-resume)
