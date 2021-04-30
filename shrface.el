@@ -1052,7 +1052,11 @@ FIXME: If variable `mu4e-view-mode' is t, bullets will disable/enable globally."
              (message "shrface bullets disabled globally.")
            (message "shrface bullets enabled globally."))
          (when (fboundp 'mu4e-view-refresh)
-           (mu4e-view-refresh)))))
+           (mu4e-view-refresh)))
+        (t
+         (if (setq shrface-toggle-bullets (if (eq shrface-toggle-bullets nil) t nil))
+             (message "shrface bullets disabled globally.")
+           (message "shrface bullets enabled globally.")))))
 
 ;;; shrface-analysis
 ;; `shrface-links'
@@ -1328,8 +1332,8 @@ It will be used in ivy counsel."
                                  ;;  (if (fboundp 'all-the-icons-icon-for-url)
                                  ;;      (all-the-icons-icon-for-url url :height 1.1)
                                  ;;    ""))
-                                 (propertize title 'face 'shrface-links-title-face)
-                                 (propertize url 'face 'shrface-links-url-face)) beg end)))
+                                 (propertize (or title "") 'face 'shrface-links-title-face)
+                                 (propertize (or url "") 'face 'shrface-links-url-face)) beg end)))
                     (shrface-href-collect-all-ordered))))
 
 (defun shrface-links-counsel ()
