@@ -291,26 +291,16 @@ You can configure your favorite item bullet for shrface
 
 You can set it with:
 #+BEGIN_SRC emacs-lisp
-(setq shrface-item-bullet "➤")
+(setq shrface-item-bullet "-")
 #+END_SRC
 
 PS: Only one type of item bullet is supported, prettified by
 =shrface-item-bullet-face=
 
 *** Paragraph indentation and fill column
-You can configure the *paragraph* indentation (obsolete, default is 0, because the
-indentation is managed by =org-indent-mode= started from version 1.6, but you can
-still use it for more indentation spaces) and fill column for better reading
-experience. These two settings is useful when you read =epub= files that have lots
-of paragraphs, like novels.
+Both ~shrface-paragraph-indentation~ and ~shrface-paragraph-fill-column~ are obsolete.
 
-You can set them with:
-#+BEGIN_SRC emacs-lisp
-(setq shrface-paragraph-indentation 0)
-(setq shrface-paragraph-fill-column 120)
-#+END_SRC
-
-PS: The default setting is 0 and 120
+Pleas use ~org-indent-mode~ to control the indentation, and ~shr-width~ to adjust the text width (fill-column).
 
 *** Versatile URL
 You can enable versatile URL faces support simply by:

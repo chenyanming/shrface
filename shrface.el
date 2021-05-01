@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.6.3
+;; Version: 2.6.4
 ;; Package-Requires: ((emacs "25.1") (org "9.0") (language-detection "0.1.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -94,17 +94,15 @@
   :group 'shrface
   :type '(repeat (string :tag "Bullet character")))
 
-(defcustom shrface-paragraph-indentation 0
-  "Indentation for paragraph."
-  :group 'shrface
-  :type 'integer)
+(define-obsolete-variable-alias 'shrface-paragraph-indentation
+  'shr-indentation "shrface 2.6.4"
+  "Please use `shr-indentation' or `org-indent-mode' to control
+  the indentation.")
 
-(defcustom  shrface-paragraph-fill-column 120
-  "Fill columns for paragraph."
-  :group 'shrface
-  :type 'integer)
+(define-obsolete-variable-alias 'shrface-paragraph-fill-column
+  'shr-width "shrface 2.6.4")
 
-(defcustom shrface-item-bullet "➤"
+(defcustom shrface-item-bullet "-"
   "Bullet used for unordered lists."
   :group 'shrface
   :type 'character)
@@ -647,15 +645,9 @@ Argument DOM dom."
         (let ((url (dom-attr dom 'href)))
           (shrface-insert-org-link url dom))
         (shr-ensure-paragraph))
-    (setq shr-indentation shrface-paragraph-indentation)
-    (setq-local fill-column shrface-paragraph-fill-column)
     (shr-ensure-paragraph)
-    (let (start end)
-      (setq start (point))
-      (shr-generic dom)
-      (setq end (point))
-      (fill-region start end nil nil nil)
-      (shr-ensure-paragraph))))
+    (shr-generic dom)
+    (shr-ensure-paragraph)))
 
 (defun shrface-tag-em (dom)
   "Fontize tag em.
@@ -868,7 +860,7 @@ Argument DOM dom."
       (let* ((bullet
               (if (numberp shr-list-mode)
                   (prog1
-                      (format "%d " shr-list-mode)
+                      (format "%d. " shr-list-mode)
                     (setq shr-list-mode (1+ shr-list-mode)))
                 (car shr-internal-bullet)))
              (width (if (numberp shr-list-mode)
