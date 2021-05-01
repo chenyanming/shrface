@@ -100,7 +100,9 @@
   the indentation.")
 
 (define-obsolete-variable-alias 'shrface-paragraph-fill-column
-  'shr-width "shrface 2.6.4")
+  'shr-width "shrface 2.6.4"
+  "Please use `nov-text-width' for `nov-mode'. For other modes,
+  please use `shr-width.'")
 
 (defcustom shrface-item-bullet '?–'
   "Bullet used for unordered lists."
