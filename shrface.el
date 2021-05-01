@@ -102,7 +102,7 @@
 (define-obsolete-variable-alias 'shrface-paragraph-fill-column
   'shr-width "shrface 2.6.4")
 
-(defcustom shrface-item-bullet "-"
+(defcustom shrface-item-bullet '?–'
   "Bullet used for unordered lists."
   :group 'shrface
   :type 'character)
@@ -523,7 +523,7 @@ Argument DOM dom."
 
 (defun shrface-shr-item-bullet ()
   "Build a `shr-bullet' based on `shrface-item-bullet'."
-  (setq shr-bullet (concat shrface-item-bullet " ")))
+  (setq shr-bullet (concat (char-to-string shrface-item-bullet) " ")))
 
 (defun shrface-shr-h1 (dom &rest types)
   "Insert the Fontized tag h1.
