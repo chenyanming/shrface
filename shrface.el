@@ -348,7 +348,7 @@ NON-nil"
 
 ;;;###autoload
 (defun shrface-shr-fontize-dom (dom props face)
-  "Fontize the sub Optional argument TYPES  DOM."
+  "Fontize the sub Optional argument DOM PROPS and FACE."
   (let (start end) ;; remember start of inserted region
     (setq start (point))
     (shr-generic dom) ;; inserts the contents of the tag
@@ -528,7 +528,8 @@ Argument DOM dom."
 (defun shrface-shr-h1 (dom props face)
   "Insert the Fontized tag h1.
 Argument DOM dom.
-Optional argument TYPES face attributes."
+Argument PROPS text properties.
+Argument FACE face."
   (shr-ensure-paragraph)
   (if shrface-org
       (progn
@@ -543,7 +544,8 @@ Optional argument TYPES face attributes."
 (defun shrface-shr-h2 (dom props face)
   "Insert the Fontized tag h2.
 Argument DOM dom.
-Optional argument props face face attributes."
+Argument PROPS text properties.
+Argument FACE face."
   (shr-ensure-paragraph)
   (if shrface-org
       (progn
@@ -558,7 +560,8 @@ Optional argument props face face attributes."
 (defun shrface-shr-h3 (dom props face)
   "Insert the Fontized tag h3.
 Argument DOM dom.
-Optional argument TYPES face attributes."
+Argument PROPS text properties.
+Argument FACE face."
   (shr-ensure-paragraph)
   (if shrface-org
       (progn
@@ -573,7 +576,8 @@ Optional argument TYPES face attributes."
 (defun shrface-shr-h4 (dom props face)
   "Insert the Fontized tag h4.
 Argument DOM dom.
-Optional argument TYPES face attributes."
+Argument PROPS text properties.
+Argument FACE face."
   (shr-ensure-paragraph)
   (if shrface-org
       (progn
@@ -589,7 +593,8 @@ Optional argument TYPES face attributes."
 (defun shrface-shr-h5 (dom props face)
   "Insert the Fontized tag h5.
 Argument DOM dom.
-Optional argument TYPES face attributes."
+Argument PROPS text properties.
+Argument FACE face."
   (shr-ensure-paragraph)
   (if shrface-org
       (progn
@@ -603,8 +608,9 @@ Optional argument TYPES face attributes."
 
 (defun shrface-shr-h6 (dom props face)
   "Insert the Fontized tag h6.
-Argument DOM .
-Optional argument TYPES face attributes."
+Argument DOM dom.
+Argument PROPS text properties.
+Argument FACE face."
   (shr-ensure-paragraph)
   (if shrface-org
       (progn
@@ -1740,28 +1746,41 @@ on `shrface-org-mode' for that buffer, eval BODY and then switch to it."
 (defun shrface-html-export-as-org (&optional html)
   "Export HTML to an org buffer.
 Optional argument HTML:
-1. If HTML is a valid file, will convert the HTML file to buffer *Shrface Org Export*.
-2. If HTML is a string, will convert the HTML string to buffer *Shrface Org Export*.
+1. If HTML is a valid file, will convert the HTML file to buffer
+*Shrface Org Export*.
+2. If HTML is a string, will convert the HTML string to buffer
+*Shrface Org Export*.
 Detail uses cases can be found at test.el."
   (interactive)
   ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
   (let* ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
          (str (shrface-html-convert-as-org-string html)))
     (shrface--with-shrface-org-buffer shrface-title
-      (insert str))))
+                                      (insert str))))
 
 (defun shrface-html-export-to-org (&optional html filename slient)
   "Export HTML to an org file as FILENAME.
 Optional argument HTML The html file name/string
-1. If HTML is a valid file, will convert the HTML file to file specified by FILENAME.
-2. If HTML is a string, will convert the HTML string to file specified by FILENAME.
-3. If HTML is Nil, will try to select the current html buffer as input.
-   if current buffer is not html, simply select the current `buffer-string'.
+
+1. If HTML is a valid file, will convert the HTML file to file
+specified by FILENAME.
+
+2. If HTML is a string, will convert the HTML string to file
+specified by FILENAME.
+
+3. If HTML is Nil, will try to select the current html buffer as
+   input. if current buffer is not html, simply select the
+   current `buffer-string'.
+
 Optional argument FILENAME The org file name.
 1. If FILENAME is provided, save as FILENAME.
-2. If FILENAME is nil, save as a org file with same file name base as HTML, under same directory as HTML.
-Optional argument SLIENT Non-Nil to export sliently. Set Nil will open the exported org file after exporting.
-Detail uses cases can be found at test.el."
+
+2. If FILENAME is nil, save as a org file with same file name
+base as HTML, under same directory as HTML.
+
+Optional argument SLIENT Non-Nil to export sliently. Set Nil will
+open the exported org file after exporting. Detail uses cases can
+be found at test.el."
   (interactive)
   ;; (image-file-name-regexps "\\(.*svg.*\\)\\|\\(.*jpg.*\\)\\|\\(.*png.*\\)")
   (let* ((image-file-name-regexps ".*") ; Any files can be treated as images, since internet images may have no extenstion
