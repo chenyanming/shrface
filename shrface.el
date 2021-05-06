@@ -347,45 +347,43 @@ NON-nil"
 ;;; Utility
 
 ;;;###autoload
-(defsubst shrface-shr-generic (dom)
-  "TODO: Improved shr-generic: fontize the sub DOM."
-  (dolist (sub (dom-children dom))
-    (cond ((stringp sub) (shr-insert sub)) ; insert the string dom
-          ((not (equal "" (dom-text (dom-by-tag sub 'code))))
-           (shrface-shr-fontize-dom-child sub '(comment t face shrface-code))) ; insert the fontized <code> dom
-          (t (shr-descend sub)))))      ;insert other sub dom
-
-;;;###autoload
-(defun shrface-shr-fontize-dom (dom &rest types)
+(defun shrface-shr-fontize-dom (dom props face)
   "Fontize the sub Optional argument TYPES  DOM."
-  (let ((start (point))) ;; remember start of inserted region
+  (let (start end) ;; remember start of inserted region
+    (setq start (point))
     (shr-generic dom) ;; inserts the contents of the tag
-    (dolist (type types)
-      (shrface-shr-add-font start (point) type)) ;; puts text properties of TYPES on the inserted contents
-    ))
+    (setq end (point))
+    (shrface-shr-add-props start end props)
+    (shrface-shr-add-face start end face))) ;; puts text properties of TYPES on the inserted contents
 
 ;;;###autoload
-(defun shrface-shr-fontize-dom-child (dom &rest types)
-  "TODO: fontize the sub DOM.
-Optional argument TYPES face attributes."
-  (let ((start (point))) ;; remember start of inserted region
-    (shr-descend dom) ;; inserts the contents of the tag
-    (dolist (type types)
-      (shrface-shr-add-font start (point) type)) ;; puts text properties of TYPES on the inserted contents
-    ))
-
-;;;###autoload
-(defun shrface-shr-add-font (start end type)
+(defun shrface-shr-add-props (start end props)
   "Fontize the string.
 Argument START start point.
 Argument END end point.
-Argument TYPE face attributes."
+Argument PROPS text properties."
   (save-excursion
     (goto-char start)
     (while (< (point) end)
       (when (bolp)
         (skip-chars-forward " "))
-      (add-text-properties (point) (min (line-end-position) end) type)
+      (add-text-properties (point) (min (line-end-position) end) props)
+      (if (< (line-end-position) end)
+          (forward-line 1)
+        (goto-char end)))))
+
+;;;###autoload
+(defun shrface-shr-add-face (start end face)
+  "Fontize the string.
+Argument START start point.
+Argument END end point.
+Argument FACE face."
+  (save-excursion
+    (goto-char start)
+    (while (< (point) end)
+      (when (bolp)
+        (skip-chars-forward " "))
+      (add-face-text-property (point) (min (line-end-position) end) face)
       (if (< (line-end-position) end)
           (forward-line 1)
         (goto-char end)))))
@@ -491,43 +489,43 @@ Argument DOM The DOM."
   "Fontize tag h1.
 Argument DOM dom."
   (setq-local shrface-headline-number (1+ shrface-headline-number))
-  (shrface-shr-h1 dom `(shrface-headline "shrface-h1" ,shrface-headline-number-property ,shrface-headline-number face shrface-h1-face)))
+  (shrface-shr-h1 dom `(shrface-headline "shrface-h1" ,shrface-headline-number-property ,shrface-headline-number) 'shrface-h1-face))
 
 (defun shrface-tag-h2 (dom)
   "Fontize tag h2.
 Argument DOM dom."
   (setq-local shrface-headline-number (1+ shrface-headline-number))
-  (shrface-shr-h2 dom `(shrface-headline "shrface-h2" ,shrface-headline-number-property ,shrface-headline-number face shrface-h2-face)))
+  (shrface-shr-h2 dom `(shrface-headline "shrface-h2" ,shrface-headline-number-property ,shrface-headline-number) 'shrface-h2-face))
 
 (defun shrface-tag-h3 (dom)
   "Fontize tag h3.
 Argument DOM dom."
   (setq-local shrface-headline-number (1+ shrface-headline-number))
-  (shrface-shr-h3 dom `(shrface-headline "shrface-h3" ,shrface-headline-number-property ,shrface-headline-number face shrface-h3-face)))
+  (shrface-shr-h3 dom `(shrface-headline "shrface-h3" ,shrface-headline-number-property ,shrface-headline-number) 'shrface-h3-face))
 
 (defun shrface-tag-h4 (dom)
   "Fontize tag h4.
 Argument DOM dom."
   (setq-local shrface-headline-number (1+ shrface-headline-number))
-  (shrface-shr-h4 dom `(shrface-headline "shrface-h4" ,shrface-headline-number-property ,shrface-headline-number face shrface-h4-face)))
+  (shrface-shr-h4 dom `(shrface-headline "shrface-h4" ,shrface-headline-number-property ,shrface-headline-number) 'shrface-h4-face))
 
 (defun shrface-tag-h5 (dom)
   "Fontize tag h5.
 Argument DOM dom."
   (setq-local shrface-headline-number (1+ shrface-headline-number))
-  (shrface-shr-h5 dom `(shrface-headline "shrface-h5" ,shrface-headline-number-property ,shrface-headline-number face shrface-h5-face)))
+  (shrface-shr-h5 dom `(shrface-headline "shrface-h5" ,shrface-headline-number-property ,shrface-headline-number) 'shrface-h5-face))
 
 (defun shrface-tag-h6 (dom)
   "Fontize tag h6.
 Argument DOM dom."
   (setq-local shrface-headline-number (1+ shrface-headline-number))
-  (shrface-shr-h6 dom `(shrface-headline "shrface-h6" ,shrface-headline-number-property ,shrface-headline-number face shrface-h6-face)))
+  (shrface-shr-h6 dom `(shrface-headline "shrface-h6" ,shrface-headline-number-property ,shrface-headline-number) 'shrface-h6-face))
 
 (defun shrface-shr-item-bullet ()
   "Build a `shr-bullet' based on `shrface-item-bullet'."
   (setq shr-bullet (concat (char-to-string shrface-item-bullet) " ")))
 
-(defun shrface-shr-h1 (dom &rest types)
+(defun shrface-shr-h1 (dom props face)
   "Insert the Fontized tag h1.
 Argument DOM dom.
 Optional argument TYPES face attributes."
@@ -539,13 +537,13 @@ Optional argument TYPES face attributes."
           (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat (shrface-bullets-level-string 1) " ") 'face 'shrface-h1-face 'shrface-bullet "shrface-h1-bullet")))
-    (apply #'shrface-shr-fontize-dom dom types))
+    (shrface-shr-fontize-dom dom props face))
   (shr-ensure-paragraph))
 
-(defun shrface-shr-h2 (dom &rest types)
+(defun shrface-shr-h2 (dom props face)
   "Insert the Fontized tag h2.
 Argument DOM dom.
-Optional argument TYPES face attributes."
+Optional argument props face face attributes."
   (shr-ensure-paragraph)
   (if shrface-org
       (progn
@@ -554,10 +552,10 @@ Optional argument TYPES face attributes."
           (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat " " (shrface-bullets-level-string 2) " ") 'face 'shrface-h2-face 'shrface-bullet "shrface-h2-bullet")))
-    (apply #'shrface-shr-fontize-dom dom types))
+    (shrface-shr-fontize-dom dom props face))
   (shr-ensure-paragraph))
 
-(defun shrface-shr-h3 (dom &rest types)
+(defun shrface-shr-h3 (dom props face)
   "Insert the Fontized tag h3.
 Argument DOM dom.
 Optional argument TYPES face attributes."
@@ -569,10 +567,10 @@ Optional argument TYPES face attributes."
           (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat "  " (shrface-bullets-level-string 3) " ") 'face 'shrface-h3-face 'shrface-bullet "shrface-h3-bullet")))
-    (apply #'shrface-shr-fontize-dom dom types))
+    (shrface-shr-fontize-dom dom props face))
   (shr-ensure-paragraph))
 
-(defun shrface-shr-h4 (dom &rest types)
+(defun shrface-shr-h4 (dom props face)
   "Insert the Fontized tag h4.
 Argument DOM dom.
 Optional argument TYPES face attributes."
@@ -585,10 +583,10 @@ Optional argument TYPES face attributes."
     (unless shrface-toggle-bullets
       (insert (propertize (concat "   " (shrface-bullets-level-string 4) " ") 'face 'shrface-h4-face 'shrface-bullet "shrface-h4-bullet")))
     ;; (insert (propertize  "**** " 'face 'shrface-h4-face))
-    (apply #'shrface-shr-fontize-dom dom types))
+    (shrface-shr-fontize-dom dom props face))
   (shr-ensure-paragraph))
 
-(defun shrface-shr-h5 (dom &rest types)
+(defun shrface-shr-h5 (dom props face)
   "Insert the Fontized tag h5.
 Argument DOM dom.
 Optional argument TYPES face attributes."
@@ -600,10 +598,10 @@ Optional argument TYPES face attributes."
           (shrface-insert-org-link url dom)))
     (unless shrface-toggle-bullets
       (insert (propertize (concat "    " (shrface-bullets-level-string 5) " ") 'face 'shrface-h5-face 'shrface-bullet "shrface-h5-bullet")) )
-    (apply #'shrface-shr-fontize-dom dom types))
+    (shrface-shr-fontize-dom dom props face))
   (shr-ensure-paragraph))
 
-(defun shrface-shr-h6 (dom &rest types)
+(defun shrface-shr-h6 (dom props face)
   "Insert the Fontized tag h6.
 Argument DOM .
 Optional argument TYPES face attributes."
@@ -616,7 +614,7 @@ Optional argument TYPES face attributes."
     (unless shrface-toggle-bullets
       (insert (propertize (concat "     " (shrface-bullets-level-string 6) " ") 'face 'shrface-h6-face 'shrface-bullet "shrface-h6-bullet")))
     ;; (insert (propertize  "****** " 'face 'shrface-h6-face))
-    (apply #'shrface-shr-fontize-dom dom types))
+    (shrface-shr-fontize-dom dom props face))
   (shr-ensure-paragraph))
 
 (defun shrface-tag-code (dom)
@@ -629,13 +627,13 @@ Argument DOM dom."
         (insert "~")
         (shr-generic dom)
         (insert "~"))
-    (shrface-shr-fontize-dom dom '(comment t face shrface-code))))
+    (shrface-shr-fontize-dom dom '(comment t) 'shrface-code)))
 
 (defun shrface-tag-figure (dom)
   "Fontize tag figure.
 Argument DOM dom."
   (shr-ensure-newline)
-  (shrface-shr-fontize-dom dom '(comment t face shrface-figure))
+  (shrface-shr-fontize-dom dom '(comment t) 'shrface-figure)
   (shr-ensure-newline))
 
 (defun shrface-tag-p (dom)
@@ -659,7 +657,7 @@ Argument DOM dom."
         (insert "/")
         (shr-generic dom)
         (insert "/"))
-      (shrface-shr-fontize-dom dom '(comment t face shrface-verbatim))))
+    (shrface-shr-fontize-dom dom '(comment t) 'shrface-verbatim)))
 
 (defun shrface-tag-strong (dom)
   "Fontize tag strong.
@@ -885,7 +883,7 @@ Argument DOM dom."
   "Fontize tag dt.
 Argument DOM dom."
   (shr-ensure-newline)
-  (shrface-shr-fontize-dom dom '(comment t face shrface-description-list-term-face))
+  (shrface-shr-fontize-dom dom '(comment t) 'shrface-description-list-term-face)
   (shr-ensure-newline))
 
 ;;;###autoload
