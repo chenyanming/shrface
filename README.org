@@ -534,51 +534,38 @@ If you want to add indentation, background color, =#+BEGIN_SRC lang=, and =#+END
 (require 'shr-tag-pre-highlight)
 (add-to-list 'shr-external-rendering-functions '(pre . shrface-shr-tag-pre-highlight))
 (defun shrface-shr-tag-pre-highlight (pre)
-  "Highlighting code in PRE."
-  (let* ((shr-folding-mode 'none)
-         (shr-current-font 'default)
-         (code (with-temp-buffer
-                 (shr-generic pre)
-                 (setq-local fill-column 120)
-                 (indent-rigidly (point-min) (point-max) 2)
-                 (if (eq "" (dom-texts pre))
-                     nil
-                   (progn
-                     (setq-local fill-column shrface-paragraph-fill-column)
-                     (indent-rigidly (point-min) (point-max) shrface-paragraph-indentation)))
-                 (buffer-string)))
-         (lang (or (shr-tag-pre-highlight-guess-language-attr pre)
-                   (let ((sym (language-detection-string code)))
-                     (and sym (symbol-name sym)))))
-         (mode (and lang
-                    (shr-tag-pre-highlight--get-lang-mode lang))))
-    (shr-ensure-newline)
-    (insert (make-string shrface-paragraph-indentation ?\ )) ; make indent string
-    ;; (insert (propertize (concat "#+BEGIN_SRC " lang) 'face 'org-block-begin-line))
-    (shr-ensure-newline)
-    (setq start (point))
-    (insert
-     (or (and (fboundp mode)
-              (with-demoted-errors "Error while fontifying: %S"
-                (shrface-tag-pre-highlight-fontify code mode)
-                ))
-         code))
-    (shr-ensure-newline)
-    (setq end (point))
-    (insert (make-string shrface-paragraph-indentation ?\ )) ; make indent string
-    ;; (insert (propertize "#+END_SRC" 'face 'org-block-end-line ) )
-    (let* ((beg start)
-           (xx (make-overlay beg end)))
-      (overlay-put xx 'face '(:background "#292b2e" :height 150)))
-    (shr-ensure-newline)
-    (insert "\n")))
+    "Highlighting code in PRE."
+    (let* ((shr-folding-mode 'none)
+           (shr-current-font 'default)
+           (code (with-temp-buffer
+                   (shr-generic pre)
+                   ;; (indent-rigidly (point-min) (point-max) 2)
+                   (buffer-string)))
+           (lang (or (shr-tag-pre-highlight-guess-language-attr pre)
+                     (let ((sym (language-detection-string code)))
+                       (and sym (symbol-name sym)))))
+           (mode (and lang
+                      (shr-tag-pre-highlight--get-lang-mode lang))))
+      (shr-ensure-newline)
+      (shr-ensure-newline)
+      (setq start (point))
+      (insert
+       (propertize (concat "#+BEGIN_SRC " lang "\n") 'face 'org-block-begin-line)
+       (or (and (fboundp mode)
+                (with-demoted-errors "Error while fontifying: %S"
+                  (shr-tag-pre-highlight-fontify code mode)))
+           code)
+       (propertize "#+END_SRC" 'face 'org-block-end-line ))
+      (shr-ensure-newline)
+      (setq end (point))
+      (if light
+          (add-face-text-property start end '(:background "#D8DEE9" :extend t))
+        (add-face-text-property start end '(:background "#292b2e" :extend t)))
+      (shr-ensure-newline)
+      (insert "\n")))
 #+END_SRC
 
-Sometimes a wrong language is detected, but it is still great for highlight, even just for eye pleasing. If you found the wrong detection is annoying, delete =lang= just like below statement:
-
-#+BEGIN_SRC emacs-lisp
-(insert (propertize (concat "#+BEGIN_SRC" ) 'face 'org-block-begin-line))
-#+END_SRC
+Sometimes a wrong language is detected, but it is still great for highlight, even just for eye pleasing. 
 
 **** Screenshots when both enable =shrface= and the code highlights
 #+attr_org: :width 600px
