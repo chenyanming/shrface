@@ -1379,7 +1379,7 @@ jump around the list."
     (if (fboundp 'helm-comp-read)
         (progn
           (setq result (helm-comp-read
-                      "shrface-headline: " (shrface-links-selectable-list)
+                      "shrface-links: " (shrface-links-selectable-list)
                       :persistent-action
                       (lambda (candidate)
                         (goto-char (nth 0 candidate))

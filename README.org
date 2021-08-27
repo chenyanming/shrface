@@ -280,7 +280,7 @@ Please notice, the following features are also disabled:
 However, the following features are still be able to use:
 1. function =shrface-links=
 2. function =shrface-links-counsel=
-3. function =shrface-headlines-counsel=
+3. function =shrface-headline-counsel=
 4. function =shrface-previous-headline=
 5. function =shrface-next-headline=
 6. function =shrface-links-helm=
