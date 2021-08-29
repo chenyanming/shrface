@@ -129,8 +129,8 @@ You can to call =shrface-default-keybindings= to enable the recommended keybindi
   (define-key shrface-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key shrface-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key shrface-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key shrface-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key shrface-mode-map (kbd "M-h") 'shrface-headline-counsel))
+  (define-key shrface-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm or 'shrface-links-consult
+  (define-key shrface-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm or 'shrface-headline-consult
 #+end_src
 
 Since the keybindings may conflict with other modes, such as =nov-mode-map=, =eww-mode-map=, =mu4e-mode-map=. If you want to enable shrface's keybindings on these modes, you have to bind the functions to those maps as well.
@@ -143,8 +143,8 @@ Here is the keybinding example:
   (define-key nov-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key nov-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key nov-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key nov-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key nov-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+  (define-key nov-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm or 'shrface-links-consult
+  (define-key nov-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm or 'shrface-headline-consult
 
 (with-eval-after-load 'eww
   (define-key eww-mode-map (kbd "<tab>") 'shrface-outline-cycle)
@@ -152,8 +152,8 @@ Here is the keybinding example:
   (define-key eww-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key eww-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key eww-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key eww-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key eww-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+  (define-key eww-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm or 'shrface-links-consult
+  (define-key eww-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm or 'shrface-headline-consult
 
 (with-eval-after-load 'mu4e
   (define-key mu4e-view-mode-map (kbd "<tab>") 'shrface-outline-cycle)
@@ -161,8 +161,8 @@ Here is the keybinding example:
   (define-key mu4e-view-mode-map (kbd "C-t") 'shrface-toggle-bullets)
   (define-key mu4e-view-mode-map (kbd "C-j") 'shrface-next-headline)
   (define-key mu4e-view-mode-map (kbd "C-k") 'shrface-previous-headline)
-  (define-key mu4e-view-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm
-  (define-key mu4e-view-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm
+  (define-key mu4e-view-mode-map (kbd "M-l") 'shrface-links-counsel) ; or 'shrface-links-helm or 'shrface-links-consult
+  (define-key mu4e-view-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm or 'shrface-headline-consult
 #+END_SRC
 
 In additional to the keys provided by ~shrface-mode~, the following features should also work, you can test and find which fits your requirement:
@@ -236,6 +236,13 @@ List all headlines with =helm=.
 - =TAB= to preview the headline
 - =RET= to goto the headline
 
+*** shrface-links-consult
+List all links with =consult=.
+
+*** shrface-headline-consult
+List all headlines with =consult=.
+
+
 *** shrface-next-headline, shrface-previous-headline
 These two headline functions are designed to replace =outline-next-headline= and
 =outline-previous-headline=. They scan the headline number text properties and
@@ -280,11 +287,13 @@ Please notice, the following features are also disabled:
 However, the following features are still be able to use:
 1. function =shrface-links=
 2. function =shrface-links-counsel=
-3. function =shrface-headlines-counsel=
+3. function =shrface-headline-counsel=
 4. function =shrface-previous-headline=
 5. function =shrface-next-headline=
 6. function =shrface-links-helm=
 7. function =shrface-headline-helm=
+8. function =shrface-links-consult=
+9. function =shrface-headline-consult=
 
 *** Item bullet
 You can configure your favorite item bullet for shrface
@@ -573,6 +582,10 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 
 
 * News/Logs
+** =TBD=
+Version ???
+- Add ~shrface-links-consult~
+- Add ~shrface-headline-consult~
 
 ** =2021-01-23=
 Version *2.6.3*:

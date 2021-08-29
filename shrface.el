@@ -63,6 +63,7 @@
   (require 'org-superstar)
   (require 'org-bullets)
   (require 'all-the-icons)
+  (require 'consult)
   (require 'ivy)
   (require 'helm)
   (require 'helm-utils))
@@ -1379,7 +1380,7 @@ jump around the list."
     (if (fboundp 'helm-comp-read)
         (progn
           (setq result (helm-comp-read
-                      "shrface-headline: " (shrface-links-selectable-list)
+                      "shrface-links: " (shrface-links-selectable-list)
                       :persistent-action
                       (lambda (candidate)
                         (goto-char (nth 0 candidate))
@@ -1387,6 +1388,23 @@ jump around the list."
                             (helm-highlight-current-line)))))
           (goto-char (nth 0 result)))
       (message "Please enable 'helm-mode' before using 'shrface-headline-helm'"))))
+
+(defun shrface-links-consult ()
+  "Use consult to present all urls in order founded in the buffer."
+  (interactive)
+  (let ((start (point)) next url)
+    ;; get the next nearest url
+    (setq next (text-property-not-all
+                (point) (point-max) shrface-href-follow-link-property nil))
+    ;; only if the next url exists
+    (if next
+        (setq url (get-text-property next shrface-href-property)))
+    (if (fboundp 'consult--read)
+        (consult--read (shrface-links-selectable-list)
+                       :prompt "shrface-links:"
+                       :category 'shrface-links-consult
+                       :sort nil)
+      (message "Please install 'consult' before using 'shrface-links-consult'"))))
 
 (defun shrface-links-counsel-set-actions ()
   "Set actions for function `shrface-links-counsel' when call \\[ivy-occur]."
@@ -1502,6 +1520,33 @@ jump around the list."
           (goto-char (car result))
           (recenter nil))
       (message "Please enable 'helm-mode' before using 'shrface-headline-helm'"))))
+
+(defun shrface-headline-consult ()
+    "Use consult to show all headlines in order founded in the buffer.
+Current headline will be the one of the candidates to initially select."
+    (interactive)
+    (let ((current (point-min)) (start (1+ (point))) point number)
+      ;; Scan from point-min to (1+ (point)) to find the current headline.
+      ;; (1+ (point)) to include under current point headline into the scan range.
+      (unless (> start (point-max))
+        (while (setq point (text-property-not-all
+                            current start shrface-headline-number-property nil))
+          (setq current (1+ point))))
+
+      (cond ((equal (point) 1) (setq number 0))
+            ((equal (point) 2) (setq number 0))
+            ((equal (point) (point-max)) (setq number 0))
+            (t
+             (ignore-errors (setq number (1- (get-text-property (1- current) shrface-headline-number-property))))))
+
+      ;; Start the consult--read
+      (setq start (point)) ; save the starting point
+      (if (fboundp 'consult--read)
+          (consult--read (shrface-headline-selectable-list)
+                         :prompt "shrface-headline:"
+                         :category 'shrface-headlines-consult
+                         :sort nil)
+        (message "Please install 'consult' before using 'shrface-headlines-consult'"))))
 
 (defun shrface-previous-headline ()
   "Jump to previous headline."
