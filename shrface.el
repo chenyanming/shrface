@@ -1403,7 +1403,10 @@ jump around the list."
         (consult--read (shrface-links-selectable-list)
                        :prompt "shrface-links:"
                        :category 'shrface-links-consult
-                       :sort nil)
+                       :sort nil
+                       :lookup (lambda(_ candidates cand)
+                                 (goto-char (nth 1 (assoc cand candidates)))
+                                 (recenter nil)))
       (message "Please install 'consult' before using 'shrface-links-consult'"))))
 
 (defun shrface-links-counsel-set-actions ()
@@ -1545,7 +1548,10 @@ Current headline will be the one of the candidates to initially select."
           (consult--read (shrface-headline-selectable-list)
                          :prompt "shrface-headline:"
                          :category 'shrface-headlines-consult
-                         :sort nil)
+                         :sort nil
+                         :lookup (lambda(_ candidates cand)
+                                   (goto-char (nth 1 (assoc cand candidates)))
+                                   (recenter nil)))
         (message "Please install 'consult' before using 'shrface-headlines-consult'"))))
 
 (defun shrface-previous-headline ()
