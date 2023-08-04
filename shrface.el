@@ -1404,7 +1404,7 @@ jump around the list."
                        :prompt "shrface-links:"
                        :category 'shrface-links-consult
                        :sort nil
-                       :lookup (lambda(_ candidates cand)
+                       :lookup (lambda(cand candidates input-string _)
                                  (goto-char (nth 1 (assoc cand candidates)))
                                  (recenter nil)))
       (message "Please install 'consult' before using 'shrface-links-consult'"))))
@@ -1549,7 +1549,7 @@ Current headline will be the one of the candidates to initially select."
                          :prompt "shrface-headline:"
                          :category 'shrface-headlines-consult
                          :sort nil
-                         :lookup (lambda(_ candidates cand)
+                         :lookup (lambda (cand candidates input-string _)
                                    (goto-char (nth 1 (assoc cand candidates)))
                                    (recenter nil)))
         (message "Please install 'consult' before using 'shrface-headlines-consult'"))))
