@@ -134,6 +134,11 @@ The following features are also disabled:
   :group 'shrface
   :type 'boolean)
 
+(defcustom shrface-ellipsis "..."
+  "The ellipsis to use in the shrface headlines."
+  :group 'shrface
+  :type 'string)
+
 (defvar shrface-org nil
   "NON-nil to render with original org features.")
 
@@ -1853,6 +1858,29 @@ be found at test.el."
         (find-file file)
         (write-file file nil)
         (goto-char (point-min))))))
+
+(defun shrface-outline-add-ellipsis-to-hidden-headers ()
+  "Add an ellipsis to headers that are hidden."
+  (save-excursion
+    ;; Remove existing overlays to avoid duplication.
+    (remove-overlays (point-min) (point-max) 'my-outline-ellipsis t)
+    (goto-char (point-min))
+    ;; Iterate over all headers.
+    (while (outline-next-heading)
+      (let* ((start (point))
+             (end (save-excursion (outline-end-of-heading) (point)))
+             (is-hidden (outline-invisible-p (line-end-position))))
+        ;; Check if the header is hidden.
+        (when is-hidden
+          ;; Create an overlay from the header's start to its end.
+          (let ((ov (make-overlay (- end 1) end)))
+            (overlay-put ov 'my-outline-ellipsis t)
+            ;; Add "..." with a space to distinguish it from actual content.
+            (overlay-put ov 'display (propertize (concat (buffer-substring (- end 1) end) shrface-ellipsis)))))))))
+
+(defun shrface-outline-visibility-changed ()
+  "Hook function to be called when outline visibility changes."
+  (shrface-outline-add-ellipsis-to-hidden-headers))
 
 (provide 'shrface)
 ;;; shrface.el ends here

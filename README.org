@@ -518,6 +518,14 @@ If you use [[https://github.com/alphapapa/org-web-tools][org-web-tools]], it is 
                   (shrface-html-export-as-org html))))))
 #+end_src
 
+*** Enable org-like ellipsis
+To enable =shrface-ellipsis= the "three-dots" after each headline when it is
+hidden just like org mode, please manually add the predefined function:
+=shrface-outline-visibility-changed= to =outline-view-change-hook=,
+#+begin_src emacs-lisp
+(add-hook 'outline-view-change-hook 'shrface-outline-visibility-changed)
+#+end_src
+
 ** (Optional) Enable source codes highlight
 You can install [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][shr-tag-pre-highlight.el]] to enable source codes highlight and
 background color.
@@ -580,12 +588,13 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 #+attr_org: :width 600px
 [[file:img/code-highlight.png]]
 
-
 * News/Logs
-** =TBD=
-Version ???
+** =2024-03-31=
+Version 2.6.4
 - Add ~shrface-links-consult~
 - Add ~shrface-headline-consult~
+- Add ~shrface-ellipsis~ and ~shrface-outline-visibility-changed~ function for
+  =outline-view-change-hook=
 
 ** =2021-01-23=
 Version *2.6.3*:
