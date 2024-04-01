@@ -37,7 +37,6 @@
 ;; - Switch/jump the headlines just like org-mode in `eww' and `nov.el' with `imenu'
 ;; - Toggle/cycle the headlines just like org-mode in `eww' and `nov.el' with `outline-minor-mode'
 ;;   and `org-cycle'/`org-shifttab'
-;; - Enable indentation just like org-mode in `eww' and `nov.el' with `org-indent-mode'
 ;; - Analysis capability:
 ;;   - Headline analysis: List all headlines with clickable texts.
 ;;   - URL analysis: List all classified URL with clickable texts.
@@ -51,7 +50,6 @@
 (require 'org-table)
 (require 'org-faces)
 (require 'outline)
-(require 'org-indent)
 (require 'compile)
 (require 'pcase)
 (require 'cl-lib)
@@ -97,8 +95,7 @@
 
 (define-obsolete-variable-alias 'shrface-paragraph-indentation
   'shr-indentation "shrface 2.6.4"
-  "Please use `shr-indentation' or `org-indent-mode' to control
-  the indentation.")
+  "Please use `shr-indentation'to control the indentation.")
 
 (define-obsolete-variable-alias 'shrface-paragraph-fill-column
   'shr-width "shrface 2.6.4"
@@ -963,8 +960,7 @@ Argument DOM dom."
 (define-minor-mode shrface-mode
   "Toggle shr minor mode.
 1. imenu
-2. outline-minor-mode
-3. org-indent-mode"
+2. outline-minor-mode"
   :group 'shrface
   (cond
    (shrface-mode
@@ -973,15 +969,13 @@ Argument DOM dom."
     (unless shrface-toggle-bullets
       (shrface-regexp)
       (setq imenu-create-index-function #'shrface-imenu-get-tree)
-      (outline-minor-mode)
-      (org-indent-mode))
+      (outline-minor-mode))
     (run-hooks 'shrface-mode-hook))
    (t
     (shrface-resume)
     (setq shr-bullet "* ")
     (setq imenu-create-index-function nil)
-    (outline-minor-mode -1)
-    (org-indent-mode -1))))
+    (outline-minor-mode -1))))
 
 (defun shrface-basic()
   "Enable the shrface faces.
@@ -1078,7 +1072,6 @@ current buffer and display the clickable result in
       (switch-to-buffer-other-window occur-buf)
       (read-only-mode)
       (outline-minor-mode)
-      (org-indent-mode)
       (goto-char (point-min)))))
 
 (defun shrface-href-collect-all ()

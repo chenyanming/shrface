@@ -29,7 +29,6 @@ buffer/file, or download/archive web pages.
 + Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
 + Toggle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
   , =org-cycle/org-shifttab=, or =shrface-outline-cycle= / =shrface-outline-cycle-buffer=.
-+ Enable indentation just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =org-indent-mode=
 + Analysis capability:
   - Headline analysis: List all headlines with clickable texts, or jump around with [[https://github.com/abo-abo/swiper][ivy]].
   - URL analysis: List all classified URL with clickable texts in a buffer, or jump around with
@@ -182,8 +181,7 @@ etc.
 ~shrface-mode~ is a minor mode that help you enable/disable the following additional features:
 1. =imenu=
 2. =outline-minior-mode=
-3. =org-indent-mode=
-4. Setup shr faces
+3. Setup shr faces
 
 Please be careful, every time you run ~shrface-mode~, faces will be enable/disable globally for
 all shr rendered buffers. Since I have not found a good way to enable/disable the faces per
@@ -309,7 +307,7 @@ PS: Only one type of item bullet is supported, prettified by
 *** Paragraph indentation and fill column
 Both ~shrface-paragraph-indentation~ and ~shrface-paragraph-fill-column~ are obsolete.
 
-Pleas use ~org-indent-mode~ to control the indentation, and ~shr-width~ to adjust the text width (fill-column).
+Pleas use =shr-indentation= to control the indentation, and ~shr-width~ to adjust the text width (fill-column).
 
 *** Versatile URL
 You can enable versatile URL faces support simply by:
@@ -589,6 +587,10 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 [[file:img/code-highlight.png]]
 
 * News/Logs
+** TBD
+- Remove =org-indent-mode= support (Because =org-indent-mode= can not work on non-org
+  mode at this moment)
+
 ** =2024-03-31=
 Version 2.6.4
 - Add ~shrface-links-consult~
