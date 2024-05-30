@@ -948,8 +948,8 @@ Argument DOM dom."
 `shrface-occur' will disable if variable `shrface-toggle-bullets' is Non-nil."
   (interactive)
   (if (not shrface-toggle-bullets)
-      (occur (shrface-outline-regexp)))
-  (message "Please set `shrface-toggle-bullets' nil to use `shrface-occur'"))
+      (occur (shrface-outline-regexp))
+    (message "Please set `shrface-toggle-bullets' nil to use `shrface-occur'")))
 
 (defun shrface-occur-flash ()
   "Flash the occurrence line."
