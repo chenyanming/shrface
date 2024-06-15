@@ -131,7 +131,7 @@ The following features are also disabled:
   :group 'shrface
   :type 'boolean)
 
-(defcustom shrface-ellipsis "..."
+(defcustom shrface-ellipsis "…"
   "The ellipsis to use in the shrface headlines."
   :group 'shrface
   :type 'string)

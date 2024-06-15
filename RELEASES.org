@@ -1,0 +1,124 @@
+#+title: Releases
+#+STARTUP: nofold
+* RELEASES
+** =2024-03-31=
+Version 2.6.4
+- Add ~shrface-links-consult~
+- Add ~shrface-headline-consult~
+- Add ~shrface-ellipsis~ and ~shrface-outline-visibility-changed~ function for
+  =outline-view-change-hook=
+
+** =2021-01-23=
+Version *2.6.3*:
+- Add ~shrface-html-export-as-org~
+- Add ~shrface-html-export-to-org~
+- Add ~shrface-tag-u~
+- Add ~shrface-tag-strong~
+
+** =2021-01-20=
+Version *2.6.2*:
+- Add keys for ~shrface-mode~.
+- Move settings to shrface-mode. So that we can use ~shrface-mode~ on other shr rendered buffers
+  via ~M-x~.
+
+** =2020-11-08=
+Version *2.6.1*:
+- Add: shrface-outline-cycle
+- Add: shrface-outline-cycle-buffer
+
+** =2020-05-07=
+Version *2.6*:
+- New Function: =shrface-headline-helm= and =shrface-links-helm=
+
+** =2020-05-02=
+Version *2.5*:
+- New Function: =shrface-headline-counsel=: better solution than =imenu= to list all
+  headlines
+- New Function: =shrface-next-headline=: better solution than
+  =outline-next-headline=, it can work without headline bullets
+- New Function: =shrface-previous-headline=: better solution than
+  =outline-previous-headline=, it can work without headline bullets
+
+** =2020-05-01=
+Version *2.4*:
+- Improved: Improve the user experience for =shrface-links-counsel=
+- New face: =shrface-figure=
+
+** =2020-04-29=
+Version *2.3*:
+- New customization: =shrface-toggle-bullets= Quick way to toggle the headline
+  bullets.
+
+** =2020-04-26=
+Version *2.2*:
+- New customization: =shrface-imenu-depth= The maximum level for Imenu access to
+  shrface headlines.
+- New Feature: =shrface-links= and =shrface-links-counsel= The first
+  =shrface-analysis= feature, to list all possible URL in a new buffer.
+
+** =2020-04-23=
+Version *2.1*:
+- New Feature:  =shrface-occur=
+- New faces:
+  - =shrface-href-http-face=
+  - =shrface-href-https-face=
+  - =shrface-href-ftp-face=
+  - =shrface-href-file-face=
+  - =shrface-href-mailto-face=
+  - =shrface-href-other-face=
+
+** =2020-04-20=
+Version *2.0*:
+- New face:  =shrface-description-list-term-face=
+
+** =2020-04-19=
+Version *1.9*:
+- New Functions: =shrface-basic= and =shrface-trail=
+
+** =2020-04-18=
+Version *1.8*:
+- New face:  =shrface-item-number-face=
+- New Minor Mode:  =shrface-mode=
+
+** =2020-04-17=
+Version *1.7*:
+- New feature:  =shrface-item-bullet=
+- New face:  =shrface-item-bullet-face=
+
+Version *1.6*:
+- New feature:  =org-indent-mode= support (Enabled by default)
+
+** =2020-04-16=
+Version *1.5*:
+- New feature: =outline minior mode= support (Enabled by default, but not the keybindings)
+
+** =2020-04-15=
+Version *1.4*:
+- New feature: =imenu= support
+
+** =2020-04-13=
+Version *1.3*:
+- New face: =shrface-code= (Experimental face, disabled by default)
+
+** =2020-04-12=
+Version *1.2*:
+- New face: =shrface-verbatim=
+
+** =2020-04-11=
+Version *1.1*:
+- Fixed bug: Wrong indentation handling make some items in paragraph disappear
+  (such as images)
+
+** =2020-04-10=
+Version *1.0*:
+- New face: =shrface-bullets-bullet-list=
+- New face: =shrface-h1-face=
+- New face: =shrface-h2-face=
+- New face: =shrface-h3-face=
+- New face: =shrface-h4-face=
+- New face: =shrface-h5-face=
+- New face: =shrface-h6-face=
+- New face: =shrface-h6-face=
+- New face: =shrface-href-face=
+- New customizable variable: =shrface-paragraph-indentation=
+- New customizable variable: =shrface-paragraph-fill-column=
