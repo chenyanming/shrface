@@ -34,7 +34,7 @@
   (if (string-equal system-type "android")
       (setq shrface-bullets-bullet-list
         '("▼"
-          "▾"
+          "▽"
           "▿"
           "▾"))
     (setq shrface-bullets-bullet-list
