@@ -10,7 +10,7 @@
 - [[#configuration][Configuration]]
 - [[#features][Features]]
 - [[#releases][Releases]]
-- [[#contributor][Contributor]]
+- [[#contributors][Contributors]]
 
 * Description
 This package extends =shr= / =eww= with org features and analysis capability. It can be used in
@@ -61,12 +61,11 @@ M-x package-install shrface
 ** My Setup
 Check [[file:config.el][config.el]] 
 
-This file is my personal configuration for ~shrface~ and I updates it frequently.
-And I configured it along with other packages. It can greatly improve your
-reading experience while also having great performance when using those
-packages.
+This file is my personal configuration for ~shrface~ configured it along with
+other packages, and I updates it frequently. It can greatly improve your reading
+experience while also having great performance when using those packages.
 
-You can use it as a reference to configure your own shrface.
+You can use it as a reference to configure your own ~shrface~.
 
 ** Keybindings Example
 #+BEGIN_SRC emacs-lisp
@@ -100,11 +99,11 @@ You can use it as a reference to configure your own shrface.
 ;; my personaly keybindings (Doom Eamcs)
 (map! :map nov-mode-map
     :after nov
-    :g "<tab>" 'shrface-outline-cycle ;; redundant, just make sure it work
-    :nie "TAB" 'shrface-outline-cycle ;; redundant, just make sure it work
-    :nie "S-<tab>" 'shrface-outline-cycle-buffer ;; redundant, just make sure it work
-    :g [backtab] 'shrface-outline-cycle-buffer ;; redundant, just make sure it work
-    :nie "<backtab>" 'shrface-outline-cycle-buffer ;; redundant, just make sure it work
+    :g "<tab>" 'shrface-outline-cycle ;; redundant, just make sure it works
+    :nie "TAB" 'shrface-outline-cycle ;; redundant, just make sure it works
+    :nie "S-<tab>" 'shrface-outline-cycle-buffer ;; redundant, just make sure it works
+    :g [backtab] 'shrface-outline-cycle-buffer ;; redundant, just make sure it works
+    :nie "<backtab>" 'shrface-outline-cycle-buffer ;; redundant, just make sure it works
     :nie "C-j" 'shrface-next-headline
     :nie "C-k" 'shrface-previous-headline)
 
@@ -113,5 +112,5 @@ You can use it as a reference to configure your own shrface.
 
 * [[file:RELEASES.org][Releases]]
 
-* Contributor
+* Contributors
 #+html: <a href = "https://github.com/chenyanming/shrface/graphs/contributors"> <img src = "https://contrib.rocks/image?repo=chenyanming/shrface"> </a>
