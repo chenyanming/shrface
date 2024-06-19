@@ -53,6 +53,7 @@
 (require 'compile)
 (require 'pcase)
 (require 'cl-lib)
+(require 'cl-macs)
 (require 'url)
 
 (ignore-errors
@@ -1716,63 +1717,67 @@ Optional argument HTML:
 1. If HTML is a valid file, will convert the HTML file to org string.
 2. If HTML is a string, will convert the HTML string to org string.
 Detail uses cases can be found at test.el."
-  (let* ((current-directory default-directory)
-         (buf (current-buffer))
-         (html (or html (if (equal (file-name-extension (or buffer-file-name "")) "html")
-                            buffer-file-name
-                          (buffer-string))))
-         (default-directory (if (file-exists-p html)
-                                (if (file-name-directory html)
-                                    (file-name-directory html)
-                                  current-directory)
-                              current-directory)))
-    (with-temp-buffer
-      (let ((shrface-org t)
-            (shr-bullet "- ")
-            (shr-table-vertical-line "|")
-            (shr-external-rendering-functions
-             '((figure . shrface-tag-figure)
-               (dt . shrface-tag-dt)
-               (li . shrface-tag-li)
-               (p . shrface-tag-p)
-               (a . shrface-tag-a)
-               (h6 . shrface-tag-h6)
-               (h5 . shrface-tag-h5)
-               (h4 . shrface-tag-h4)
-               (h3 . shrface-tag-h3)
-               (h2 . shrface-tag-h2)
-               (h1 . shrface-tag-h1)
-               (svg . shrface-tag-svg)
-               (strong . shrface-tag-strong)
-               (u . shrface-tag-u)
-               (em . shrface-tag-em)
-               (pre . shrface-tag-pre)
-               (title . shrface-tag-title)
-               (span . shrface-tag-span)
-               (img . shrface-tag-img))))
-        (cond
-         ((not html)
-          (shr-insert-document
-           (with-current-buffer buf
-             (shrface-parse-html))))
-         ((file-exists-p html)
-          (shr-insert-document
-           (with-temp-buffer
-             (insert-file-contents html)
-             (shrface-parse-html))))
-         ((stringp html)
-          (shr-insert-document
-           (with-temp-buffer
-             (insert html)
-             (shrface-parse-html))))
-         (t (shr-insert-document
+  (cl-block nil
+    (if (and html (string-empty-p html))
+        (cl-return ""))
+    (let* ((current-directory default-directory)
+           (buf (current-buffer))
+           (html (or html (if (equal (file-name-extension (or buffer-file-name "")) "html")
+                              buffer-file-name
+                            (buffer-string))))
+           (default-directory (if (file-exists-p html)
+                                  (if (file-name-directory html)
+                                      (file-name-directory html)
+                                    current-directory)
+                                current-directory)))
+      (with-temp-buffer
+        (let ((shrface-org t)
+              (shr-bullet "- ")
+              (shr-table-vertical-line "|")
+              (shr-external-rendering-functions
+               '((figure . shrface-tag-figure)
+                 (dt . shrface-tag-dt)
+                 (li . shrface-tag-li)
+                 (p . shrface-tag-p)
+                 (a . shrface-tag-a)
+                 (h6 . shrface-tag-h6)
+                 (h5 . shrface-tag-h5)
+                 (h4 . shrface-tag-h4)
+                 (h3 . shrface-tag-h3)
+                 (h2 . shrface-tag-h2)
+                 (h1 . shrface-tag-h1)
+                 (svg . shrface-tag-svg)
+                 (strong . shrface-tag-strong)
+                 (u . shrface-tag-u)
+                 (em . shrface-tag-em)
+                 (pre . shrface-tag-pre)
+                 (title . shrface-tag-title)
+                 (span . shrface-tag-span)
+                 (img . shrface-tag-img))))
+          (cond
+           ((not html)
+            (shr-insert-document
              (with-current-buffer buf
-               (shrface-parse-html)))))
-        (goto-char (point-min))
-        (insert (format "#+TITLE: %s\n" (or shrface-org-title shrface-title)))
-        (if shrface-request-url
-            (insert (format "#+LINK_HOME: %s\n" shrface-request-url))))
-      (buffer-substring-no-properties (point-min) (point-max)))))
+               (shrface-parse-html))))
+           ((file-exists-p html)
+            (shr-insert-document
+             (with-temp-buffer
+               (insert-file-contents html)
+               (shrface-parse-html))))
+           ((stringp html)
+            (shr-insert-document
+             (with-temp-buffer
+               (insert html)
+               (shrface-parse-html))))
+           (t (shr-insert-document
+               (with-current-buffer buf
+                 (shrface-parse-html)))))
+          (goto-char (point-min))
+          (if (or shrface-org-title shrface-title)
+              (insert (format "#+TITLE: %s\n" (or shrface-org-title shrface-title))) )
+          (if shrface-request-url
+              (insert (format "#+LINK_HOME: %s\n" shrface-request-url))))
+        (buffer-substring-no-properties (point-min) (point-max)))) ))
 
 (defmacro shrface--with-shrface-org-buffer (name &rest body)
   "Basic setup for a `shrface-org-mode' buffer.

@@ -20,6 +20,9 @@
 ;; convert sliently
 (shrface-html-export-to-org "test.html" "helloworld-man.org" t)
 
+
+;; html empty string
+(shrface-html-convert-as-org-string "")
 ;; html string to org string
 (shrface-html-convert-as-org-string "<h1>hello</h1>")
 ;; html file (absolute) to org string
