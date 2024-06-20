@@ -141,13 +141,15 @@ The following features are also disabled:
   "NON-nil to render with original org features.")
 
 (defvar shrface-org-title nil
-  "Title of exported org file, only used in overwriting `shrface-title'.")
+  "Title of exported org file.
+Bind it to overwrite `shrface-title'.")
 
 (defvar shrface-title nil
   "Title of html.")
 
 (defvar shrface-request-url nil
-  "Request url of html, bound it before generating the org buffer/file.")
+  "Request url of html.
+Bound it before generating the org buffer/file.")
 
 (defvar shrface-headline-property 'shrface-headline
   "Property name to use for href.")
@@ -1731,6 +1733,7 @@ Detail uses cases can be found at test.el."
                                     current-directory)
                                 current-directory)))
       (with-temp-buffer
+        (setq shrface-title nil)
         (let ((shrface-org t)
               (shr-bullet "- ")
               (shr-table-vertical-line "|")
