@@ -144,7 +144,9 @@
     ;; workaround to show annotations in eww
     (when (bound-and-true-p paw-annotation-mode)
       (paw-clear-annotation-overlay)
-      (paw-show-all-annotations) ))
+      (paw-show-all-annotations)
+      (if paw-annotation-show-unknown-words-p
+          (paw-focus-find-unknown-words))))
 
   (defun shrface-eww-advice (orig-fun &rest args)
     (require 'eww)
@@ -258,7 +260,9 @@
     ;; workaround, show annotations when document updates
     (when (bound-and-true-p paw-annotation-mode)
       (paw-clear-annotation-overlay)
-      (paw-show-all-annotations) )))
+      (paw-show-all-annotations)
+      (if paw-annotation-show-unknown-words-p
+          (paw-focus-find-unknown-words)))))
 
 (defun shrface-nov-setup ()
   (unless shrface-toggle-bullets
@@ -351,7 +355,9 @@
     ;; workaround, show annotations when document updates
     (when (bound-and-true-p paw-annotation-mode)
       (paw-clear-annotation-overlay)
-      (paw-show-all-annotations) )))
+      (paw-show-all-annotations)
+      (if paw-annotation-show-unknown-words-p
+          (paw-focus-find-unknown-words)))))
 
 (use-package mu4e
   :defer t
