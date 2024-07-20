@@ -145,8 +145,10 @@
     (when (bound-and-true-p paw-annotation-mode)
       (paw-clear-annotation-overlay)
       (paw-show-all-annotations)
+      (if paw-annotation-show-wordlists-words-p
+          (paw-focus-find-words :wordlist t))
       (if paw-annotation-show-unknown-words-p
-          (paw-focus-find-unknown-words))))
+          (paw-focus-find-words))))
 
   (defun shrface-eww-advice (orig-fun &rest args)
     (require 'eww)
@@ -261,8 +263,10 @@
     (when (bound-and-true-p paw-annotation-mode)
       (paw-clear-annotation-overlay)
       (paw-show-all-annotations)
+      (if paw-annotation-show-wordlists-words-p
+          (paw-focus-find-words :wordlist t))
       (if paw-annotation-show-unknown-words-p
-          (paw-focus-find-unknown-words)))))
+          (paw-focus-find-words)))))
 
 (defun shrface-nov-setup ()
   (unless shrface-toggle-bullets
@@ -356,8 +360,10 @@
     (when (bound-and-true-p paw-annotation-mode)
       (paw-clear-annotation-overlay)
       (paw-show-all-annotations)
+      (if paw-annotation-show-wordlists-words-p
+          (paw-focus-find-words :wordlist t))
       (if paw-annotation-show-unknown-words-p
-          (paw-focus-find-unknown-words)))))
+        (paw-focus-find-words)))))
 
 (use-package mu4e
   :defer t
