@@ -292,7 +292,7 @@
       (when (and (re-search-backward "[^ \n]" nil t)
                  (not (eobp)))
         (forward-line 1)
-        (delete-region (point) (1+ (point)))))))
+        (delete-region (point) (min (1+ (point)) (point-max)))))))
 
 (defun shrface-nov-setup ()
   (unless shrface-toggle-bullets
