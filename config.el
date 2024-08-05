@@ -224,7 +224,8 @@
   (add-hook 'nov-mode-hook #'shrface-nov-setup)
   (require 'shrface)
   (setq nov-render-html-function #'my-nov-render-html)
-  (advice-add 'my-nov-visit-relative-file :override #'nov-visit-relative-file))
+  ;; (advice-add 'my-nov-visit-relative-file :override #'nov-visit-relative-file)
+  (advice-add 'shr--remove-blank-lines-at-the-end :override #'my-shr--remove-blank-lines-at-the-end))
 
 (defun my-nov-render-html ()
   (require 'eww)
@@ -238,6 +239,7 @@
         (tab-width 8)
         (shr-external-rendering-functions
          (append '((img . nov-render-img)
+                   (svg . nov-render-svg)
                    ;; (title . nov-render-title)
                    (pre . shrface-shr-tag-pre-highlight)
                    (code . shrface-tag-code)
@@ -267,6 +269,30 @@
           (paw-focus-find-words :wordlist t))
       (if paw-annotation-show-unknown-words-p
           (paw-focus-find-words)))))
+
+(defun nov-render-svg (dom)
+  "A fix for `shr-render-svg' which will render relative image."
+  (when (and (image-type-available-p 'svg)
+             (not shr-inhibit-images)
+             (dom-attr dom 'width)
+             (dom-attr dom 'height))
+    (let ((url (dom-attr (dom-by-tag dom 'image) 'xlink:href)))
+      (if (nov-external-url-p url)
+          (funcall shr-put-image-function (list (shr-dom-to-xml dom 'utf-8)
+                                                'image/svg+xml)
+                   "SVG Image")
+        (nov-insert-image (expand-file-name (nov-urldecode url)) url)))))
+
+(defun my-shr--remove-blank-lines-at-the-end (start end)
+  "A fix for `shr--remove-blank-lines-at-the-end' which will remove image at the end of the document."
+  (save-restriction
+    (save-excursion
+      (narrow-to-region start end)
+      (goto-char end)
+      (when (and (re-search-backward "[^ \n]" nil t)
+                 (not (eobp)))
+        (forward-line 1)
+        (delete-region (point) (1+ (point)))))))
 
 (defun shrface-nov-setup ()
   (unless shrface-toggle-bullets
