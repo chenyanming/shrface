@@ -240,7 +240,7 @@
         (shr-external-rendering-functions
          (append '((img . nov-render-img)
                    (svg . nov-render-svg)
-                   ;; (title . nov-render-title)
+                   (title . nov-render-title)
                    (pre . shrface-shr-tag-pre-highlight)
                    (code . shrface-tag-code)
                    (form . eww-tag-form)
