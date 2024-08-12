@@ -239,7 +239,7 @@
         (tab-width 8)
         (shr-external-rendering-functions
          (append '((img . nov-render-img)
-                   (svg . nov-render-svg)
+                   (svg . my-nov-render-svg)
                    (title . nov-render-title)
                    (pre . shrface-shr-tag-pre-highlight)
                    (code . shrface-tag-code)
@@ -270,7 +270,7 @@
       (if paw-annotation-show-unknown-words-p
           (paw-focus-find-words)))))
 
-(defun nov-render-svg (dom)
+(defun my-nov-render-svg (dom)
   "A fix for `shr-render-svg' which will render relative image."
   (when (and (image-type-available-p 'svg)
              (not shr-inhibit-images)
