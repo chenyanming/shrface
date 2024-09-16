@@ -239,7 +239,7 @@
         (tab-width 8)
         (shr-external-rendering-functions
          (append '((img . nov-render-img)
-                   (svg . my-nov-render-svg)
+                   (svg . nov-render-svg)
                    (title . nov-render-title)
                    (pre . shrface-shr-tag-pre-highlight)
                    (code . shrface-tag-code)
@@ -269,19 +269,6 @@
           (paw-focus-find-words :wordlist t))
       (if paw-annotation-show-unknown-words-p
           (paw-focus-find-words)))))
-
-(defun my-nov-render-svg (dom)
-  "A fix for `shr-render-svg' which will render relative image."
-  (when (and (image-type-available-p 'svg)
-             (not shr-inhibit-images)
-             (dom-attr dom 'width)
-             (dom-attr dom 'height))
-    (let ((url (dom-attr (dom-by-tag dom 'image) 'xlink:href)))
-      (if (nov-external-url-p url)
-          (funcall shr-put-image-function (list (shr-dom-to-xml dom 'utf-8)
-                                                'image/svg+xml)
-                   "SVG Image")
-        (nov-insert-image (expand-file-name (nov-urldecode url)) url)))))
 
 (defun my-shr--remove-blank-lines-at-the-end (start end)
   "A fix for `shr--remove-blank-lines-at-the-end' which will remove image at the end of the document."
