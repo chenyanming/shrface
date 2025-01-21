@@ -232,10 +232,8 @@
   (let ((shrface-org nil)
         (shr-bullet (concat (char-to-string shrface-item-bullet) " "))
         (shr-table-vertical-line "|")
-        ;; make it large enough, it would not fill the column
-        ;; I uses visual-line-mode, writeroom-mode for improving the reading experience instead
-        (shr-width (if (string-equal system-type "android") 700 700))
-        (shr-indentation (if (string-equal system-type "android") 0 0)) ;; remove all unnecessary indentation
+        (shr-width 7000) ;; make it large enough, it would not fill the column (use visual-line-mode/writeroom-mode instead)
+        (shr-indentation 0) ;; remove all unnecessary indentation
         (tab-width 8)
         (shr-external-rendering-functions
          (append '((img . nov-render-img)
