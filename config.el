@@ -347,7 +347,7 @@
           (shr-bullet (concat (char-to-string shrface-item-bullet) " "))
           ;; make it large enough, it would not fill the column
           ;; I uses visual-line-mode, writeroom-mode for improving the reading experience instead
-          (shr-width (if (string-equal system-type "android") 700 700))
+          (shr-width 7000)
           (shr-indentation (if (string-equal system-type "android") 0 0))
           (shr-table-vertical-line "|")
           (shr-external-rendering-functions
