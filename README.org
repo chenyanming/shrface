@@ -14,7 +14,7 @@
 
 * Description
 This package extends =shr= / =eww= with org features and analysis capability. It can be used in
-[[https://github.com/dash-docs-el/dash-docs][dash-docs]], [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]], [[https://github.com/wasamasa/nov.el][nov.el]], [[https://github.com/djcb/mu][mu/mu4e]], [[https://github.com/chenyanming/anki.el][anki.el]], etc. It is also able to export HTML buffer to Org
+[[https://github.com/dash-docs-el/dash-docs][dash-docs]], [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]], [[https://github.com/wasamasa/nov.el][nov.el]], [[https://github.com/djcb/mu][mu/mu4e]], [[https://github.com/chenyanming/anki.el][anki.el]], [[https://github.com/skeeto/elfeed][elfeed]], [[https://github.com/chenyanming/wallabag.el][wallabag.el]], etc. It is also able to export HTML buffer to Org
 buffer/file, or download/archive web pages.
 
 #+attr_org: :width 600px
@@ -28,6 +28,8 @@ buffer/file, or download/archive web pages.
 + Read epub files with [[https://github.com/wasamasa/nov.el][nov.el]] , just like org mode.
 + Read html email with [[https://github.com/djcb/mu][mu/mu4e]] , the same reading experience just like org mode
   without formatting html to org file.
++ Read RSS with [[https://github.com/skeeto/elfeed][elfeed]], the same reading experience just like org mode.
++ Read Read It Later Articles with [[https://github.com/chenyanming/wallabag.el][wallabag.el]], the same reading experience just like org mode.
 + Switch/jump the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with =imenu=
 + Toggle/cycle the headlines just like org-mode in [[https://www.gnu.org/software/emacs/manual/html_mono/eww.html][eww]] and [[https://github.com/wasamasa/nov.el][nov.el]] with [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Outline-Mode.html][outline minor mode]]
   , =org-cycle/org-shifttab=, or =shrface-outline-cycle= / =shrface-outline-cycle-buffer=.
@@ -97,15 +99,24 @@ You can use it as a reference to configure your own ~shrface~.
   (define-key mu4e-view-mode-map (kbd "M-h") 'shrface-headline-counsel)) ; or 'shrface-headline-helm or 'shrface-headline-consult
 
 ;; my personaly keybindings (Doom Eamcs)
-(map! :map nov-mode-map
-    :after nov
-    :g "<tab>" 'shrface-outline-cycle ;; redundant, just make sure it works
-    :nie "TAB" 'shrface-outline-cycle ;; redundant, just make sure it works
-    :nie "S-<tab>" 'shrface-outline-cycle-buffer ;; redundant, just make sure it works
-    :g [backtab] 'shrface-outline-cycle-buffer ;; redundant, just make sure it works
-    :nie "<backtab>" 'shrface-outline-cycle-buffer ;; redundant, just make sure it works
-    :nie "C-j" 'shrface-next-headline
-    :nie "C-k" 'shrface-previous-headline)
+(map! :map (shrface-mode-map wallabag-entry-mode-map nov-mode-map eww-mode-map mu4e-view-mode-map elfeed-show-mode-map)
+      :n "TAB" 'shrface-outline-cycle
+      :n "<tab>" 'shrface-outline-cycle
+      :n "<backtab>" 'shrface-outline-cycle-buffer
+      :localleader
+      "k" 'shrface-previous-headline
+      "j" 'shrface-next-headline
+      "l" 'shrface-links-consult
+      "i" 'imenu-list
+      "h" 'shrface-headline-consult
+      "o" 'shrface-occur
+      "b" 'shrface-toggle-bullets
+      ;; if you use paw.el, you can add some paw functions as well
+      ;"a" 'paw-show-all-annotations
+      ;"r" 'paw-clear-annotation-overlay
+      ;"c" 'paw-add-annotation
+      ;"," 'paw-list-annotations
+)
 
 #+END_SRC
 * [[file:FEATURES.org][Features]] 

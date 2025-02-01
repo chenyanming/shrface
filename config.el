@@ -404,3 +404,58 @@
           (shrface-href-versatile t)
           (shr-use-fonts nil))
       (apply orig-fun args))))
+
+(use-package elfeed
+  :defer t
+  :config
+  (add-hook 'elfeed-show-mode-hook #'org-indent-mode)
+  (add-hook 'elfeed-show-mode-hook #'eldoc-mode)
+  (add-hook 'elfeed-show-mode-hook #'eldoc-box-hover-mode)
+  (add-hook 'elfeed-show-mode-hook #'shrface-wallabag-setup)
+
+  (advice-add 'elfeed-insert-html :around #'shrface-elfeed-advice)
+
+  (require 'shrface)
+
+  (defun shrface-wallabag-setup ()
+    (unless shrface-toggle-bullets
+      (shrface-regexp)
+      (setq-local imenu-create-index-function #'shrface-imenu-get-tree))
+    (if (string-equal system-type "android")
+        (setq-local touch-screen-enable-hscroll nil))
+    ;; (add-function :before-until (local 'eldoc-documentation-function) #'paw-get-eldoc-note)
+    )
+  (defun shrface-elfeed-advice (orig-fun &rest args)
+    (require 'eww)
+    (let ((shrface-org nil)
+          (shr-bullet (concat (char-to-string shrface-item-bullet) " "))
+          ;; make it large enough, it would not fill the column
+          ;; I uses visual-line-mode, writeroom-mode for improving the reading experience instead
+          (shr-width 7000)
+          (shr-indentation 0)
+          (shr-table-vertical-line "|")
+          (shr-external-rendering-functions
+           (append '((title . eww-tag-title)
+                     (form . eww-tag-form)
+                     (input . eww-tag-input)
+                     (button . eww-form-submit)
+                     (textarea . eww-tag-textarea)
+                     (select . eww-tag-select)
+                     (link . eww-tag-link)
+                     (meta . eww-tag-meta)
+                     ;; (a . eww-tag-a)
+                     (code . shrface-tag-code)
+                     (pre . shrface-shr-tag-pre-highlight))
+                   shrface-supported-faces-alist))
+          (shrface-toggle-bullets nil)
+          (shrface-href-versatile t)
+          (shr-use-fonts nil))
+      (apply orig-fun args)
+      (with-current-buffer "*elfeed-entry*"
+        (when (bound-and-true-p paw-annotation-mode)
+          (paw-clear-annotation-overlay)
+          (paw-show-all-annotations)
+          (if paw-annotation-show-wordlists-words-p
+              (paw-focus-find-words :wordlist t))
+          (if paw-annotation-show-unknown-words-p
+              (paw-focus-find-words))) ))))
