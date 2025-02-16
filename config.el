@@ -108,7 +108,6 @@
           (shr-bullet (concat (char-to-string shrface-item-bullet) " "))
           (shr-width 60)
           (shr-indentation 3)
-          (shr-hr-line "") ;; remove horizontal line so that it won't fill out the whole page
           (shr-table-vertical-line "|")
           (shr-external-rendering-functions
            (append '((title . eww-tag-title)
@@ -158,7 +157,6 @@
           (shr-table-vertical-line "|")
           (shr-width 65)
           (shr-indentation 0)
-          (shr-hr-line "") ;; remove horizontal line so that it won't fill out the whole page
           (shr-external-rendering-functions
            (append '((title . eww-tag-title)
                      (form . eww-tag-form)
@@ -201,7 +199,6 @@
           (shr-table-vertical-line "")
           (shr-width 90)
           (shr-indentation 3)
-          (shr-hr-line "") ;; remove horizontal line so that it won't fill out the whole page
           (anki-shr-rendering-functions
            (append '((img . anki-render-img)
                      (pre . shrface-shr-tag-pre-highlight)
@@ -237,7 +234,6 @@
         (shr-table-vertical-line "|")
         (shr-width 7000) ;; make it large enough, it would not fill the column (use visual-line-mode/writeroom-mode instead)
         (shr-indentation 0) ;; remove all unnecessary indentation
-        (shr-hr-line "") ;; remove horizontal line so that it won't fill out the whole page
         (tab-width 8)
         (shr-external-rendering-functions
          (append '((img . nov-render-img)
@@ -353,7 +349,6 @@
           ;; I uses visual-line-mode, writeroom-mode for improving the reading experience instead
           (shr-width 7000)
           (shr-indentation (if (string-equal system-type "android") 0 0))
-          (shr-hr-line "") ;; remove horizontal line so that it won't fill out the whole page
           (shr-table-vertical-line "|")
           (shr-external-rendering-functions
            (append '((title . eww-tag-title)
@@ -392,7 +387,6 @@
           (shr-table-vertical-line "")
           (shr-width 90)
           (shr-indentation 3)
-          (shr-hr-line "") ;; remove horizontal line so that it won't fill out the whole page
           (shr-external-rendering-functions
            (append '((title . eww-tag-title)
                      (form . eww-tag-form)
@@ -439,7 +433,6 @@
           ;; I uses visual-line-mode, writeroom-mode for improving the reading experience instead
           (shr-width 7000)
           (shr-indentation 0)
-          (shr-hr-line "") ;; remove horizontal line so that it won't fill out the whole page
           (shr-table-vertical-line "|")
           (shr-external-rendering-functions
            (append '((title . eww-tag-title)

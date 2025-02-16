@@ -137,6 +137,15 @@ The following features are also disabled:
   :group 'shrface
   :type 'string)
 
+(defcustom shrface-hr-width 70
+  "The width of hr."
+  :group 'shrface
+  :type 'string)
+
+(defcustom shrface-hr-line 32
+  "Character used to draw hr lines."
+  :type 'character)
+
 (defvar shrface-org nil
   "NON-nil to render with original org features.")
 
@@ -211,6 +220,7 @@ Bound it before generating the org buffer/file.")
     (p   . shrface-tag-p)
     (li   . shrface-tag-li)
     (dt   . shrface-tag-dt)
+    (hr   . shrface-tag-hr)
     (figure . shrface-tag-figure)
     ;; (code   . shrface-tag-code)
     )
@@ -314,6 +324,11 @@ NON-nil"
   "Face used for description list terms <dt>"
   :group 'shrface-faces)
 
+(defface shrface-hr-face
+  '((default :inherit org-hide)
+    (((background light)) :strike-through "gray70")
+    (t :strike-through "gray30"))
+  "Face used for horizontal ruler.")
 
 ;;; Faces for shrface-analysis realted buffers
 
@@ -897,6 +912,17 @@ Argument DOM dom."
   (shr-ensure-newline)
   (shrface-shr-fontize-dom dom '(comment t) 'shrface-description-list-term-face)
   (shr-ensure-newline))
+
+(defun shrface-tag-hr (dom)
+  "Fontize tag hr.
+Argument DOM dom."
+  (shr-ensure-newline)
+  (insert (propertize (make-string (if (not shr-use-fonts)
+                                       shrface-hr-width
+                                     (1+ (/ shrface-hr-width
+                                            shr-table-separator-pixel-width)))
+                                   shrface-hr-line) 'face 'shrface-hr-face)
+          "\n"))
 
 ;;;###autoload
 (defun shrface-imenu-get-tree ()
