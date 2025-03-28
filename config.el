@@ -368,19 +368,7 @@
           (shr-use-fonts nil))
       (shr-render-region begin end))
     ;; workaround, show annotations when document updates
-    (when (bound-and-true-p paw-annotation-mode)
-      (paw-clear-annotation-overlay)
-      (paw-show-all-annotations)
-      ;; workaround, switch to the entry buffer and add annotations overlays
-      ;; the current logic of showing annotations is not perfect, it can only add the current buffer's overlays
-      (if (get-buffer-window "*wallabag-entry*")
-          (select-window (get-buffer-window "*wallabag-entry*"))
-        (if (buffer-live-p (get-buffer"*wallabag-entry*"))
-            (funcall wallabag-show-entry-switch (get-buffer"*wallabag-entry*"))))
-      (if paw-annotation-show-wordlists-words-p
-          (paw-focus-find-words :wordlist t))
-      (if paw-annotation-show-unknown-words-p
-          (paw-focus-find-words)))))
+    (paw-annotation-mode 1)))
 
 (use-package mu4e
   :defer t
