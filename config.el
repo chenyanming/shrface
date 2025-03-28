@@ -368,7 +368,8 @@
           (shr-use-fonts nil))
       (shr-render-region begin end))
     ;; workaround, show annotations when document updates
-    (paw-annotation-mode 1)))
+    (paw-annotation-mode 1)
+    (visual-line-mode 1)))
 
 (use-package mu4e
   :defer t
