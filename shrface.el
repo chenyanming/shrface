@@ -148,7 +148,7 @@ The following features are also disabled:
   :type 'character)
 
 (defcustom shrface-header-line-max-level 2
-  "Maximum depth of headers to display in `header-line-format`.
+  "Maximum depth of headers to display in `header-line-format'.
 Used in `shrface-update-header-line'."
   :type 'integer
   :group 'shrface)
