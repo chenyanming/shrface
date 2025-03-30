@@ -234,7 +234,8 @@
     ;; every usage of `shr-tag-img'
     (cl-letf (((symbol-function 'shr-tag-img) 'nov-render-img))
       (shr-render-region (point-min) (point-max)))
-    (shrface-update-header-line)
+    ;; workaround, need a delay to update the header line
+    (run-with-timer 0.01 nil 'shrface-update-header-line)
     ;; workaround, show annotations when document updates
     (shrface-show-all-annotations)))
 
@@ -297,6 +298,8 @@
         (shrface-toggle-bullets nil)
         (shrface-href-versatile t)
         (shr-use-fonts nil))
+    ;; workaround, need a delay to update the header line
+    (run-with-timer 0.01 nil 'shrface-update-header-line)
     (apply orig-fun args)))
 
 (defun shrface-elfeed-advice (orig-fun &rest args)
