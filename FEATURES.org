@@ -404,4 +404,6 @@ Sometimes a wrong language is detected, but it is still great for highlight, eve
 **** Screenshots when both enable =shrface= and the code highlights
 #+attr_org: :width 600px
 [[file:img/code-highlight.png]]
+** Clickable header-line
+Use ~shrface-update-header-line~, this will set the current header line with clickable shrface headlines.
 

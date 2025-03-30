@@ -70,16 +70,16 @@
 ;;; shrface
 
 (defgroup shrface nil
-  "Org-like faces setting for shr"
+  "Org-like faces setting for shr."
   :group 'shr)
 
 (defgroup shrface-faces nil
-  "Org-like faces for shr"
+  "Org-like faces for shr."
   :group 'shrface
   :group 'faces)
 
 (defgroup shrface-analysis-faces nil
-  "Faces for shrface analysis realted buffers"
+  "Faces for shrface analysis realted buffers."
   :group 'shrface
   :group 'faces)
 
@@ -144,7 +144,20 @@ The following features are also disabled:
 
 (defcustom shrface-hr-line 32
   "Character used to draw hr lines."
+  :group 'shrface
   :type 'character)
+
+(defcustom shrface-header-line-max-level 2
+  "Maximum depth of headers to display in `header-line-format`.
+Used in `shrface-update-header-line'."
+  :type 'integer
+  :group 'shrface)
+
+(defcustom shrface-header-line-scale-factor 0.8
+  "Factor to scale the header line.
+Used in `shrface-update-header-line'."
+  :type 'number
+  :group 'shrface)
 
 (defvar shrface-org nil
   "NON-nil to render with original org features.")
@@ -237,39 +250,39 @@ Used when we run `shrface-headline-counsel'.
 Used for later analysis, sorting, exporting etc.")
 
 (defface shrface-href-face '((t :inherit org-link))
-  "Default <href> face if `shrface-href-versatile' is nil"
+  "Default <href> face if `shrface-href-versatile' is nil."
   :group 'shrface-faces)
 
 (defface shrface-href-other-face '((t :inherit org-link :foreground "#81A1C1"))
-  "Face used for <href> other than http:// https:// ftp://
-file:// mailto:// if `shrface-href-versatile' is NON-nil. For
-example, it can be used for fontifying charter links with epub
-files when using nov.el."
+  "Face used for <href>.
+Other than http:// https:// ftp:// file:// mailto:// if
+`shrface-href-versatile' is NON-nil. For example, it can be used for
+fontifying charter links with epub files when using nov.el."
   :group 'shrface-faces)
 
 (defface shrface-href-http-face '((t :inherit org-link :foreground "#39CCCC"))
-  "Face used for <href>, http:// if `shrface-href-versatile' is
-NON-nil"
+  "Face used for <href>, http://.
+If `shrface-href-versatile' is NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-href-https-face '((t :inherit org-link :foreground "#7FDBFF"))
-  "Face used for <href>, https:// if `shrface-href-versatile' is
-NON-nil"
+  "Face used for <href>, https://.
+If `shrface-href-versatile' is NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-href-ftp-face '((t :inherit org-link :foreground "#5E81AC"))
-  "Face used for <href>, ftp:// if `shrface-href-versatile' is
-NON-nil"
+  "Face used for <href>, ftp://.
+If `shrface-href-versatile' is NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-href-file-face '((t :inherit org-link :foreground "#87cefa"))
-  "Face used for <href>, file:// if `shrface-href-versatile' is
-NON-nil"
+  "Face used for <href>, file://.
+If `shrface-href-versatile' is NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-href-mailto-face '((t :inherit org-link :foreground "#8FBCBB"))
-  "Face used for <href>, mailto:// if `shrface-href-versatile' is
-NON-nil"
+  "Face used for <href>, mailto://.
+If `shrface-href-versatile' is NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-h1-face '((t :inherit org-level-1))
@@ -305,7 +318,7 @@ NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-code '((t :inherit org-code))
-  "TODO Face used for inline <code>"
+  "TODO Face used for inline <code>."
   :group 'shrface-faces)
 
 (defface shrface-figure '((t :inherit org-table))
@@ -313,15 +326,15 @@ NON-nil"
   :group 'shrface-faces)
 
 (defface shrface-item-bullet-face '((t :inherit org-list-dt))
-  "Face used for unordered list bullet"
+  "Face used for unordered list bullet."
   :group 'shrface-faces)
 
 (defface shrface-item-number-face '((t :inherit org-list-dt))
-  "Face used for ordered list numbers"
+  "Face used for ordered list numbers."
   :group 'shrface-faces)
 
 (defface shrface-description-list-term-face '((t :inherit org-list-dt))
-  "Face used for description list terms <dt>"
+  "Face used for description list terms <dt>."
   :group 'shrface-faces)
 
 (defface shrface-hr-face
@@ -333,15 +346,15 @@ NON-nil"
 ;;; Faces for shrface-analysis realted buffers
 
 (defface shrface-links-title-face '((t :inherit default))
-  "Face used for *shrface-links* title"
+  "Face used for *shrface-links* title."
   :group 'shrface-analysis-faces)
 
 (defface shrface-links-url-face '((t :inherit font-lock-comment-face))
-  "Face used for *shrface-links* url"
+  "Face used for *shrface-links* url."
   :group 'shrface-analysis-faces)
 
 (defface shrface-links-mouse-face '((t :inherit mode-line-highlight))
-  "Face used for *shrface-links* mouse face"
+  "Face used for *shrface-links* mouse face."
   :group 'shrface-analysis-faces)
 
 (defvar-local shrface-outline--cycle-buffer-state 'show-all
@@ -976,9 +989,11 @@ Argument DOM dom."
   "Use `occur' to find all `shrface-tag-h1' to `shrface-tag-h6'.
 `shrface-occur' will disable if variable `shrface-toggle-bullets' is Non-nil."
   (interactive)
-  (if (not shrface-toggle-bullets)
-      (occur (shrface-outline-regexp))
-    (message "Please set `shrface-toggle-bullets' nil to use `shrface-occur'")))
+  (if (derived-mode-p 'occur-mode)
+      (kill-buffer-and-window)
+    (if (not shrface-toggle-bullets)
+        (occur (shrface-outline-regexp))
+      (message "Please set `shrface-toggle-bullets' nil to use `shrface-occur'")) ))
 
 (defun shrface-occur-flash ()
   "Flash the occurrence line."
@@ -989,7 +1004,7 @@ Argument DOM dom."
 (define-minor-mode shrface-mode
   "Toggle shr minor mode.
 1. imenu
-2. outline-minor-mode"
+2. `outline-minor-mode'"
   :group 'shrface
   (cond
    (shrface-mode
@@ -1906,8 +1921,109 @@ be found at test.el."
             (overlay-put ov 'display (propertize (concat (buffer-substring (- end 1) end) shrface-ellipsis)))))))))
 
 (defun shrface-outline-visibility-changed ()
-  "Hook function to be called when outline visibility changes."
+  "Hook function to be called when outline visibility change."
   (shrface-outline-add-ellipsis-to-hidden-headers))
+
+(defun shrface-truncate-string (string length)
+  "Truncate STRING to LENGTH characters, adding '…' if necessary."
+  (if (> (length string) length)
+      (concat (substring string 0 (- length 1)) "…")
+    string))
+
+(defun shrface-update-header-line ()
+  "Update `header-line-format` with clickable shrface headlines.
+It has to be called after `shr-render-region'."
+  (let* ((headers (shrface-headline-selectable-list))
+         (header-line '())
+         (filtered-headers (cl-remove-if
+                            #'(lambda (x)
+                                (let* ((face (get-text-property 0 'face (car x)))
+                                       (level (cond
+                                               ((eq face 'shrface-h1-face) 1)
+                                               ((eq face 'shrface-h2-face) 2)
+                                               ((eq face 'shrface-h3-face) 3)
+                                               ((eq face 'shrface-h4-face) 4)
+                                               ((eq face 'shrface-h5-face) 5)
+                                               ((eq face 'shrface-h6-face) 6)
+                                               (t 7))))
+                                  (> level shrface-header-line-max-level)))
+                            headers))
+         (len-filtered-headers (length filtered-headers))
+         (header-width (length (mapconcat #'(lambda (x) (string-trim (car x))) filtered-headers "")))
+         (no-truncate (<= header-width (window-text-width)))
+         (truncate-len (if no-truncate header-width (/ (window-text-width) len-filtered-headers))))
+    (when headers
+        (push (propertize
+               "[Menu]"
+               'face 'bold
+               'mouse-face 'highlight
+               'help-echo "shrface-occur"
+               'local-map (let ((map (make-sparse-keymap)))
+                            (define-key map [header-line mouse-1]
+                                        #'shrface-occur)
+                            (define-key map [header-line mouse-2]
+                                        #'shrface-occur)
+                            map))
+              header-line)
+        (push (propertize
+               " < "
+               'face 'bold
+               'mouse-face 'highlight
+               'help-echo "shrface-previous-headline"
+               'local-map (let ((map (make-sparse-keymap)))
+                            (define-key map [header-line mouse-1]
+                                        #'shrface-previous-headline)
+                            (define-key map [header-line mouse-2]
+                                        #'shrface-previous-headline)
+                            map))
+              header-line)
+        (push (propertize
+               " > "
+               'face 'bold
+               'mouse-face 'highlight
+               'help-echo "shrface-next-headline"
+               'local-map (let ((map (make-sparse-keymap)))
+                            (define-key map [header-line mouse-1]
+                                        #'shrface-next-headline)
+                            (define-key map [header-line mouse-2]
+                                        #'shrface-next-headline)
+                            map))
+              header-line))
+    (dolist (header headers)
+      (let* ((text (car header))
+             (start (nth 1 header))
+             (face (get-text-property 0 'face text)) ;; Get original face
+             (level (cond
+                     ((eq face 'shrface-h1-face) 1)
+                     ((eq face 'shrface-h2-face) 2)
+                     ((eq face 'shrface-h3-face) 3)
+                     ((eq face 'shrface-h4-face) 4)
+                     ((eq face 'shrface-h5-face) 5)
+                     ((eq face 'shrface-h6-face) 6)
+                     (t 7)))
+             (symbol (shrface-bullets-level-string level)) ;; Level-based icons
+             (truncated-text (if no-truncate
+                                 (string-trim (format "%s" text))
+                               (shrface-truncate-string (string-trim (format "%s" text))
+                                                        truncate-len) ))
+             (clickable-text
+              (when (<= level shrface-header-line-max-level) ;; Enforce max level
+                (propertize
+                 (concat " " symbol " " truncated-text) ;; Add icon & spacing
+                 'face `((t :inherit ,face
+                          :height ,(* (face-attribute face :height nil t) shrface-header-line-scale-factor)))
+                 'mouse-face 'highlight
+                 'help-echo text
+                 'local-map (let ((map (make-sparse-keymap)))
+                              (define-key map [header-line mouse-1]
+                                          `(lambda () (interactive) (goto-char ,start)))
+                              (define-key map [header-line mouse-2]
+                                          `(lambda () (interactive) (goto-char ,start)))
+                              map)))))
+        (when clickable-text
+          (push clickable-text header-line))))
+    ;; if nil, it will remove the header-line
+    (setq header-line-format (nreverse header-line))))
 
 (provide 'shrface)
 ;;; shrface.el ends here
