@@ -1952,7 +1952,7 @@ It has to be called after `shr-render-region'."
          (header-width (length (mapconcat #'(lambda (x) (string-trim (car x))) filtered-headers "")))
          (no-truncate (<= header-width (window-text-width)))
          (truncate-len (if no-truncate header-width (/ (window-text-width) len-filtered-headers))))
-    (when headers
+    (when filtered-headers
         (push (propertize
                "[Menu]"
                'face 'bold
@@ -1989,7 +1989,7 @@ It has to be called after `shr-render-region'."
                                         #'shrface-next-headline)
                             map))
               header-line))
-    (dolist (header headers)
+    (dolist (header filtered-headers)
       (let* ((text (car header))
              (start (nth 1 header))
              (face (get-text-property 0 'face text)) ;; Get original face
