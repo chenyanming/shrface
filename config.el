@@ -326,4 +326,8 @@
     (if paw-annotation-show-wordlists-words-p
         (paw-focus-find-words :wordlist t))
     (if paw-annotation-show-unknown-words-p
-        (paw-focus-find-words))))
+        (paw-focus-find-words))
+
+    ;; enable kinlde-like word wise feature by default
+    (setq-local paw-enable-inline-annotations-p nil)
+    (paw-toggle-inline-annotations)))
