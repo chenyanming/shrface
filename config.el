@@ -235,7 +235,7 @@
     (cl-letf (((symbol-function 'shr-tag-img) 'nov-render-img))
       (shr-render-region (point-min) (point-max)))
     ;; workaround, need a delay to update the header line
-    (run-with-timer 0.01 nil 'shrface-update-header-line)
+    ;; (run-with-timer 0.01 nil 'shrface-update-header-line)
     ;; workaround, show annotations when document updates
     (shrface-show-all-annotations)))
 
