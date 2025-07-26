@@ -270,10 +270,7 @@
   (shrface-render-region beg end)
   (shrface-update-header-line)
   (paw-annotation-mode 1)
-  (visual-line-mode 1)
-  ;; enable kinlde-like word wise feature by default
-  (setq-local paw-enable-inline-annotations-p nil)
-  (paw-toggle-inline-annotations))
+  (visual-line-mode 1))
 
 (defun shrface-render-region (beg end)
   (require 'eww)
@@ -329,8 +326,4 @@
     (if paw-annotation-show-wordlists-words-p
         (paw-focus-find-words :wordlist t))
     (if paw-annotation-show-unknown-words-p
-        (paw-focus-find-words))
-
-    ;; enable kinlde-like word wise feature by default
-    (setq-local paw-enable-inline-annotations-p nil)
-    (paw-toggle-inline-annotations)))
+        (paw-focus-find-words))))
