@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/shrface
 ;; Keywords: faces
 ;; Created: 10 April 2020
-;; Version: 2.6.4
+;; Version: 2.6.5
 ;; Package-Requires: ((emacs "25.1") (org "9.0") (language-detection "0.1.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -159,6 +159,18 @@ Used in `shrface-update-header-line'."
   :type 'number
   :group 'shrface)
 
+(defcustom shrface-rt-height-factor 0.6
+  "Scaling factor for ruby text height relative to base font size.
+Used to control the font size of ruby/furigana annotations."
+  :type 'number
+  :group 'shrface)
+
+(defcustom shrface-rt-raise-factor 0.6
+  "Vertical raise factor for ruby text.
+Controls how far above the base character the annotation is displayed."
+  :type 'number
+  :group 'shrface)
+
 (defvar shrface-org nil
   "NON-nil to render with original org features.")
 
@@ -235,6 +247,7 @@ Bound it before generating the org buffer/file.")
     (dt   . shrface-tag-dt)
     (hr   . shrface-tag-hr)
     (figure . shrface-tag-figure)
+    (rt   . shrface-tag-rt)
     ;; (code   . shrface-tag-code)
     )
   "Alist of shrface supported faces except experimental faces.")
@@ -926,8 +939,49 @@ Argument DOM dom."
   (shrface-shr-fontize-dom dom '(comment t) 'shrface-description-list-term-face)
   (shr-ensure-newline))
 
-(defun shrface-tag-hr (dom)
-  "Fontize tag hr.
+(defun shrface-tag-rt (dom)
+  "Render the <rt> (ruby text) element by creating raised overlays for annotation text.
+
+DOM is the parsed HTML DOM node representing the <rt> tag.
+This function looks for string children in the DOM and displays them as ruby annotations
+using `shrface-add-rt-overlay`, without modifying the buffer text.
+
+This assumes the annotation belongs above the immediately preceding character."
+  (dolist (sub (dom-children dom))
+    (when (stringp sub)
+      (let ((rt-text (string-trim sub))
+            (pos (1- (point)))) ;; assumes the <rb> char was just inserted
+        (when (and (>= pos (point-min))
+                   (= (length rt-text) (length (string-trim sub))))
+          (shrface-add-rt-overlay pos (buffer-substring-no-properties pos (1+ pos)) rt-text))))
+    ;; If not string, recurse
+    (unless (stringp sub)
+      (shr-descend sub))))
+
+(defun shrface-add-rt-overlay (pos base-char rt-text)
+  "Display RT-TEXT (ruby/furigana annotation) above BASE-CHAR at position POS using an overlay.
+
+This function adds an overlay that does not modify the underlying buffer content.
+It displays RT-TEXT (e.g., 'zhù' or 'かん') above BASE-CHAR (a single character),
+mimicking ruby text in HTML.
+
+- POS should be the position of the BASE-CHAR in the buffer.
+- BASE-CHAR is the character to annotate.
+- RT-TEXT is the text to display above BASE-CHAR.
+
+This works only in graphical Emacs (not terminal), and relies on the 'display' property."
+  (let* ((raised-rt (propertize rt-text
+                                'face `(:height ,shrface-rt-height-factor)
+                                'display `(raise ,shrface-rt-raise-factor)))
+         (composed (concat base-char raised-rt))
+         (ov (make-overlay pos (1+ pos))))
+    (overlay-put ov 'shrface-rt t) ;; tag for later cleanup
+    (overlay-put ov 'display composed)
+    ov))
+
+
+(defun shrface-tag-ruby (dom)
+  "Fontize tag ruby.
 Argument DOM dom."
   (shr-ensure-newline)
   (insert (propertize (make-string (if (not shr-use-fonts)

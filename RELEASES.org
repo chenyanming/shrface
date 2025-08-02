@@ -1,6 +1,11 @@
 #+title: Releases
 #+STARTUP: nofold
 * RELEASES
+** =2025-08-02=
+Version 2.6.5
+- Add ~shrface-tag-rt~: For showing Japanese ふりがな（furigana）in nov files
+- Add ~shrface-tag-hr~
+
 ** =2024-03-31=
 Version 2.6.4
 - Add ~shrface-links-consult~
