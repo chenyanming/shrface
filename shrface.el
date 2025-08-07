@@ -939,6 +939,17 @@ Argument DOM dom."
   (shrface-shr-fontize-dom dom '(comment t) 'shrface-description-list-term-face)
   (shr-ensure-newline))
 
+(defun shrface-tag-hr (dom)
+  "Fontize tag hr.
+Argument DOM dom."
+  (shr-ensure-newline)
+  (insert (propertize (make-string (if (not shr-use-fonts)
+                                       shrface-hr-width
+                                     (1+ (/ shrface-hr-width
+                                            shr-table-separator-pixel-width)))
+                                   shrface-hr-line) 'face 'shrface-hr-face)
+          "\n"))
+
 (defun shrface-tag-rt (dom)
   "Render the <rt> (ruby text) element by creating raised overlays for annotation text.
 
