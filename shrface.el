@@ -969,6 +969,23 @@ This assumes the annotation belongs above the immediately preceding character."
     (unless (stringp sub)
       (shr-descend sub))))
 
+(defun shrface-tag-rt-bracketize (dom)
+  "Render the <rt> (ruby text) element by creating raised overlays for annotation text.
+
+DOM is the parsed HTML DOM node representing the <rt> tag.
+This function looks for string children in the DOM and displays them as ruby annotations
+using `shrface-add-rt-overlay`, without modifying the buffer text.
+
+This assumes the annotation belongs above the immediately preceding character."
+  (dolist (sub (dom-children dom))
+    (when (stringp sub)
+      (let ((rt-text (string-trim sub)))
+        (insert (format "[%s]" rt-text))))
+    ;; If not string, recurse
+    (unless (stringp sub)
+      (shr-descend sub))))
+
+
 (defun shrface-add-rt-overlay (pos base-char rt-text)
   "Display RT-TEXT (ruby/furigana annotation) above BASE-CHAR at position POS using an overlay.
 
@@ -1849,6 +1866,7 @@ Detail uses cases can be found at test.el."
                  (li . shrface-tag-li)
                  (p . shrface-tag-p)
                  (a . shrface-tag-a)
+                 (rt   . shrface-tag-rt-bracketize)
                  (h6 . shrface-tag-h6)
                  (h5 . shrface-tag-h5)
                  (h4 . shrface-tag-h4)
