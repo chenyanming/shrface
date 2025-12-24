@@ -315,6 +315,8 @@
         (shrface-toggle-bullets nil)
         (shrface-href-versatile t)
         (shr-use-fonts nil))
+    (if (fboundp 'elfeed-goodies/show-mode-setup)
+        (elfeed-goodies/show-mode-setup))
     (apply orig-fun args)
     (with-current-buffer "*elfeed-entry*"
       (shrface-show-all-annotations))))
